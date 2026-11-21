@@ -45,7 +45,7 @@ Constants `lib/languages.ts`: `SUPPORTED_LANGUAGES = ['ko','fr','en'] as const`,
 
 ## Tasks
 
-### [ ] T1 — Scaffold
+### [x] T1 — Scaffold
 - `create-next-app` (TS, App Router, Tailwind, ESLint, `@/*` alias), pnpm. Add Prettier, shadcn/ui init (button, input, card, dialog, drawer, sheet, select, checkbox, tabs, table, toast/sonner, badge, progress, textarea, form).
 - Vitest configured (jsdom for components, node for lib), Playwright installed with one placeholder spec.
 - Scripts listed in CLAUDE.md.
