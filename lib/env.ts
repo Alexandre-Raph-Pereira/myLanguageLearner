@@ -44,7 +44,9 @@ export const env = {
   get DATABASE_URL() {
     return parsed(
       "DATABASE_URL",
-      z.string().regex(/^postgres(ql)?:\/\//, "must be a postgres URL"),
+      z
+        .string()
+        .regex(/^(postgres(ql)?|pglite):\/\//, "must be a postgres:// (or dev-only pglite://) URL"),
     );
   },
   get NEXT_PUBLIC_SUPABASE_URL() {

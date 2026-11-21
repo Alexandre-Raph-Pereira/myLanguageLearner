@@ -1,30 +1,38 @@
 import "server-only";
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
 import { env } from "@/lib/env";
 import * as schema from "./schema";
 import type { Db } from "./types";
 
 export type { Db } from "./types";
 
-const globalForDb = globalThis as unknown as { __db?: Db };
+const globalForDb = globalThis as unknown as { __dbPromise?: Promise<Db> };
 
-function createDb(): Db {
+/** Dev/e2e only: `DATABASE_URL=pglite://<dir>` uses an embedded PGlite database. */
+export function pgliteDir(url: string): string | null {
+  return url.startsWith("pglite://") ? url.slice("pglite://".length) || "./.pglite" : null;
+}
+
+async function createDb(): Promise<Db> {
+  const url = env.DATABASE_URL;
+  const dir = pgliteDir(url);
+  if (dir) {
+    if (process.env.NODE_ENV === "production") throw new Error("PGlite is dev-only");
+    const { PGlite } = await import("@electric-sql/pglite");
+    const { drizzle } = await import("drizzle-orm/pglite");
+    return drizzle(new PGlite(dir), { schema }) as unknown as Db;
+  }
+  const { default: postgres } = await import("postgres");
+  const { drizzle } = await import("drizzle-orm/postgres-js");
   // prepare: false is required by the Supabase transaction pooler.
-  const client = postgres(env.DATABASE_URL, { prepare: false, max: 5 });
+  const client = postgres(url, { prepare: false, max: 5 });
   return drizzle(client, { schema }) as unknown as Db;
 }
 
 /** Lazily connected client: importing this module never reads DATABASE_URL. */
-export function getDb(): Db {
-  globalForDb.__db ??= createDb();
-  return globalForDb.__db;
+export function getDb(): Promise<Db> {
+  globalForDb.__dbPromise ??= createDb().catch((e) => {
+    globalForDb.__dbPromise = undefined;
+    throw e;
+  });
+  return globalForDb.__dbPromise;
 }
-
-export const db: Db = new Proxy({} as Db, {
-  get(_target, prop) {
-    const real = getDb() as unknown as Record<PropertyKey, unknown>;
-    const value = real[prop];
-    return typeof value === "function" ? (value as (...args: unknown[]) => unknown).bind(real) : value;
-  },
-});

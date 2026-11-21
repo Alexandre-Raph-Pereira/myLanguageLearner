@@ -65,7 +65,7 @@ Constants `lib/languages.ts`: `SUPPORTED_LANGUAGES = ['ko','fr','en'] as const`,
 - Seed script `pnpm db:seed` (dev only): settings row for a dev user, pricing row.
 - **Accept:** a vitest test inserts/reads `user_settings` on PGlite.
 
-### [ ] T4 — Auth
+### [x] T4 — Auth
 - Supabase Auth with `@supabase/ssr`: email **magic link** login page `/login`, callback route `/auth/callback`, sign-out.
 - `middleware.ts`: refresh session; unauthenticated → `/login` (except `/login`, `/auth/*`, manifest, icons, static).
 - After callback, if the email is not in `ALLOWED_EMAILS` → sign out + error message.
