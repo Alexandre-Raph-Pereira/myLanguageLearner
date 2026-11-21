@@ -2,7 +2,21 @@
 
 Claude Code appends here when a step needs a human (accounts, keys, files, manual checks). Tick when done.
 
-- [ ] (plan 00) Create Supabase project, enable email magic link, add redirect URLs — see plan 00 "Human steps".
-- [ ] (plan 00) Create Vercel project from the repo and set env vars from `.env.example`.
-- [ ] (plan 00) Verify model prices in Settings.
-- [ ] (all) Repo is public — consider making it private; never commit `.env`.
+## Plan 00 — Foundation
+
+- [ ] **Supabase project** — create a project at supabase.com (region close to you).
+  - Settings → API: copy **Project URL** → `NEXT_PUBLIC_SUPABASE_URL` and the **anon public** key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+  - Authentication → Sign In / Providers → **Email**: enabled, "Confirm email" on (magic link works with the default email template).
+  - Authentication → URL Configuration: **Site URL** = `https://<your-vercel-domain>`; **Redirect URLs** add `http://localhost:3000/auth/callback` and `https://<your-vercel-domain>/auth/callback` (add `https://*-<your-vercel-team>.vercel.app/auth/callback` if you want logins on preview deployments).
+- [ ] **Database URL** — Supabase → Connect → **Transaction pooler** (port **6543**) → copy the URI (replace `[YOUR-PASSWORD]`) → `DATABASE_URL`. The app already uses `prepare: false`, required by this pooler.
+- [ ] **Apply migrations** (manual by default): locally, with `DATABASE_URL` set to the Supabase URL, run `pnpm db:migrate`. Re-run after each plan that adds migrations. This also seeds the placeholder price row for `claude-sonnet-5-5`.
+- [ ] **Vercel project** — import the GitHub repo in Vercel (framework: Next.js, install command auto-detected from `packageManager`). Set, for **Production and Preview**:
+  `DATABASE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `ALLOWED_EMAILS` (your email), `AI_PROVIDER=anthropic`, `AI_MODEL_SMART=claude-sonnet-5-5`, `AI_MODEL_FAST=claude-sonnet-5-5`, `ANTHROPIC_API_KEY`. Do **not** set `DEV_USER_ID` or `AI_MOCK` there (dev bypass is ignored in production anyway). See `.env.example`.
+- [ ] **Local dev** — copy `.env.example` to `.env.local` and fill it. Without Supabase you can run fully locally with `DATABASE_URL=pglite://./.pglite`, `DEV_USER_ID=00000000-0000-4000-8000-000000000001`, `AI_MOCK=1`, then `pnpm db:migrate && pnpm dev`.
+- [ ] **Verify model prices** — open Settings → Pricing, check the input / output / cache-read prices (USD per million tokens) against Anthropic's pricing page and press **Save** on each row. The "Verify prices" banner disappears once saved. The seeded values ($3 / $15 / $0.30) are placeholders.
+- [ ] **Install check on the phone** — on the Vercel deployment: log in, then "Add to Home Screen" (iOS Safari) / "Install app" (Android Chrome). Optionally run Chrome DevTools → Lighthouse (or Application → Manifest) on the deployment and confirm the manifest is installable with no errors.
+- [ ] **Replace placeholder icons** (optional) — overwrite `public/icons/*.png` and `public/apple-touch-icon.png`, or tweak `scripts/generate-icons.mjs` and run `pnpm icons`.
+
+## All plans
+
+- [ ] Repo is public — consider making it private; never commit `.env*` (only `.env.example`).
