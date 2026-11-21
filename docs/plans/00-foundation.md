@@ -52,7 +52,7 @@ Constants `lib/languages.ts`: `SUPPORTED_LANGUAGES = ['ko','fr','en'] as const`,
 - Copy `CLAUDE.md` and `docs/` (already in repo) untouched.
 - **Accept:** `pnpm build`, `pnpm lint`, `pnpm typecheck`, `pnpm test` pass.
 
-### [ ] T2 — Environment
+### [x] T2 — Environment
 - `lib/env.ts`: zod-validated, **lazy** getters (so tests/builds don't crash when unset). Variables:
   `DATABASE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `ALLOWED_EMAILS` (comma list), `AI_PROVIDER` (`anthropic|openai|google`, default anthropic), `AI_MODEL_SMART`, `AI_MODEL_FAST` (default `claude-sonnet-5-5`), `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `GOOGLE_GENERATIVE_AI_API_KEY` (optional), `AI_MOCK` (`1` = mock).
 - `.env.example` with every variable and a comment. Ensure `.gitignore` covers `.env*` except `.env.example`.
