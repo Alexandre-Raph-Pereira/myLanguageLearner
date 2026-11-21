@@ -73,7 +73,7 @@ Constants `lib/languages.ts`: `SUPPORTED_LANGUAGES = ['ko','fr','en'] as const`,
 - Dev convenience: when `NODE_ENV !== 'production'` and `DEV_USER_ID` is set, `requireUser()` returns that user (lets cloud sessions/e2e run without Supabase). Never active in production.
 - **Accept:** protected page redirects when logged out; dev bypass works in tests.
 
-### [ ] T5 — AI layer (`lib/ai/`)
+### [x] T5 — AI layer (`lib/ai/`)
 Files:
 - `providers.ts` — `getModel(tier: 'smart'|'fast', settings)` → AI SDK `LanguageModel` for the configured provider/model. When `AI_MOCK=1`, return a mock model (`ai/test`) that reads `tests/fixtures/ai/<task>.json` (pick by task name; support an array of responses served in order).
 - `pricing.ts` — `getPricing(modelId)`; `costOf(usage, pricing)`.

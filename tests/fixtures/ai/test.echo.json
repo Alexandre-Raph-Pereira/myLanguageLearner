@@ -1,0 +1,4 @@
+{
+  "responses": [{ "word": "사과", "meaning": "apple" }],
+  "usage": { "input": 200, "output": 40 }
+}
