@@ -89,7 +89,7 @@ Files:
 - `prompts/` folder (empty index) — every later prompt lives here.
 - **Accept:** unit tests with mock model: budget blocks over per-request cap, over monthly cap, logs usage, retries once on invalid JSON, mock mode reads fixtures.
 
-### [ ] T6 — App shell & Settings
+### [x] T6 — App shell & Settings
 - Layout: mobile bottom nav (Home, Words, Grammar, Tests, Settings), desktop left sidebar. Language indicator (Korean only now).
 - `/` Home: placeholder cards (Word test, Grammar test, TOPIK test, "resume unfinished test" slot).
 - `/tests`: hub page with three entries (disabled until their plan ships).
