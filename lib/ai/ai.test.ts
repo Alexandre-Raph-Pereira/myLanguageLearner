@@ -5,9 +5,9 @@ import { aiUsage, modelPricing, userSettings } from "@/db/schema";
 import type { Db } from "@/db/types";
 import { createTestDb, OTHER_USER_ID, TEST_USER_ID } from "@/tests/db";
 import { assertBudget, createOperation, monthSpent, startOfUtcMonth } from "./budget";
-import { BudgetError } from "./errors";
+import { AiError, BudgetError } from "./errors";
 import { estimateCost, estimateInputTokens, IMAGE_TOKENS } from "./estimate";
-import { loadFixture, resetMockFixtures, setMockFixture } from "./mock";
+import { getMockCalls, loadFixture, resetMockFixtures, setMockFixture } from "./mock";
 import { costOf } from "./pricing";
 import { resolveModelChoice } from "./providers";
 import { aiObject, aiText, type AiObjectOptions } from "./run";
@@ -243,6 +243,53 @@ describe("aiObject", () => {
     await call("test.echo", { images: [{ data: "aGVsbG8=", mediaType: "image/png" }] });
     const [row] = await usageRows();
     expect(row.estimatedCostUsd).toBeGreaterThan((IMAGE_TOKENS * 3) / 1e6);
+  });
+});
+
+describe("aiObject — other paths", () => {
+  it("wraps provider failures in AiError and logs an error row", async () => {
+    await expect(call("no.such.fixture")).rejects.toBeInstanceOf(AiError);
+    const [row] = await usageRows();
+    expect(row).toMatchObject({ status: "error", costUsd: 0 });
+    expect(row.error).toMatch(/no fixture/);
+  });
+
+  it("accepts a messages array instead of a prompt", async () => {
+    await aiObject({
+      db,
+      userId: TEST_USER_ID,
+      operation: createOperation(TEST_USER_ID, "chat"),
+      task: "test.echo",
+      tier: "fast",
+      schema,
+      system: "sys",
+      messages: [
+        { role: "user", content: "first" },
+        { role: "assistant", content: "ok" },
+        { role: "user", content: "second" },
+      ],
+      maxOutputTokens: 100,
+    });
+    const [opts] = getMockCalls("test.echo");
+    expect(opts.prompt.map((m) => m.role)).toEqual(["system", "user", "assistant", "user"]);
+  });
+
+  it("sends the validation error back on retry", async () => {
+    setMockFixture("t.retry2", { responses: ["{oops", { word: "a", meaning: "b" }] });
+    await call("t.retry2");
+    const second = getMockCalls("t.retry2")[1];
+    const last = second.prompt.at(-1);
+    expect(last?.role).toBe("user");
+    expect(JSON.stringify(last?.content)).toMatch(/not valid for the required JSON schema/);
+  });
+
+  it("cacheSystem sets Anthropic cache control on the system message", async () => {
+    await call("test.echo", { cacheSystem: true });
+    const [opts] = getMockCalls("test.echo");
+    expect(opts.prompt[0]).toMatchObject({
+      role: "system",
+      providerOptions: { anthropic: { cacheControl: { type: "ephemeral" } } },
+    });
   });
 });
 

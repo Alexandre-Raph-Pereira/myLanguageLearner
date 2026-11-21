@@ -2,6 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { MockLanguageModelV4 } from "ai/test";
 
+type CallOptions = Parameters<MockLanguageModelV4["doGenerate"]>[0];
+
 /**
  * Mock models for AI_MOCK=1. Each task answers from
  * `tests/fixtures/ai/<task>.json`:
@@ -21,6 +23,12 @@ export type MockFixture = {
 const FIXTURES_DIR = path.join(process.cwd(), "tests", "fixtures", "ai");
 const overrides = new Map<string, MockFixture>();
 const counters = new Map<string, number>();
+const calls: { task: string; options: CallOptions }[] = [];
+
+/** Test helper: options (prompt, provider options…) received by mock models, oldest first. */
+export function getMockCalls(task?: string): CallOptions[] {
+  return calls.filter((c) => !task || c.task === task).map((c) => c.options);
+}
 
 /** Test helper: serve these responses for `task` instead of the fixture file. */
 export function setMockFixture(task: string, fixture: MockFixture): void {
@@ -32,6 +40,7 @@ export function setMockFixture(task: string, fixture: MockFixture): void {
 export function resetMockFixtures(): void {
   overrides.clear();
   counters.clear();
+  calls.length = 0;
 }
 
 export function loadFixture(task: string): MockFixture {
@@ -61,7 +70,9 @@ export function createMockModel(task: string, modelId: string) {
   return new MockLanguageModelV4({
     provider: "mock",
     modelId,
-    doGenerate: async () => {
+    doGenerate: async (options) => {
+      calls.push({ task, options });
+      if (calls.length > 100) calls.shift(); // bounded: dev servers run in mock mode too
       const { text, fixture } = nextResponse(task);
       const input = fixture.usage?.input ?? 100;
       const output = fixture.usage?.output ?? 50;
