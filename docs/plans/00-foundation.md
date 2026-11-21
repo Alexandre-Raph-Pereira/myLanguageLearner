@@ -58,7 +58,7 @@ Constants `lib/languages.ts`: `SUPPORTED_LANGUAGES = ['ko','fr','en'] as const`,
 - `.env.example` with every variable and a comment. Ensure `.gitignore` covers `.env*` except `.env.example`.
 - **Accept:** missing var produces a clear error only when used.
 
-### [ ] T3 — Database
+### [x] T3 — Database
 - Drizzle + `postgres` driver (`prepare: false` — required for Supabase transaction pooler). `db/index.ts` exports `db`.
 - Schema above, first migration generated.
 - Test helper `tests/db.ts`: creates a fresh **PGlite** instance, runs migrations, returns a drizzle client; used by every DB test.

@@ -9,3 +9,6 @@ Format: `YYYY-MM-DD — plan NN — decision — reason`
 - 2026-11-21 — plan 00 — `@playwright/test` pinned to 1.63.0 to match the Chromium preinstalled in cloud sessions; `PW_CHROMIUM_PATH` env can point to another browser binary.
 - 2026-11-21 — plan 00 — `pnpm typecheck` runs `next typegen` before `tsc` so the generated route types (`LayoutProps`, `PageProps`) exist on a fresh checkout.
 - 2026-11-21 — plan 00 — Work happens on the session branch `claude/charming-gauss-y43prx` (the cloud session may only push there) instead of `plan/00-fondation`.
+- 2026-11-21 — plan 00 — `model_pricing` is a global table (no `user_id`): prices are facts about a model, not user data. It is the only table exempt from the "scoped by userId" rule. The default-model row is seeded by migration `0001_seed_pricing` (placeholder $3 / $15 / $0.30 per MTok, `verified=false`) so production has a row too; Settings shows a "verify prices" banner.
+- 2026-11-21 — plan 00 — Numeric money columns use Drizzle `mode: "number"` (JS numbers) — amounts are small, float precision is fine for budgets.
+- 2026-11-21 — plan 00 — Domain functions take a `Db` argument (driver-agnostic type in `db/types.ts`) so the same code runs on postgres-js and PGlite in tests; `db/index.ts` exports a lazily connected `db`.
