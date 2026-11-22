@@ -25,7 +25,11 @@ export async function seedWords(db: Db, userId: string, now = new Date()): Promi
     timesCorrect: w.level,
     source: "manual" as const,
   }));
-  const inserted = await db.insert(words).values(rows).onConflictDoNothing().returning({ id: words.id });
+  const inserted = await db
+    .insert(words)
+    .values(rows)
+    .onConflictDoNothing()
+    .returning({ id: words.id });
   return inserted.length;
 }
 

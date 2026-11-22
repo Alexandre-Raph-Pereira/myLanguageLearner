@@ -15,7 +15,9 @@ test("import a 10-row TSV: duplicates, invalid, AI types, insert", async ({ page
   await expect(page.getByTestId("import-counts")).toContainText(
     "7 new · 2 duplicate · 1 invalid · 9 missing example",
   );
-  await expect(page.getByRole("textbox", { name: "Meanings row 1", exact: true })).toHaveValue("cat; kitty");
+  await expect(page.getByRole("textbox", { name: "Meanings row 1", exact: true })).toHaveValue(
+    "cat; kitty",
+  );
 
   // Inline edit.
   const t10 = page.getByRole("textbox", { name: "Translation row 10" });
@@ -31,9 +33,7 @@ test("import a 10-row TSV: duplicates, invalid, AI types, insert", async ({ page
   await expect(page.getByRole("combobox", { name: "Type row 3", exact: true })).toHaveValue("verb");
 
   await page.getByRole("button", { name: "Import 7 words" }).click();
-  await expect(page.getByTestId("import-result")).toHaveText(
-    "7 inserted · 0 updated · 0 skipped",
-  );
+  await expect(page.getByTestId("import-result")).toHaveText("7 inserted · 0 updated · 0 skipped");
 
   await page.goto("/words?q=%EC%9D%98%EC%9E%90");
   const row = page.getByRole("list", { name: "Word list" }).getByRole("link", { name: /의자/ });

@@ -11,5 +11,4 @@ describe("seedWords", () => {
     expect(await countWords(db, TEST_USER_ID)).toBe(SEED_WORDS.length);
     expect(SEED_WORDS.length).toBeGreaterThanOrEqual(40);
   });
-
 });
