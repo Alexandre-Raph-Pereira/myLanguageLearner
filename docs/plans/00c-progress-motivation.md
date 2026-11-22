@@ -72,7 +72,7 @@ Implementation + PGlite tests: idempotency (same `dedupe_key` twice → counted 
 - Settings → **Motivation**: checkboxes "Points & rank", "Milestone celebrations".
 - Timezone: a tiny client component posts `Intl.DateTimeFormat().resolvedOptions().timeZone` once when it differs from the stored value (server action, zod-validated against `Intl.supportedValuesOf('timeZone')`); also shown read-only in Settings.
 
-### [ ] T5 — Home wired to data (canvas "Home")
+### [x] T5 — Home wired to data (canvas "Home")
 - `HeroPanel` with `GoalRing` (words outer, grammar inner, total %), counts, `WeekStrip`, streak label, CTA "Review N more words" (link to `/tests/words` once plan 01 ships; disabled before).
 - Rank card: rank name, points to next rank, week points + `MiniBars` (7 days, today in brass). Hidden when `show_points` is off.
 - **Mastery ledger**: `LedgerRow`s from registered sources — Words known (plan 01), Grammar mastered (plan 03), TOPIK N coverage (plan 06), Due today (plan 01). A source not registered yet renders nothing (no fake numbers).
