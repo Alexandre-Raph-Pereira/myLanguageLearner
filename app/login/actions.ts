@@ -21,7 +21,12 @@ export async function sendMagicLink(_prev: LoginState, formData: FormData): Prom
   }
   const email = parsed.data.email.trim().toLowerCase();
   // Same response whether or not the address is allowed: don't leak the allow-list.
-  if (!isEmailAllowed(email, env.ALLOWED_EMAILS)) {
+  const allowed = env.ALLOWED_EMAILS;
+  if (!isEmailAllowed(email, allowed)) {
+    // Server log only (Vercel → Logs), so the owner can diagnose a missing link.
+    console.warn(
+      `[login] ${maskEmail(email)} is not in ALLOWED_EMAILS (${allowed.length} entr${allowed.length === 1 ? "y" : "ies"} configured); no link sent.`,
+    );
     return { status: "sent" };
   }
   const supabase = await createSupabaseServerClient();
@@ -31,6 +36,16 @@ export async function sendMagicLink(_prev: LoginState, formData: FormData): Prom
     email,
     options: { emailRedirectTo: callback.toString(), shouldCreateUser: true },
   });
-  if (error) return { status: "error", message: error.message };
+  if (error) {
+    console.error(`[login] Supabase refused to send the link: ${error.message}`);
+    return { status: "error", message: error.message };
+  }
+  console.info(`[login] magic link requested for ${maskEmail(email)}, redirect ${callback.origin}`);
   return { status: "sent" };
+}
+
+/** "someone@example.com" → "so***@example.com" (enough to spot a typo, not the full address). */
+function maskEmail(email: string): string {
+  const [local, domain] = email.split("@");
+  return `${local.slice(0, 2)}***@${domain}`;
 }
