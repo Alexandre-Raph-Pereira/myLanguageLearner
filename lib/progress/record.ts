@@ -43,6 +43,8 @@ export type ActivityResult = {
   streak: Streak;
   newMilestones: Milestone[];
   rank: Rank;
+  /** Cumulative points for the language after this call. */
+  pointsTotal: number;
   /** Events actually inserted (duplicates skipped), incl. goal_met / milestone. */
   awarded: AwardedEvent[];
   localDate: string;
@@ -242,6 +244,7 @@ export async function recordActivity(
       streak,
       newMilestones,
       rank: rankFor(updated.pointsTotal),
+      pointsTotal: updated.pointsTotal,
       awarded,
       localDate: today,
     };

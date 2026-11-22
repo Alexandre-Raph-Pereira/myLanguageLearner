@@ -80,7 +80,7 @@ Implementation + PGlite tests: idempotency (same `dedupe_key` twice → counted 
 - Desktop: same blocks in the canvas grid (hero spans 2 columns), sidebar footer shows rank + bar.
 - Empty state for a brand-new user: hero at 0 % with the goal text, everything else hidden.
 
-### [ ] T6 — Shared results blocks
+### [x] T6 — Shared results blocks
 `components/progress/session-summary.tsx`: given an `ActivityResult` (+ session-specific props) renders `GoalMetBanner` (when `justMet`), `PointsBreakdown` (grouped lines from the session's events), rank progress (today's gain in brass) and fires a sonner toast per new milestone (when `celebrate_milestones`). Used by word, grammar and TOPIK results pages.
 
 ### [ ] T7 — Dev seed + e2e
