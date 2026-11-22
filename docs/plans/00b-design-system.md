@@ -44,7 +44,7 @@
 - `AiErrorMessage`: uses `wrong-soft` / `wrong-text`.
 - **Accept:** lint/typecheck/test/build/e2e green.
 
-### [ ] T6 — Docs
+### [x] T6 — Docs
 - Append decisions to `docs/DECISIONS.md` (fonts, next-themes, token source file).
 - HUMAN_TODO: "Open the deployed app on the phone in light and dark mode and compare with the Navy & Cream canvas."
 

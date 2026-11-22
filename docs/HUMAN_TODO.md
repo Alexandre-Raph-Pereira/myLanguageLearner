@@ -17,6 +17,11 @@ Claude Code appends here when a step needs a human (accounts, keys, files, manua
 - [ ] **Install check on the phone** — on the Vercel deployment: log in, then "Add to Home Screen" (iOS Safari) / "Install app" (Android Chrome). Optionally run Chrome DevTools → Lighthouse (or Application → Manifest) on the deployment and confirm the manifest is installable with no errors.
 - [ ] **Replace placeholder icons** (optional) — overwrite `public/icons/*.png` and `public/apple-touch-icon.png`, or tweak `scripts/generate-icons.mjs` and run `pnpm icons`.
 
+## Plan 00b — Design system
+
+- [ ] **Compare with the canvas** — open the deployed app on the phone in light and dark mode (Settings → Appearance, or the sun/moon button in the header) and compare Home, Tests, Settings and Login with the Navy & Cream canvas (Claude Design → "myLanguageLearner redesign" → page "Navy & Cream — chosen"), also on a desktop browser (~1280 px). Locally you can run `SCREENSHOTS=1 pnpm test:e2e e2e/screenshots.spec.ts` and look at `test-results/screenshots/`. Note any differences in a new issue or here; the canvas was not available to the implementer, so spacing/wording follow `docs/DESIGN.md` only.
+- [ ] **Re-install the PWA** (optional) — the icons and theme colour changed; remove and re-add the home-screen app to pick up the new navy/brass icon.
+
 ## All plans
 
 - [ ] Repo is public — consider making it private; never commit `.env*` (only `.env.example`).
