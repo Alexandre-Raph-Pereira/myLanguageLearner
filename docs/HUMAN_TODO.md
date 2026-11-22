@@ -7,7 +7,7 @@ Claude Code appends here when a step needs a human (accounts, keys, files, manua
 - [ ] **Supabase project** — create a project at supabase.com (region close to you).
   - Settings → API: copy **Project URL** → `NEXT_PUBLIC_SUPABASE_URL` and the **anon public** key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
   - Authentication → Sign In / Providers → **Email**: enabled, "Confirm email" on (magic link works with the default email template).
-  - Authentication → URL Configuration: **Site URL** = `https://<your-vercel-domain>`; **Redirect URLs** add `http://localhost:3000/auth/callback` and `https://<your-vercel-domain>/auth/callback` (add `https://*-<your-vercel-team>.vercel.app/auth/callback` if you want logins on preview deployments).
+  - Authentication → URL Configuration: **Site URL** = `https://<your-vercel-domain>`; **Redirect URLs** add `http://localhost:3000/**` and `https://<your-vercel-domain>/**` (`/**` is needed: the app redirects to `/auth/callback?next=…`). For logins on preview deployments add `https://<vercel-project>-*-<team-slug>.vercel.app/**` (preview URLs look like `<project>-<hash>-<team-slug>.vercel.app`).
 - [ ] **Database URL** — Supabase → Connect → **Transaction pooler** (port **6543**) → copy the URI (replace `[YOUR-PASSWORD]`) → `DATABASE_URL`. The app already uses `prepare: false`, required by this pooler.
 - [ ] **Apply migrations** (manual by default): locally, with `DATABASE_URL` set to the Supabase URL, run `pnpm db:migrate`. Re-run after each plan that adds migrations. This also seeds the placeholder price row for `claude-sonnet-5-5`.
 - [ ] **Vercel project** — import the GitHub repo in Vercel (framework: Next.js, install command auto-detected from `packageManager`). Set, for **Production and Preview**:
