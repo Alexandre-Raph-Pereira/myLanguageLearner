@@ -22,7 +22,7 @@
 - `viewport.themeColor` per scheme (`#F3EDE0` / `#0D1628`); manifest `background_color: #F3EDE0`, `theme_color: #13213C`. Regenerate placeholder icons in navy/cream/brass (`pnpm icons`).
 - **Accept:** e2e: choose Dark in Settings → `html.dark` present, survives reload; header toggle switches back.
 
-### [ ] T3 — Shell restyle
+### [x] T3 — Shell restyle
 - Header: wordmark "LangLearner" in Fraunces 700 + brass dot, language chip (`한국어`, from `LANGUAGE_LABELS`), theme toggle, sign-out icon. Safe-area padding kept.
 - Mobile bottom nav: `bg-card`, 5 items unchanged (Home, Words, Grammar, Tests, Settings); active item = `bg-track` pill (44×28) behind the icon + 600 weight; inactive muted.
 - Desktop sidebar: `bg-sidebar`, wordmark, items with `bg-track` active row (radius 10); footer slot `SidebarFooter` (empty now; plan 00c puts rank + bar there).

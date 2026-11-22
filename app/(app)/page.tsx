@@ -1,3 +1,4 @@
+import { PageTitle } from "@/components/shell/page-title";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,7 +12,7 @@ const TESTS = [
 export default function HomePage() {
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-semibold">Home</h1>
+      <PageTitle>Home</PageTitle>
 
       <Card className="border-dashed" data-slot="resume-test">
         <CardHeader>

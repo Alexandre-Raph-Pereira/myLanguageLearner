@@ -1,3 +1,4 @@
+import { PageTitle } from "@/components/shell/page-title";
 import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -51,7 +52,7 @@ export default async function SettingsPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-semibold">Settings</h1>
+      <PageTitle>Settings</PageTitle>
 
       {needsVerification && (
         <div

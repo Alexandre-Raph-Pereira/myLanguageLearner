@@ -1,3 +1,4 @@
+import { PageTitle } from "@/components/shell/page-title";
 import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,7 +14,7 @@ const ENTRIES = [
 export default function TestsPage() {
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-semibold">Tests</h1>
+      <PageTitle>Tests</PageTitle>
       <ul className="flex flex-col gap-3">
         {ENTRIES.map((e) => (
           <li key={e.title}>
