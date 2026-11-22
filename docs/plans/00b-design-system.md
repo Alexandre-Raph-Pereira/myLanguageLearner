@@ -29,7 +29,7 @@
 - Page titles: Fraunces 30 px mobile / 36 px desktop.
 - **Accept:** existing e2e still pass; screenshots at 375 px and 1280 px in both themes look like the canvas (owner check → HUMAN_TODO "compare with canvas").
 
-### [ ] T4 — Progress primitives
+### [x] T4 — Progress primitives
 - `lib/progress/scale.ts` (pure): `scaleStep(pct)` (< 40 → 0, < 60 → 1, < 80 → 2, else 3), `levelStep(level)`, `masteryStep(state, pct)`, `stepClasses(step)` → `{ fill, text, onFill, soft }` Tailwind class names. Unit tests for every boundary (39.9, 40, 59, 60, 79, 80, 100, NaN → 0).
 - Components in `components/progress/` exactly as specified in DESIGN.md §2: `GoalRing`, `ProgressRing`, `ProgressBar`, `LevelBar`, `LevelBadge`, `LevelTransition`, `LevelPips`, `LedgerRow`, `StatTile`, `WeekStrip`, `MiniBars`, `HeroPanel`, `MilestoneBadge`, `PointsBreakdown`, `GoalMetBanner`, `FeedbackPanel` (presentational only — props in, no data fetching). Rings use CSS `conic-gradient` (no SVG dependency). Every visual has a text equivalent (`aria-label` or visible number).
 - Component tests (vitest + jsdom): labels/aria present, scale class chosen from %.

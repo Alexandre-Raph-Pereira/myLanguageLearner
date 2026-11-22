@@ -29,3 +29,11 @@ test("settings: saving pricing removes the verify banner", async ({ page }) => {
   await page.reload();
   await expect(page.getByText("Verify prices.")).toHaveCount(0);
 });
+
+test("dev design page renders every primitive in both themes", async ({ page }) => {
+  await page.goto("/dev/design");
+  await expect(page.getByRole("heading", { name: "Design system" })).toBeAttached();
+  await expect(page.getByRole("img", { name: /^Daily goal 85%/ })).toHaveCount(2);
+  await expect(page.locator(".light .bg-hero")).not.toHaveCount(0);
+  await expect(page.locator(".dark .bg-hero")).not.toHaveCount(0);
+});
