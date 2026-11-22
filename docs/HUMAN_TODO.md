@@ -35,3 +35,9 @@ Claude Code appends here when a step needs a human (accounts, keys, files, manua
 ## Magic-link login flag
 
 - [ ] **Turn magic-link login off (optional)** — Vercel → Project → Settings → Environment Variables: add `MAGIC_LINK_LOGIN` = `0` for Production (and Preview if wanted), then redeploy. Set it to `1` (or delete it) to turn login back on. Note: magic link is currently the **only** way to sign in — while it is off, only browsers that are already signed in can use the app; sign out and you are locked out until you set it back to `1`.
+
+## No-login mode (until all features are done)
+- [ ] Vercel → Project → Settings → Environment Variables (Production): add `NO_LOGIN_USER_ID` = `2dd3bfbe-a490-4cbc-a9c6-92eac7767842` (your own account id, so your data is kept), then redeploy. The app then opens straight on Home.
+- [ ] Locally it is already set in `.env.local`; restart `pnpm dev` to pick it up.
+- ⚠️ While it is set, **anyone who has the URL** can use the app and spend your AI key (the monthly AI budget in Settings is the only cap). Keep the URL private and keep the budget low.
+- [ ] When you want login back: delete `NO_LOGIN_USER_ID` in Vercel and `.env.local` and redeploy.

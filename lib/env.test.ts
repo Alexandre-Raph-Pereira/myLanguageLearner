@@ -51,4 +51,15 @@ describe("env", () => {
     vi.stubEnv("NODE_ENV", "development");
     expect(env.DEV_USER_ID).toBe("00000000-0000-4000-8000-000000000001");
   });
+
+  it("NO_LOGIN_USER_ID works in production and must be a uuid", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("NO_LOGIN_USER_ID", "00000000-0000-4000-8000-000000000001");
+    expect(env.NO_LOGIN_USER_ID).toBe("00000000-0000-4000-8000-000000000001");
+    expect(env.BYPASS_USER_ID).toBe("00000000-0000-4000-8000-000000000001");
+    vi.stubEnv("NO_LOGIN_USER_ID", "nope");
+    expect(() => env.NO_LOGIN_USER_ID).toThrow(/NO_LOGIN_USER_ID is invalid/);
+    vi.stubEnv("NO_LOGIN_USER_ID", "");
+    expect(env.BYPASS_USER_ID).toBeUndefined();
+  });
 });

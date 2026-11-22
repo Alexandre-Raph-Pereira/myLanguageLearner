@@ -39,4 +39,12 @@ describe("requireUser", () => {
     const { requireUser } = await import("./auth");
     await expect(requireUser()).rejects.toThrow("NEXT_REDIRECT:/login");
   });
+
+  it("no-login mode acts as NO_LOGIN_USER_ID, production included", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("DEV_USER_ID", "");
+    vi.stubEnv("NO_LOGIN_USER_ID", TEST_USER_ID);
+    const { requireUser } = await import("./auth");
+    await expect(requireUser()).resolves.toEqual({ id: TEST_USER_ID, email: "dev@localhost" });
+  });
 });

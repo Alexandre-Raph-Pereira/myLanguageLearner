@@ -8,6 +8,7 @@ import { TimezoneSync } from "@/components/shell/timezone-sync";
 import { Wordmark } from "@/components/shell/wordmark";
 import { getDb } from "@/db";
 import { requireUser } from "@/lib/auth";
+import { env } from "@/lib/env";
 import { isLanguage } from "@/lib/languages";
 import { getLanguageProfile, getUserSettings } from "@/lib/settings";
 
@@ -36,16 +37,18 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
           <div className="flex items-center gap-1">
             <LanguageIndicator language={language} />
             <ThemeToggle />
-            <form action="/auth/signout" method="post">
-              <button
-                type="submit"
-                aria-label="Sign out"
-                title={user.email}
-                className="text-muted-foreground hover:bg-track hover:text-foreground focus-visible:ring-ring/50 inline-flex size-11 items-center justify-center rounded-full outline-none focus-visible:ring-3"
-              >
-                <LogOut className="size-5" aria-hidden />
-              </button>
-            </form>
+            {env.NO_LOGIN_USER_ID ? null : (
+              <form action="/auth/signout" method="post">
+                <button
+                  type="submit"
+                  aria-label="Sign out"
+                  title={user.email}
+                  className="text-muted-foreground hover:bg-track hover:text-foreground focus-visible:ring-ring/50 inline-flex size-11 items-center justify-center rounded-full outline-none focus-visible:ring-3"
+                >
+                  <LogOut className="size-5" aria-hidden />
+                </button>
+              </form>
+            )}
           </div>
         </header>
         {/* Bottom padding keeps content clear of the mobile tab bar + home indicator. */}
