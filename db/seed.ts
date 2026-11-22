@@ -17,9 +17,9 @@ async function main() {
     .insert(schema.modelPricing)
     .values({
       modelId: "claude-sonnet-5-5",
-      inputPerMtok: 3,
-      outputPerMtok: 15,
-      cacheReadPerMtok: 0.3,
+      inputPerMtok: 2,
+      outputPerMtok: 10,
+      cacheReadPerMtok: 0.1,
     })
     .onConflictDoNothing();
   console.log(`Seeded dev user ${userId}`);
