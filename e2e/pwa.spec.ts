@@ -8,6 +8,8 @@ test("manifest is served with installable fields", async ({ request }) => {
     short_name: "LangLearner",
     display: "standalone",
     start_url: "/",
+    background_color: "#F3EDE0",
+    theme_color: "#13213C",
   });
   const sizes = manifest.icons.map(
     (i: { sizes: string; purpose: string }) => `${i.sizes}:${i.purpose}`,
@@ -32,4 +34,8 @@ test("iOS meta tags and viewport-fit=cover", async ({ page }) => {
     "content",
     /viewport-fit=cover/,
   );
+  await expect(page.locator('meta[name="theme-color"]')).toHaveCount(2);
+  await expect(
+    page.locator('meta[name="theme-color"][media="(prefers-color-scheme: dark)"]'),
+  ).toHaveAttribute("content", "#0D1628");
 });

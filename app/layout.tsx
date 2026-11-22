@@ -1,11 +1,24 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Fraunces, Inter, Noto_Serif_KR } from "next/font/google";
 import { Providers } from "@/components/providers";
-import { THEME_COLOR } from "./manifest";
+import { THEME_META } from "@/lib/design/tokens";
 import "./globals.css";
 
-const geistSans = Geist({ variable: "--font-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+// Font CSS variables are mapped to Tailwind's font-sans / font-display / font-target-ko in globals.css.
+const inter = Inter({ variable: "--font-inter", subsets: ["latin"], display: "swap" });
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  axes: ["opsz"],
+  display: "swap",
+});
+// Large CJK font: not preloaded, swapped in when Korean text appears.
+const notoSerifKr = Noto_Serif_KR({
+  variable: "--font-noto-serif-kr",
+  weight: ["500", "700"],
+  preload: false,
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "LangLearner",
@@ -22,12 +35,20 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover", // lets content use env(safe-area-inset-*)
-  themeColor: THEME_COLOR,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: THEME_META.light },
+    { media: "(prefers-color-scheme: dark)", color: THEME_META.dark },
+  ],
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+    <html
+      lang="en"
+      // next-themes sets class/style on <html> before hydration.
+      suppressHydrationWarning
+      className={`${inter.variable} ${fraunces.variable} ${notoSerifKr.variable} h-full antialiased`}
+    >
       <body className="flex min-h-full flex-col">
         <Providers>{children}</Providers>
       </body>

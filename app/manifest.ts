@@ -1,7 +1,5 @@
 import type { MetadataRoute } from "next";
-
-export const THEME_COLOR = "#18181b";
-export const BACKGROUND_COLOR = "#ffffff";
+import { THEME_META } from "@/lib/design/tokens";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -13,8 +11,8 @@ export default function manifest(): MetadataRoute.Manifest {
     scope: "/",
     display: "standalone",
     orientation: "portrait",
-    background_color: BACKGROUND_COLOR,
-    theme_color: THEME_COLOR,
+    background_color: THEME_META.manifestBackground,
+    theme_color: THEME_META.manifestTheme,
     icons: [
       { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
       { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },

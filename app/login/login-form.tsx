@@ -13,7 +13,7 @@ export function LoginForm({ next }: { next?: string }) {
 
   if (state.status === "sent") {
     return (
-      <p role="status" className="text-sm">
+      <p role="status" className="bg-good-soft rounded-xl p-3 text-sm">
         If this address is allowed, a login link is on its way. Check your inbox.
       </p>
     );
@@ -28,7 +28,7 @@ export function LoginForm({ next }: { next?: string }) {
         {pending ? "Sending…" : "Send magic link"}
       </Button>
       {state.status === "error" && (
-        <p role="alert" className="text-destructive text-sm">
+        <p role="alert" className="text-wrong-text text-sm">
           {state.message}
         </p>
       )}

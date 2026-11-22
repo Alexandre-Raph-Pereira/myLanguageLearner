@@ -16,3 +16,10 @@ export const LANGUAGE_EXAMS: Partial<Record<Language, string>> = { ko: "TOPIK" }
 export function isLanguage(v: unknown): v is Language {
   return typeof v === "string" && (SUPPORTED_LANGUAGES as readonly string[]).includes(v);
 }
+
+/** Font utility for text written in each target language (DESIGN.md typography). */
+export const TARGET_FONT_CLASS: Record<Language, string> = {
+  ko: "font-target-ko",
+  fr: "font-display",
+  en: "font-display",
+};
