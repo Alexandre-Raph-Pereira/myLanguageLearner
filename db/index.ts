@@ -1,6 +1,7 @@
 import "server-only";
 import { env } from "@/lib/env";
 import * as schema from "./schema";
+import { toPostgresJsConfig } from "./url";
 import type { Db } from "./types";
 
 export type { Db } from "./types";
@@ -24,7 +25,12 @@ async function createDb(): Promise<Db> {
   const { default: postgres } = await import("postgres");
   const { drizzle } = await import("drizzle-orm/postgres-js");
   // prepare: false is required by the Supabase transaction pooler.
-  const client = postgres(url, { prepare: false, max: 5 });
+  const cfg = toPostgresJsConfig(url);
+  const client = postgres(cfg.url, {
+    prepare: false,
+    max: 5,
+    ...(cfg.ssl ? { ssl: cfg.ssl } : {}),
+  });
   return drizzle(client, { schema }) as unknown as Db;
 }
 
