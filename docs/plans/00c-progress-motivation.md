@@ -67,7 +67,7 @@ Files and tests listed above (≥ 95 % line coverage).
 ### [x] T3 — recordActivity / summary
 Implementation + PGlite tests: idempotency (same `dedupe_key` twice → counted once), goal met exactly once per day (+25 once), streak updates, `adjustActivity`, milestone earned once, summary for an empty user (all zeros, no crash).
 
-### [ ] T4 — Settings: goals, motivation, timezone
+### [x] T4 — Settings: goals, motivation, timezone
 - Settings → **Daily goal** (per active language): steppers "Words to review" (5–200, step 5) and "Grammar lessons" (0–5), 44 px buttons, as in the canvas.
 - Settings → **Motivation**: checkboxes "Points & rank", "Milestone celebrations".
 - Timezone: a tiny client component posts `Intl.DateTimeFormat().resolvedOptions().timeZone` once when it differs from the stored value (server action, zod-validated against `Intl.supportedValuesOf('timeZone')`); also shown read-only in Settings.

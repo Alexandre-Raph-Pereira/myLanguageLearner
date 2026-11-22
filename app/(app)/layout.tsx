@@ -3,6 +3,7 @@ import { BottomNav, SideNav } from "@/components/shell/app-nav";
 import { LanguageIndicator } from "@/components/shell/language-indicator";
 import { SidebarFooter } from "@/components/shell/sidebar-footer";
 import { ThemeToggle } from "@/components/shell/theme-toggle";
+import { TimezoneSync } from "@/components/shell/timezone-sync";
 import { Wordmark } from "@/components/shell/wordmark";
 import { getDb } from "@/db";
 import { requireUser } from "@/lib/auth";
@@ -48,6 +49,7 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
         </main>
       </div>
       <BottomNav />
+      <TimezoneSync stored={settings.timezone} />
     </div>
   );
 }

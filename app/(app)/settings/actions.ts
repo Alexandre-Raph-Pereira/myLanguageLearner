@@ -4,9 +4,14 @@ import { revalidatePath } from "next/cache";
 import type { z } from "zod";
 import { getDb } from "@/db";
 import { requireUser } from "@/lib/auth";
+import { recordActivity } from "@/lib/progress/record";
 import {
   aiSettingsInput,
   budgetsInput,
+  dailyGoalInput,
+  motivationInput,
+  saveDailyGoal,
+  saveMotivation,
   languageProfileInput,
   pricingInput,
   saveAiSettings,
@@ -53,5 +58,20 @@ export async function saveBudgetsAction(_: FormState, formData: FormData) {
 export async function savePricingAction(_: FormState, formData: FormData) {
   return handle(pricingInput, formData, async (_userId, input) =>
     savePricing(await getDb(), input),
+  );
+}
+
+export async function saveDailyGoalAction(_: FormState, formData: FormData) {
+  return handle(dailyGoalInput, formData, async (userId, input) => {
+    const db = await getDb();
+    await saveDailyGoal(db, userId, input);
+    // Re-evaluate today with the new goal (a lower goal can complete it).
+    await recordActivity(db, { userId, language: input.language, events: [] });
+  });
+}
+
+export async function saveMotivationAction(_: FormState, formData: FormData) {
+  return handle(motivationInput, formData, async (userId, input) =>
+    saveMotivation(await getDb(), userId, input),
   );
 }
