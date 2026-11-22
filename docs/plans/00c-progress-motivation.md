@@ -64,7 +64,7 @@ Columns and tables above; drizzle migration; PGlite test helper unchanged.
 ### [x] T2 — Pure logic
 Files and tests listed above (≥ 95 % line coverage).
 
-### [ ] T3 — recordActivity / summary
+### [x] T3 — recordActivity / summary
 Implementation + PGlite tests: idempotency (same `dedupe_key` twice → counted once), goal met exactly once per day (+25 once), streak updates, `adjustActivity`, milestone earned once, summary for an empty user (all zeros, no crash).
 
 ### [ ] T4 — Settings: goals, motivation, timezone
