@@ -78,7 +78,8 @@
   --radius-4xl: calc(var(--radius) * 2);
 }
 
-:root {
+:root,
+.light {
   --radius: 0.75rem;
   --background: #f3ede0;
   --card: #fbf8f1;

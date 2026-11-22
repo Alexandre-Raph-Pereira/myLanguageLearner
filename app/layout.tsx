@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter, Noto_Serif_KR } from "next/font/google";
 import { Providers } from "@/components/providers";
-import { THEME_COLOR } from "./manifest";
+import { THEME_META } from "@/lib/design/tokens";
 import "./globals.css";
 
 // Font CSS variables are mapped to Tailwind's font-sans / font-display / font-target-ko in globals.css.
@@ -35,13 +35,18 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover", // lets content use env(safe-area-inset-*)
-  themeColor: THEME_COLOR,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: THEME_META.light },
+    { media: "(prefers-color-scheme: dark)", color: THEME_META.dark },
+  ],
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
+      // next-themes sets class/style on <html> before hydration.
+      suppressHydrationWarning
       className={`${inter.variable} ${fraunces.variable} ${notoSerifKr.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">

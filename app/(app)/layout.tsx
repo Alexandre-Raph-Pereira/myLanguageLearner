@@ -2,6 +2,7 @@ import Link from "next/link";
 import { LogOut } from "lucide-react";
 import { BottomNav, SideNav } from "@/components/shell/app-nav";
 import { LanguageIndicator } from "@/components/shell/language-indicator";
+import { ThemeToggle } from "@/components/shell/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { getDb } from "@/db";
 import { requireUser } from "@/lib/auth";
@@ -31,6 +32,7 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
           </Link>
           <div className="flex items-center gap-2">
             <LanguageIndicator language={language} />
+            <ThemeToggle />
             <form action="/auth/signout" method="post">
               <Button
                 type="submit"

@@ -5,9 +5,13 @@ import { fileURLToPath } from "node:url";
 import { chromium } from "@playwright/test";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const BG = "#18181b";
-const FG = "#fafafa";
-const ACCENT = "#f43f5e";
+// Navy & Cream: navy ground, cream glyph, brass ring (docs/DESIGN.md).
+const BG = "#13213C";
+const FG = "#F3EDE0";
+const ACCENT = "#D4A65A";
+// Same Korean face as the app (subset to the one glyph); needs network once.
+const FONT_LINK =
+  '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700&text=%ED%95%9C&display=block">';
 
 /** maskable: glyph kept inside the 80% safe zone and the background fills the square. */
 function svg(size, { maskable = false, rounded = true } = {}) {
@@ -18,7 +22,7 @@ function svg(size, { maskable = false, rounded = true } = {}) {
   <rect width="${size}" height="${size}" rx="${radius}" fill="${BG}"/>
   <circle cx="${size * 0.5}" cy="${size * 0.5}" r="${size * 0.36 * scale}" fill="none" stroke="${ACCENT}" stroke-width="${size * 0.035 * scale}"/>
   <text x="50%" y="50%" dominant-baseline="central" text-anchor="middle"
-        font-family="'Noto Sans KR','WenQuanYi Zen Hei',sans-serif" font-weight="700"
+        font-family="'Noto Serif KR','Noto Serif CJK KR','Noto Sans KR','WenQuanYi Zen Hei',serif" font-weight="700"
         font-size="${font}" fill="${FG}">한</text>
 </svg>`;
 }
@@ -39,8 +43,14 @@ const page = await browser.newPage();
 for (const icon of ICONS) {
   await page.setViewportSize({ width: icon.size, height: icon.size });
   await page.setContent(
-    `<html><body style="margin:0;background:transparent">${svg(icon.size, icon)}</body></html>`,
+    `<html><head>${FONT_LINK}</head><body style="margin:0;background:transparent">${svg(icon.size, icon)}</body></html>`,
+    { waitUntil: "networkidle" },
   );
+  // Make sure the web font is used (machines without a Korean font would render tofu).
+  await page.evaluate(async () => {
+    await document.fonts.load("700 32px 'Noto Serif KR'", "한");
+    await document.fonts.ready;
+  });
   await page.screenshot({
     path: path.join(root, "public", icon.file),
     omitBackground: !icon.maskable && icon.rounded !== false,

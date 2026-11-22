@@ -24,6 +24,7 @@ import {
   saveLanguageProfileAction,
   savePricingAction,
 } from "./actions";
+import { AppearanceSettings } from "./appearance";
 import { SettingsForm } from "./settings-form";
 
 export const metadata: Metadata = { title: "Settings · LangLearner" };
@@ -61,6 +62,18 @@ export default async function SettingsPage() {
           against your provider&apos;s pricing page and save each row — budgets depend on them.
         </div>
       )}
+
+      <Card id="appearance">
+        <CardHeader>
+          <CardTitle>Appearance</CardTitle>
+          <CardDescription>
+            Follows your device by default. Saved on this device only.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <AppearanceSettings />
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>

@@ -5,9 +5,9 @@ import { THEMES, themeVars, type ThemeName } from "./tokens";
 
 const css = readFileSync(path.resolve(__dirname, "../../app/globals.css"), "utf8");
 
-/** Custom properties declared in the first top-level block with this selector. */
+/** Custom properties declared in the first top-level block matching this selector regex. */
 function block(selector: string): Record<string, string> {
-  const re = new RegExp(`(^|\\n)${selector.replace(".", "\\.")}\\s*\\{([^}]*)\\}`);
+  const re = new RegExp(`(^|\\n)${selector}\\s*\\{([^}]*)\\}`);
   const m = re.exec(css);
   if (!m) throw new Error(`No ${selector} block in globals.css`);
   const vars: Record<string, string> = {};
@@ -15,7 +15,7 @@ function block(selector: string): Record<string, string> {
   return vars;
 }
 
-const SELECTOR: Record<ThemeName, string> = { light: ":root", dark: ".dark" };
+const SELECTOR: Record<ThemeName, string> = { light: ":root,\\s*\\.light", dark: "\\.dark" };
 
 describe.each(THEMES)("globals.css %s values match lib/design/tokens.ts", (theme) => {
   const declared = block(SELECTOR[theme]);

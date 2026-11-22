@@ -15,7 +15,7 @@
 - `lib/languages.ts`: `TARGET_FONT_CLASS: Record<Language, string>` (`ko` → `font-target-ko`, `fr`/`en` → `font-display`). Component `components/ui/target-text.tsx`: `<T lang="ko">…</T>` sets `lang` and the class.
 - **Accept:** build passes; a unit test (`lib/design/contrast.test.ts`) computes WCAG contrast for every text/background pair listed in DESIGN.md (foreground, muted, brass-text, level-n-text on background and card; on-level-n on level-n; on-hero on hero) in both themes and asserts ≥ 4.5 (≥ 3 for `on-level-*` badges, which are bold 12 px+ — default: still aim 4.5, assert 3). Tokens live in `lib/design/tokens.ts` (single source, also used by the test and the dev page); `globals.css` values must match (a test reads the CSS file and compares).
 
-### [ ] T2 — Theme switching
+### [x] T2 — Theme switching
 - Add `next-themes`; `ThemeProvider` in `components/providers.tsx` (`attribute="class"`, `defaultTheme="system"`, `enableSystem`, `disableTransitionOnChange`); `suppressHydrationWarning` on `<html>`.
 - `components/shell/theme-toggle.tsx`: icon button (sun/moon, `aria-label="Switch theme"`, 44 px) cycling light/dark from the resolved theme.
 - Settings → new first section **Appearance**: segmented control System / Light / Dark (radiogroup) + two preview tiles (cream, navy), as in the canvas.
