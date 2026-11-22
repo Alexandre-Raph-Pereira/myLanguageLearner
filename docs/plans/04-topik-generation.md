@@ -111,6 +111,9 @@ Input: exam, counts per catalog id (each 0–10 questions, UI enforces), mode.
 
 ---
 
+## Design note
+No learner-facing UI in this plan. The dev preview (T7) uses the design tokens and `<T lang>` for Korean text; nothing else to design.
+
 ## 4. Tasks
 
 ### [ ] T1 — Catalog + level helpers

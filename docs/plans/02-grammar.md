@@ -2,7 +2,7 @@
 
 **Goal:** a grammar library. Lessons are created by hand, from pasted notes, or from notebook photos; the AI structures them into a fixed template; the user always reviews (Save / Rewrite / Discard) before anything is stored.
 
-**Depends on:** 00 (uses `content_status`, `content_source` enums from 01 — if 01 is not merged yet, define the enums in `db/schema/enums.ts` and have 01 import them).
+**Depends on:** 00c (design system + `recordActivity`; uses `content_status`, `content_source` enums from 01 — if 01 is not merged yet, define the enums in `db/schema/enums.ts` and have 01 import them).
 
 ---
 
@@ -51,6 +51,11 @@ Input: current draft (including the user's manual edits) + optional instruction 
 
 ---
 
+## Design & progress hooks
+Canvas screen: **Grammar lesson** (DESIGN.md §5). Patterns, variants and examples always render in the target-language font (`<T lang>`).
+- Events: **"Mark as studied today"** button on the lesson page → `grammar_credit` (+10, `dedupe_key` = `grammar_credit:<lessonId>:<localDate>`; the button then shows "Studied today — counts as today's grammar lesson"); saving a new lesson from review → same `grammar_credit` event.
+- Until plan 03 ships, the mastery card shows "Not tested yet" (muted); plan 03 fills it.
+
 ## Tasks
 
 ### [ ] T1 — Schema, normalization, queries
@@ -58,8 +63,8 @@ Input: current draft (including the user's manual edits) + optional instruction 
 - **Accept:** PGlite tests: create with links, dedupe detection, match keys.
 
 ### [ ] T2 — Library & lesson pages
-- `/grammar`: list cards (title, meaning_short, level badge; mastery badge slot for plan 03), search, level filter.
-- `/grammar/[id]`: rendered lesson (react-markdown), examples table (KR/EN, pattern occurrence bolded via simple match on variants), related lessons as chips (links), Edit / Delete.
+- `/grammar`: list cards (title in the target font, meaning_short, TOPIK level chip, mastery badge slot for plan 03 coloured by the scale, "studied today" tick), search, level filter.
+- `/grammar/[id]` (canvas "Grammar lesson"): title (target font, 34 px) + meaning (Fraunces), level chip, **mastery card** (`ProgressRing` + state + last-10 attempt strip — slot until plan 03), "Mark as studied today" / "Studied today" row (`good-soft`), Formation card (react-markdown), Examples card (KR/EN, pattern occurrence in `brass-text` bold via simple match on variants), "Similar · be careful" dashed card with related lessons as chips (links), bottom actions Edit / **Test this lesson** (enabled by plan 03) / Delete in an overflow menu.
 - `/grammar/[id]/edit`: same form as review (T4).
 - **Accept:** mobile layout readable; markdown renders.
 

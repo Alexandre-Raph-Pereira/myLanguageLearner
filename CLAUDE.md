@@ -5,9 +5,10 @@ Single user today (the owner), owner's AI key only. Hosted on Vercel, installed 
 
 Read these before any work:
 1. `docs/VISION.md` — what the app is and every product decision already made.
-2. `docs/plans/README.md` — plan order and how to execute a plan.
-3. The plan you were asked to implement (`docs/plans/NN-*.md`).
-4. `docs/DECISIONS.md` — decisions taken during implementation (append-only).
+2. `docs/DESIGN.md` — visual design (Navy & Cream tokens, components) and the motivation rules. Every UI follows it.
+3. `docs/plans/README.md` — plan order and how to execute a plan.
+4. The plan you were asked to implement (`docs/plans/NN-*.md`).
+5. `docs/DECISIONS.md` — decisions taken during implementation (append-only).
 
 ## Stack (fixed — do not swap without a logged decision)
 - **Next.js (latest stable, App Router) + TypeScript strict**, package manager **pnpm**
@@ -38,7 +39,7 @@ components/             UI components (components/ui = shadcn)
 db/schema/*.ts          Drizzle tables (one file per domain)
 db/migrations/          generated SQL — never hand-edit applied migrations
 lib/ai/                 THE ONLY place that talks to model providers
-lib/words|grammar|tests|exams|align/   domain logic (pure functions where possible)
+lib/words|grammar|tests|exams|align|progress/   domain logic (pure functions where possible)
 lib/text/               Korean/text normalization helpers
 tests/                  vitest helpers, fixtures (tests/fixtures/ai/*.json)
 e2e/                    playwright specs
@@ -53,6 +54,8 @@ docs/                   vision, plans, decisions
 - `language` column on every content table (`'ko' | 'fr' | 'en'`). Only `'ko'` is enabled in the UI for now, but never hardcode Korean in data logic.
 - Server-only modules start with `import 'server-only'`.
 - Mobile first: design for 375px width, then desktop.
+- **Design:** use the tokens and `components/progress/*` from `docs/DESIGN.md`; never hardcode colours; every progress colour comes with its number; check light and dark.
+- **Progress:** award points / goal progress only through `recordActivity()` (`lib/progress/record.ts`).
 - **Secrets:** the repo is PUBLIC. Never commit `.env*` (only `.env.example`). Never log API keys.
 - Use the AI SDK API of the **installed version** (check `node_modules/ai` docs/types; e.g. `generateObject` vs `generateText({ output })` differ between majors).
 

@@ -73,6 +73,12 @@ Rules: judge only grammar use + meaning, tolerate small spelling slips (mention 
 
 ---
 
+## Design & progress hooks
+Runner and results reuse the word-test look (DESIGN.md §2: `FeedbackPanel`, brass progress bar, `session-summary`). Tests hub card "Grammar test" shows last-30-days % + `MiniBars`.
+- Events: correct `mcq_blank` / `conjugate` / `choose_correct` → `grammar_answer` +10; `translate` judged correct → +15 (`dedupe_key` = `grammar_answer:<attemptId>`). After each answer, if ≥ 3 questions tagged with a lesson were answered today → `grammar_credit` for that lesson (same dedupe key as plan 02, so it counts once).
+- Snapshot sources: `grammarMastered` (count mastered), ledger row "Grammar mastered" (`mastered / lessons`), test tile `lastScore.grammar`.
+- Mastery colours: `not_tested` muted, `learning` = `scaleStep(pct)`, `mastered` = level-3.
+
 ## Tasks
 
 ### [ ] T1 — Schema + engine core
@@ -80,7 +86,7 @@ Tables, migration, `question-types.ts`, `retry.ts`, `generation.ts` (server part
 **Accept:** unit tests: retry selection rules (never re-serve correct, 30 % cap), idempotent group generation, operation shared across groups (budget blocks mid-session → remaining groups `failed`, session still playable with what exists).
 
 ### [ ] T2 — Grammar mastery (`lib/grammar/mastery.ts`)
-`masteryFor(grammarId)`: last 10 attempts on questions whose `grammar_ids` contain it (any source). `not_tested` (0 attempts), `learning`, `mastered` (≥ 5 attempts and ≥ 80 % correct). Batched query for lists. Show badge on `/grammar` list and lesson page.
+`masteryFor(grammarId)`: last 10 attempts on questions whose `grammar_ids` contain it (any source). `not_tested` (0 attempts), `learning`, `mastered` (≥ 5 attempts and ≥ 80 % correct). Batched query for lists. Show badge on `/grammar` list and fill the lesson page mastery card (ring with % of the last 10, state label, strip of the last 10 attempts in level-2 / level-0).
 **Accept:** unit tests on thresholds.
 
 ### [ ] T3 — Config page `/tests/grammar`
@@ -96,7 +102,7 @@ Prompts + routes; groups of ≤ 5; verification; fixtures `grammar.test_generate
 - One question at a time; MCQ options as large tap targets; conjugate/translate with Korean input (IME rule).
 - Confirm → `POST answer` → grading (AI for translate, spinner) → feedback: correct/wrong, right answer, explanation, link "open lesson" (opens lesson in a drawer, not a navigation).
 - Attempts saved per answer; `markResult` applied; session resumable.
-- End: score, per-lesson % table, mastery changes, "retry failed questions" (new session from retry pool only, no AI cost).
+- End ("Session results" layout): score %, `session-summary` (plan 00c), per-lesson % table (`LedgerRow`s coloured by the scale), mastery changes (state badge before → after), "retry failed questions" (new session from retry pool only, no AI cost).
 **Accept:** e2e full run with mocks; mastery badge updates.
 
 ## Definition of Done

@@ -23,6 +23,13 @@
 
 ---
 
+## Design & progress hooks
+Canvas screens: **TOPIK blank mode — lookup drawer**, **Tests hub**, **Stats & milestones**, Home (resume + tests tiles).
+- Passage text in the target font (17 px, line-height 1.9); tapped token = `brass` tint + 2 px brass ring; drawer = `card`/sheet surface with a drag handle, scrim over the test.
+- Drawer content order: surface form + "instant · from annotation" (or "re-analyzed"); word card (lemma, pos, gloss, `LevelBadge` "in your words" or "Add to my words"); **reset notice** in `wrong-soft` when an existing word is shown ("Looked up during a test: this word goes back to Lv 0"); grammar rows (pattern, meaning, mastery state coloured by the scale, link to the lesson); footer "Analysis looks wrong? Re-analyze" + "Back to question".
+- Serious-mode timer: normal ink; < 5 min `brass-text`; < 1 min `level-0-text` (text + colour, never colour alone).
+- Events: correct question → `topik_answer` (+15 blank at check time, +20 serious at submit; `dedupe_key` = `topik_answer:<attemptId>`); grammar credit rule of plan 03 applies to questions' `grammar_ids`. Snapshot sources: test tile `lastScore.topik`, `bestSeriousTopik` (milestone).
+
 ## 3. Tasks
 
 ### [ ] T1 — Config page `/tests/topik`
@@ -78,15 +85,16 @@
 - Failed questions → retry pool (automatic). Words looked up → listed ("these words are back to level 0").
 - Buttons: "Retry failed questions" (no AI cost), "New test with same settings".
 
-### [ ] T10 — Stats `/stats` (all test kinds)
-- Tabs: TOPIK / Grammar / Words.
-- TOPIK: table per question type — attempts, success % all time, last 30 days, trend arrow; line chart of session score % over time (filter exam, mode).
+### [ ] T10 — Stats `/stats` (all test kinds) — canvas "Stats & milestones" (page title "Progress")
+- Tabs (segmented control): TOPIK / Grammar / Words. Below the tabs on every tab: **Milestones** grid (`MilestoneBadge`, earned / locked with progress %, total points).
+- TOPIK: score history (`MiniBars` coloured by the scale, or a recharts line for > 12 sessions); table per question type — Korean name + English, attempts, success % all time (muted), **last 30 days in Fraunces coloured by the scale**, trend arrow (filter exam, mode).
 - Grammar: mastery distribution, weakest lessons.
 - Words: count per level, due today, known words (level ≥ 2), words with missing example.
 - Queries in `lib/stats/*.ts`, unit-tested on PGlite.
 
-### [ ] T11 — Home integration
-Home cards: resume unfinished session, due words count, quick "TOPIK quick 10", "Grammar: weakest 5".
+### [ ] T11 — Home & Tests hub integration
+- Home: resume unfinished session (in the hero when no goal work is pending), test tiles (Words / Grammar / TOPIK %, trend vs last), quick "TOPIK quick 10", "Grammar: weakest 5".
+- Tests hub (canvas "Tests hub"): `HeroPanel` resume card with progress, one card per test kind (last-30-days % in the scale colour, `MiniBars`, meta line such as "38 due today" / "6 retry questions waiting", CTA), **Weak spots** list (3 lowest question types / lessons with % bars).
 
 ### [ ] T12 — E2E (AI_MOCK)
 Blank mode: start test, tap an annotated token (instant), add a word from drawer, answer with feedback, finish, results show per-type %. Serious mode: timer visible, tokens not tappable, auto-submit with fake timers.
