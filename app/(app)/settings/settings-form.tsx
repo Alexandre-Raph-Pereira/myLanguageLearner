@@ -29,7 +29,7 @@ export function SettingsForm({
         </Button>
         <span aria-live="polite" className="text-sm">
           {state.status === "saved" && <span className="text-muted-foreground">Saved</span>}
-          {state.status === "error" && <span className="text-destructive">{state.message}</span>}
+          {state.status === "error" && <span className="text-wrong-text">{state.message}</span>}
         </span>
       </div>
     </form>

@@ -1,32 +1,19 @@
-import { PageTitle } from "@/components/shell/page-title";
 import type { Metadata } from "next";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageTitle } from "@/components/shell/page-title";
+import { TEST_ENTRIES } from "@/components/tests/test-catalog";
+import { ResumeSlot, TestCard } from "@/components/tests/test-card";
 
 export const metadata: Metadata = { title: "Tests · LangLearner" };
 
-const ENTRIES = [
-  { title: "Word test", description: "25 due words, EN→KR by default.", plan: "01" },
-  { title: "Grammar test", description: "5–20 questions on the lessons you pick.", plan: "03" },
-  { title: "TOPIK test", description: "Blank or serious mode at your target level.", plan: "05" },
-];
-
 export default function TestsPage() {
   return (
-    <div className="flex flex-col gap-4">
-      <PageTitle>Tests</PageTitle>
-      <ul className="flex flex-col gap-3">
-        {ENTRIES.map((e) => (
-          <li key={e.title}>
-            <Card aria-disabled className="opacity-70">
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between text-base">
-                  {e.title}
-                  <Badge variant="outline">Coming in plan {e.plan}</Badge>
-                </CardTitle>
-                <CardDescription>{e.description}</CardDescription>
-              </CardHeader>
-            </Card>
+    <div className="flex flex-col gap-6">
+      <PageTitle sub="Words, grammar and exam practice built from your library.">Tests</PageTitle>
+      <ResumeSlot />
+      <ul className="grid gap-3 md:grid-cols-[repeat(auto-fit,minmax(240px,1fr))] md:gap-4">
+        {TEST_ENTRIES.map((e) => (
+          <li key={e.id}>
+            <TestCard entry={e} className="h-full" />
           </li>
         ))}
       </ul>

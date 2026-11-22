@@ -22,3 +22,9 @@ describe("<AiErrorMessage>", () => {
     expect(container).toBeEmptyDOMElement();
   });
 });
+
+it("uses the wrong-answer tokens", () => {
+  render(<AiErrorMessage error={{ kind: "ai", message: "Failed" }} />);
+  expect(screen.getByRole("alert")).toHaveClass("bg-wrong-soft", "text-wrong-text");
+  cleanup();
+});

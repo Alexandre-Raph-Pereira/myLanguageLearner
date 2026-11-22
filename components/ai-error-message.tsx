@@ -5,10 +5,7 @@ import type { AiErrorPayload } from "@/lib/ai/errors";
 export function AiErrorMessage({ error }: { error: AiErrorPayload | null | undefined }) {
   if (!error) return null;
   return (
-    <div
-      role="alert"
-      className="border-destructive/40 bg-destructive/5 text-destructive rounded-md border p-3 text-sm"
-    >
+    <div role="alert" className="bg-wrong-soft text-wrong-text rounded-xl p-3 text-sm">
       <p>{error.message}</p>
       {error.kind === "budget" && (
         <Link href="/settings#budgets" className="mt-1 inline-block font-medium underline">

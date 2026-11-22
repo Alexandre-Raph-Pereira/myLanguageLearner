@@ -36,7 +36,7 @@
 - Dev page `/dev/design` (only when `NODE_ENV !== 'production'`): every component with sample props, rendered in a light and a `.dark` column side by side.
 - **Accept:** tests green; dev page renders.
 
-### [ ] T5 — Restyle existing pages
+### [x] T5 — Restyle existing pages
 - Home: replace the placeholder with the **Home skeleton** of the canvas built from the primitives, fed by a static "empty state" object (no data yet): hero `GoalRing` at 0 % with "Your daily goal: 20 words · 1 grammar lesson", rank/ledger/tests cards showing "Available after plan 01/02/03/05" muted states. Plan 00c wires real data.
 - Tests hub `/tests`: three test cards in the canvas layout (disabled state until each plan ships), resume slot.
 - Settings: sections as cards with overline headings; native selects/inputs restyled with tokens.
