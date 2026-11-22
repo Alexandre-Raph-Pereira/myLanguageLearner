@@ -86,7 +86,7 @@ Canvas screens (DESIGN.md §5): **Words library**, **Word test — feedback**, *
 - Tables above + migration. `lib/words/queries.ts` (all scoped by userId/language): list with filters (search on term/meanings ILIKE, type[], level[], needsExample, status), get, create, update, delete, bulkInsert, findDuplicates(rows), libraryIndex (id, term, meanings, type, level — used by plan 05).
 - **Accept:** PGlite tests for CRUD, uniqueness with homonyms, filters.
 
-### [ ] T2 — Word library UI
+### [x] T2 — Word library UI
 - `/words` (canvas "Words library"): title + "N words · K known (P %)", `LevelBar` of the whole bank, search box, filter chips with level-colour dots and counts (all, Lv 0–3, type, "no example · N"), a `HeroPanel` card "N words due — today's goal x / y — Start test", list rows (term in the target font, primary meaning, type chip, `LevelPips` + "Lv n", "no example" flag in `level-1-text`). Infinite scroll or pagination (50).
 - `/words/new` and `/words/[id]`: form (term, meanings as tag input, type select, example + translation, notes), level shown read-only with "reset to 0" button. Delete with confirm.
 - Header actions: Add, Import (CSV), Import (photo), Start test.

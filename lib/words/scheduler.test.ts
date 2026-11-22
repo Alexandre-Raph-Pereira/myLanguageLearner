@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   describeNextReview,
+  dueLabel,
   isKnown,
   nextInterval,
   onCorrect,
@@ -80,5 +81,12 @@ describe("helpers", () => {
   });
   it("scheduleOf picks schedule fields only", () => {
     expect(scheduleOf({ ...base, term: "x" } as Schedule)).toEqual(base);
+  });
+});
+
+describe("dueLabel", () => {
+  it("labels due and future words", () => {
+    expect(dueLabel(NOW, NOW)).toBe("Due now");
+    expect(dueLabel(new Date(NOW.getTime() + 2.5 * DAY), NOW)).toBe("Next review in 3 days");
   });
 });

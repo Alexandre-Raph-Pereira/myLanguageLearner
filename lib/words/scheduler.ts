@@ -60,7 +60,11 @@ export function onWrong(w: Schedule, now: Date): Schedule {
 }
 
 /** Looking a bank word up during a TOPIK test resets it (plan 05). */
-export function resetToZero(w: Schedule, now: Date, reason: "lookup" | "manual" = "lookup"): Schedule {
+export function resetToZero(
+  w: Schedule,
+  now: Date,
+  reason: "lookup" | "manual" = "lookup",
+): Schedule {
   return {
     ...w,
     level: 0,
@@ -93,4 +97,11 @@ export function scheduleOf(w: Schedule): Schedule {
     timesFailed: w.timesFailed,
     timesLookedUp: w.timesLookedUp,
   };
+}
+
+/** "Due now" or "Next review in N days" for a word's due date. */
+export function dueLabel(dueAt: Date, now: Date): string {
+  const ms = dueAt.getTime() - now.getTime();
+  if (ms <= 0) return "Due now";
+  return `Next review ${describeNextReview(Math.ceil(ms / DAY_MS))}`;
 }

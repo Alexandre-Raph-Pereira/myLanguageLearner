@@ -66,12 +66,7 @@ export const words = pgTable(
       .$onUpdate(() => new Date()),
   },
   (t) => [
-    uniqueIndex("words_user_lang_term_meaning_uq").on(
-      t.userId,
-      t.language,
-      t.term,
-      t.meaningKey,
-    ),
+    uniqueIndex("words_user_lang_term_meaning_uq").on(t.userId, t.language, t.term, t.meaningKey),
     index("words_user_lang_term_idx").on(t.userId, t.language, t.term),
     index("words_user_lang_due_idx").on(t.userId, t.language, t.dueAt),
     check("words_level_range", sql`${t.level} between 0 and 3`),

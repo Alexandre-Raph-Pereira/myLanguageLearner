@@ -151,7 +151,10 @@ describe("bulk insert + duplicates", () => {
       db,
       me,
       [
-        w("사과", ["apple", "apology"], { exampleSentence: "사과 주세요", exampleTranslation: "x" }),
+        w("사과", ["apple", "apology"], {
+          exampleSentence: "사과 주세요",
+          exampleTranslation: "x",
+        }),
         w("새", ["bird"]),
       ],
       { source: "import_csv", updateExisting: true },
