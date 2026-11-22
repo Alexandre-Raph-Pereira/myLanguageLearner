@@ -14,7 +14,7 @@
     "format": "prettier --write .",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "node --env-file-if-exists=.env.local --import tsx db/migrate.ts",
-    "db:seed": "node --env-file-if-exists=.env.local --import tsx db/seed.ts",
+    "db:seed": "node --env-file-if-exists=.env.local --conditions=react-server --import tsx db/seed.ts",
     "icons": "node scripts/generate-icons.mjs",
     "test:coverage": "vitest run --coverage --coverage.include=\"lib/progress/*.ts\""
   },

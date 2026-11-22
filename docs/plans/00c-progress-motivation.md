@@ -83,7 +83,7 @@ Implementation + PGlite tests: idempotency (same `dedupe_key` twice → counted 
 ### [x] T6 — Shared results blocks
 `components/progress/session-summary.tsx`: given an `ActivityResult` (+ session-specific props) renders `GoalMetBanner` (when `justMet`), `PointsBreakdown` (grouped lines from the session's events), rank progress (today's gain in brass) and fires a sonner toast per new milestone (when `celebrate_milestones`). Used by word, grammar and TOPIK results pages.
 
-### [ ] T7 — Dev seed + e2e
+### [x] T7 — Dev seed + e2e
 - `pnpm db:seed` adds 30 days of activity for the dev user (streak 12, some missed days, points ≈ 18,700 → "Intermediate II").
 - e2e: Home shows the seeded goal %, streak and rank; change the words goal in Settings → Home % updates.
 

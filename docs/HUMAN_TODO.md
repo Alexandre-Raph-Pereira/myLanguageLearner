@@ -25,3 +25,9 @@ Claude Code appends here when a step needs a human (accounts, keys, files, manua
 ## All plans
 
 - [ ] Repo is public — consider making it private; never commit `.env*` (only `.env.example`).
+
+## Plan 00c — Progress & motivation
+
+- [ ] **Apply migration 0002** — with `DATABASE_URL` pointing at Supabase, run `pnpm db:migrate` (adds `activity_events`, `daily_progress`, `milestones_earned` and the goal / timezone / motivation columns).
+- [ ] **Check Home and Settings on the phone** — open the deployment once in the phone's browser so the timezone is detected (Settings → Daily goal shows it), set your daily goal, and compare Home / Settings with the canvas in light and dark mode. Locally, `pnpm db:seed` fills 30 days of sample activity for the dev user (do **not** run it against production: it would add sample points to your real account).
+- [ ] **Local e2e on WSL/Ubuntu** (optional) — Playwright's Chromium needs `libnspr4`, `libnss3` and `libasound2t64`: `sudo pnpm exec playwright install-deps chromium` (or `sudo apt install libnspr4 libnss3 libasound2t64`).

@@ -114,10 +114,10 @@ function RankCard({ s }: { s: ProgressSummary }) {
   return (
     <CardShell title="Rank">
       <div className="flex items-baseline justify-between gap-3">
-        <span className="font-display text-2xl font-medium" data-testid="rank-name">
+        <span className="font-display min-w-0 text-2xl font-medium" data-testid="rank-name">
           {rank.name}
         </span>
-        <span className="text-brass-text text-[15px] font-semibold tabular-nums">
+        <span className="text-brass-text shrink-0 text-[15px] font-semibold whitespace-nowrap tabular-nums">
           {fmt(points.total)} pts
         </span>
       </div>

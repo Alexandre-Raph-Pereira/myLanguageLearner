@@ -9,9 +9,9 @@ export function SidebarRank({ points }: { points: number }) {
   return (
     <div className="flex flex-col gap-2" aria-label="Rank" role="group">
       <span className="overline-label">Rank</span>
-      <div className="flex items-baseline justify-between gap-2">
+      <div className="flex flex-col">
         <span className="font-display text-[15px] font-medium">{rank.name}</span>
-        <span className="text-brass-text text-xs font-semibold tabular-nums">
+        <span className="text-brass-text text-xs font-semibold whitespace-nowrap tabular-nums">
           {fmt(points)} pts
         </span>
       </div>
