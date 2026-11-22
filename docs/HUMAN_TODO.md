@@ -41,3 +41,11 @@ Claude Code appends here when a step needs a human (accounts, keys, files, manua
 - [ ] Locally it is already set in `.env.local`; restart `pnpm dev` to pick it up.
 - ⚠️ While it is set, **anyone who has the URL** can use the app and spend your AI key (the monthly AI budget in Settings is the only cap). Keep the URL private and keep the budget low.
 - [ ] When you want login back: delete `NO_LOGIN_USER_ID` in Vercel and `.env.local` and redeploy.
+
+## Plan 01 — Words
+
+- [ ] **Apply migration 0003** — with `DATABASE_URL` pointing at Supabase, run `pnpm db:migrate` (adds `words`, `test_sessions`, `word_reviews` and the `word_type` / `content_status` / `content_source` enums). Do **not** run `pnpm db:seed` against Supabase (it adds 41 sample words and 30 days of sample points to your account).
+- [ ] **Import your Quizlet words** — Quizlet → your set → ⋯ → Export → keep "Tab" between term and definition and "New line" between rows → Copy text. In the app: Words → Import CSV → paste → check the column mapping (Column 1 = Term, Column 2 = Meaning) → Preview → review duplicates / invalid rows → optionally "Suggest types with AI" (shows the cost first) → Import. Alternatively, give the list to Claude in a new session as planned.
+- [ ] **Phone check** — on the deployment, take a 25-word EN→KR test with the Korean keyboard: typing 한글 and pressing Enter/Done must commit the syllable without submitting early or twice; check the feedback panel, "I was right", and the results page in light and dark mode.
+- [ ] **Photo import check** — Words → Import photo → "Take a photo" of a notebook page; verify the preview against the page before importing (real AI call, costs a few cents per photo with Sonnet).
+- [ ] **Local e2e without sudo** (optional, alternative to installing the libs) — `apt-get download libnspr4 libnss3 libasound2t64`, extract each with `dpkg-deb -x <file>.deb ./pwlibs`, then run e2e with `LD_LIBRARY_PATH=$PWD/pwlibs/usr/lib/x86_64-linux-gnu pnpm test:e2e`.

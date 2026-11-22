@@ -125,7 +125,7 @@ Canvas screens (DESIGN.md §5): **Words library**, **Word test — feedback**, *
 - Results merged into the same Import Preview (low-confidence rows highlighted). Images are **not stored**.
 - **Accept:** mock-fixture test of the route; UI flow works with AI_MOCK.
 
-### [ ] T7 — Dev seed + fixtures
+### [x] T7 — Dev seed + fixtures
 - `pnpm db:seed` adds ~40 Korean words of mixed types/levels for the dev user.
 - AI fixtures: `words.photo_extract.json`, `words.suggest_types.json`.
 
