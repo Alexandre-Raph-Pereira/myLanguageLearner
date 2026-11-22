@@ -1,0 +1,20 @@
+{
+  "responses": [
+    {
+      "entries": [
+        {
+          "term": "도서관",
+          "meanings": ["library"],
+          "example_sentence": "도서관에서 공부해요.",
+          "example_translation": "I study at the library.",
+          "type": "noun",
+          "confidence": "high"
+        },
+        { "term": "우산", "meanings": ["umbrella"], "confidence": "high" },
+        { "term": "기다렸어요", "meanings": ["waited"], "type": "verb", "confidence": "low" },
+        { "term": "시원하다", "meanings": ["cool", "refreshing"], "type": "adjective", "confidence": "high" }
+      ]
+    }
+  ],
+  "usage": { "input": 1900, "output": 260 }
+}

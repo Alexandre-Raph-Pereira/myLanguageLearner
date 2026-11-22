@@ -118,7 +118,7 @@ Canvas screens (DESIGN.md §5): **Words library**, **Word test — feedback**, *
 - Import button → transaction, batches of 500, `source = import_csv`, level 0, due now. Result summary: inserted / updated / skipped.
 - **Accept:** unit tests for parsing (Quizlet tab export, quoted commas, Korean NFC), mapping, duplicate detection; e2e import of a 10-row fixture.
 
-### [ ] T6 — Photo import (`/words/import/photo`)
+### [x] T6 — Photo import (`/words/import/photo`)
 - Pick up to 5 images (camera allowed on mobile: `accept="image/*" capture` optional). Client-side resize with canvas to max 2000 px long side, JPEG q≈0.85 (keep each < ~1.5 MB — Vercel request body limit is 4.5 MB). Send **one image per request**, sequentially, with progress.
 - Route `POST /api/words/photo-extract` (`maxDuration` 60): `aiObject` tier smart, task `words.photo_extract`, schema `{ entries: [{ term, meanings: string[], example_sentence?, example_translation?, type?, confidence: 'high'|'low' }] }`.
 - Prompt rules: transcribe exactly what is written; Korean in NFC; do not invent words, meanings or examples that are not on the page; mark unclear handwriting `low`; skip crossed-out items; if a verb/adjective is written conjugated, keep as written and set `confidence: 'low'`.

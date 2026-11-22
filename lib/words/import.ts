@@ -207,3 +207,26 @@ export function countByStatus(rows: ClassifiedRow[]) {
     missingExample: rows.filter((r) => r.status !== "invalid" && r.missingExample).length,
   };
 }
+
+/** An entry returned by the photo extraction (task `words.photo_extract`). */
+export type PhotoEntry = {
+  term: string;
+  meanings: string[];
+  example_sentence?: string | null;
+  example_translation?: string | null;
+  type?: WordType | null;
+  confidence: "high" | "low";
+};
+
+/** Photo entries → preview rows (NFC, cleaned). Rows get ids from `startIndex`. */
+export function entriesToRows(entries: PhotoEntry[], startIndex = 0): ImportRow[] {
+  return entries.map((e, k) => ({
+    i: startIndex + k,
+    term: clean(e.term),
+    meanings: dedupeMeanings(e.meanings),
+    exampleSentence: cleanOrNull(e.example_sentence),
+    exampleTranslation: cleanOrNull(e.example_translation),
+    type: e.type ?? "other",
+    confidence: e.confidence,
+  }));
+}
