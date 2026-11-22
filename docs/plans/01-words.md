@@ -82,7 +82,7 @@ Canvas screens (DESIGN.md §5): **Words library**, **Word test — feedback**, *
 
 ## Tasks
 
-### [ ] T1 — Schema + queries
+### [x] T1 — Schema + queries
 - Tables above + migration. `lib/words/queries.ts` (all scoped by userId/language): list with filters (search on term/meanings ILIKE, type[], level[], needsExample, status), get, create, update, delete, bulkInsert, findDuplicates(rows), libraryIndex (id, term, meanings, type, level — used by plan 05).
 - **Accept:** PGlite tests for CRUD, uniqueness with homonyms, filters.
 
