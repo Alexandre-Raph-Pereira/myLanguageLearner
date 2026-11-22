@@ -24,6 +24,9 @@ CREATE TABLE "word_reviews" (
 	"direction" text NOT NULL,
 	"answer" text NOT NULL,
 	"result" text NOT NULL,
+	"level_before" smallint DEFAULT 0 NOT NULL,
+	"level_after" smallint DEFAULT 0 NOT NULL,
+	"prev_schedule" jsonb,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint

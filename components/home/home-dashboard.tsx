@@ -10,7 +10,7 @@ import {
   WeekStrip,
 } from "@/components/progress";
 import { TEST_ENTRIES } from "@/components/tests/test-catalog";
-import { ResumeSlot, TestCard } from "@/components/tests/test-card";
+import { ResumeSlot, TestCard, type ResumeInfo } from "@/components/tests/test-card";
 import { clampPct, scaleStep, stepClasses } from "@/lib/progress/scale";
 import type { ProgressSummary } from "@/lib/progress/summary";
 import { cn } from "@/lib/utils";
@@ -36,8 +36,8 @@ function CardShell({
   );
 }
 
-/** Word test ships in plan 01; until then the CTA is disabled. */
-const WORD_TEST_HREF: string | null = null;
+/** The word test (plan 01). */
+const WORD_TEST_HREF = "/tests/words";
 
 function GoalHero({ s, showDetails }: { s: ProgressSummary; showDetails: boolean }) {
   const { today, streak } = s;
@@ -51,7 +51,7 @@ function GoalHero({ s, showDetails }: { s: ProgressSummary; showDetails: boolean
       ? `Review ${today.wordsLeft} more ${plural(today.wordsLeft, "word")}`
       : "Keep reviewing";
   const ctaClass =
-    "bg-on-hero text-hero inline-flex h-12 w-full items-center justify-center rounded-xl text-[15px] font-semibold disabled:opacity-60 md:w-auto md:self-start md:px-6";
+    "bg-on-hero text-hero inline-flex h-12 w-full items-center justify-center rounded-xl text-[15px] font-semibold md:w-auto md:self-start md:px-6";
 
   return (
     <HeroPanel aria-label="Daily goal" className="flex flex-col gap-5 md:col-span-2">
@@ -91,20 +91,9 @@ function GoalHero({ s, showDetails }: { s: ProgressSummary; showDetails: boolean
         </div>
       )}
 
-      <div className="flex flex-col gap-1.5">
-        {WORD_TEST_HREF ? (
-          <Link href={WORD_TEST_HREF} className={ctaClass}>
-            {cta}
-          </Link>
-        ) : (
-          <>
-            <button type="button" disabled className={ctaClass}>
-              {cta}
-            </button>
-            <span className="text-xs opacity-75">Word tests arrive with plan 01</span>
-          </>
-        )}
-      </div>
+      <Link href={WORD_TEST_HREF} className={ctaClass}>
+        {cta}
+      </Link>
     </HeroPanel>
   );
 }
@@ -210,7 +199,13 @@ function TestTiles({ s }: { s: ProgressSummary }) {
 }
 
 /** Home dashboard (canvas "Home"): pure render of a ProgressSummary. */
-export function HomeDashboard({ summary: s }: { summary: ProgressSummary }) {
+export function HomeDashboard({
+  summary: s,
+  resume,
+}: {
+  summary: ProgressSummary;
+  resume?: ResumeInfo | null;
+}) {
   const showProgress = !s.isEmpty;
   return (
     <>
@@ -231,7 +226,7 @@ export function HomeDashboard({ summary: s }: { summary: ProgressSummary }) {
             All tests
           </Link>
         </div>
-        <ResumeSlot />
+        <ResumeSlot resume={resume} />
         <div className="grid gap-3 md:grid-cols-[repeat(auto-fit,minmax(240px,1fr))]">
           {TEST_ENTRIES.map((t) => (
             <TestCard key={t.id} entry={t} />

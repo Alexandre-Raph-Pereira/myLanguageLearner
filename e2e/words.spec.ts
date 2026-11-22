@@ -30,7 +30,9 @@ test("create, edit and delete a word on mobile", async ({ page }) => {
   await expect(page).toHaveURL(/\/words$/);
 
   await page.goto("/words?q=%EA%B3%A0%EC%96%91%EC%9D%B4");
-  const updated = page.getByRole("list", { name: "Word list" }).getByRole("link", { name: /고양이/ });
+  const updated = page
+    .getByRole("list", { name: "Word list" })
+    .getByRole("link", { name: /고양이/ });
   await expect(updated).not.toContainText("no example");
   await updated.click();
   await page.getByRole("button", { name: "Delete" }).click();

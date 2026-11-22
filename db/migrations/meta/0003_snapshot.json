@@ -1,5 +1,5 @@
 {
-  "id": "9efc4d7c-bf9b-421f-855d-0189fe604c15",
+  "id": "61af2617-4a42-4889-a7a7-1734bd17ab84",
   "prevId": "66d55435-e28b-4021-98bc-caadad74cff5",
   "version": "7",
   "dialect": "postgresql",
@@ -809,6 +809,26 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "level_before": {
+          "name": "level_before",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "level_after": {
+          "name": "level_after",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "prev_schedule": {
+          "name": "prev_schedule",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",

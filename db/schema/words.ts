@@ -112,6 +112,18 @@ export type Direction = (typeof DIRECTIONS)[number];
 export const REVIEW_RESULTS = ["correct", "wrong", "alternative", "override"] as const;
 export type ReviewResult = (typeof REVIEW_RESULTS)[number];
 
+/** JSON form of `lib/words/scheduler` Schedule (dates as ISO strings). */
+export type StoredSchedule = {
+  level: number;
+  intervalDays: number;
+  dueAt: string;
+  lastReviewedAt: string | null;
+  correctStreak: number;
+  timesCorrect: number;
+  timesFailed: number;
+  timesLookedUp: number;
+};
+
 export const wordReviews = pgTable(
   "word_reviews",
   {
@@ -126,6 +138,11 @@ export const wordReviews = pgTable(
     direction: text("direction", { enum: DIRECTIONS }).notNull(),
     answer: text("answer").notNull(),
     result: text("result", { enum: REVIEW_RESULTS }).notNull(),
+    /** Word level before / after this answer (results page level movement). */
+    levelBefore: smallint("level_before").notNull().default(0),
+    levelAfter: smallint("level_after").notNull().default(0),
+    /** Schedule before the answer, so "I was right" can apply onCorrect instead of onWrong. */
+    prevSchedule: jsonb("prev_schedule").$type<StoredSchedule>(),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [

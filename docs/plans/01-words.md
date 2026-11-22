@@ -96,7 +96,7 @@ Canvas screens (DESIGN.md §5): **Words library**, **Word test — feedback**, *
 - Implement `lib/words/scheduler.ts`, `select.ts`, `answer.ts`, `lib/text/normalize.ts` with tests above.
 - **Accept:** ≥ 95 % line coverage on these files.
 
-### [ ] T4 — Word test
+### [x] T4 — Word test
 - `/tests/words` params page: types (multi-select, default all), direction (`en_ko` default, `ko_en`, `mixed`), count (5–50, default 25), checkbox "include words without example". Shows "N due / M total matching".
 - Start → server action creates `test_sessions` (kind `word`, config, list of selected word ids + direction per item in `config.items`) → redirect `/tests/words/[sessionId]`.
 - Runner (canvas "Word test — feedback"; one card at a time): header with quit button, brass progress bar, "n/25"; sub-line with in-session streak and accuracy %.
