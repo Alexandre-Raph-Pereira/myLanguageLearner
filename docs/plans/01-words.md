@@ -92,7 +92,7 @@ Canvas screens (DESIGN.md §5): **Words library**, **Word test — feedback**, *
 - Header actions: Add, Import (CSV), Import (photo), Start test.
 - **Accept:** create/edit/delete works on mobile width; zod validation messages.
 
-### [ ] T3 — Scheduler, selection, answer checking
+### [x] T3 — Scheduler, selection, answer checking
 - Implement `lib/words/scheduler.ts`, `select.ts`, `answer.ts`, `lib/text/normalize.ts` with tests above.
 - **Accept:** ≥ 95 % line coverage on these files.
 

@@ -16,7 +16,7 @@
     "db:migrate": "node --env-file-if-exists=.env.local --import tsx db/migrate.ts",
     "db:seed": "node --env-file-if-exists=.env.local --conditions=react-server --import tsx db/seed.ts",
     "icons": "node scripts/generate-icons.mjs",
-    "test:coverage": "vitest run --coverage --coverage.include=\"lib/progress/*.ts\""
+    "test:coverage": "vitest run --coverage --coverage.include=\"lib/progress/*.ts\" --coverage.include=\"lib/words/{scheduler,select,answer}.ts\" --coverage.include=\"lib/text/*.ts\""
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^4.0.106",
