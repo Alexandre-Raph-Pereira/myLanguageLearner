@@ -108,7 +108,7 @@ Canvas screens (DESIGN.md §5): **Words library**, **Word test — feedback**, *
 - End screen (canvas "Session results"): score % in Fraunces 88 px (scale colour) + "x of n correct", `session-summary` from plan 00c (goal-met banner, points breakdown, rank progress, milestone toasts), **level movement** = two `LevelBar`s (before / after) for the session's words, list of failed words (with links), "Retry the N missed words" (new session with those ids) and "Back to home".
 - **Accept:** e2e smoke on seeded data: run a 5-word test, fail one, level resets to 0, pass one, level increments, due date set.
 
-### [ ] T5 — CSV/TSV import (`/words/import`)
+### [x] T5 — CSV/TSV import (`/words/import`)
 - Input: paste textarea **or** file (.csv/.tsv/.txt). Parse with papaparse.
 - Options: separator (auto-detect tab/comma/semicolon, or custom), "first row is header", meaning split on `;` (default on), `,` (default off), `/` (default off).
 - Column mapping UI: term, meaning, example_sentence, example_translation, type (each column can be ignored). Default mapping for 2 columns = term, meaning (Quizlet export); 3 columns = term, meaning, example.

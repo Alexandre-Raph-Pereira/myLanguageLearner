@@ -169,6 +169,16 @@ describe("bulk insert + duplicates", () => {
     });
   });
 
+  it("imports a Quizlet-sized bank (700 rows) in batches", async () => {
+    const rows = Array.from({ length: 700 }, (_, i) => w(`단어${i}`, [`word ${i}`]));
+    const res = await bulkInsert(db, me, rows, { source: "import_csv" });
+    expect(res).toEqual({ inserted: 700, updated: 0, skipped: 0 });
+    const again = await bulkInsert(db, me, rows, { source: "import_csv" });
+    expect(again).toEqual({ inserted: 0, updated: 0, skipped: 700 });
+    const dups = await findDuplicates(db, me, rows);
+    expect(dups.size).toBe(700);
+  });
+
   it("finds duplicates among candidate rows", async () => {
     await createWord(db, me, w("배", ["pear"]));
     const dups = await findDuplicates(db, me, [
