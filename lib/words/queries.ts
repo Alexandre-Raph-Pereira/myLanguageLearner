@@ -88,7 +88,9 @@ export async function wordStats(db: Db, s: Scope, now = new Date()): Promise<Wor
       needsExample: sql<number>`count(*) filter (where ${words.exampleSentence} is null)`.mapWith(
         Number,
       ),
-      due: sql<number>`count(*) filter (where ${words.dueAt} <= ${now})`.mapWith(Number),
+      due: sql<number>`count(*) filter (where ${words.dueAt} <= ${now.toISOString()}::timestamptz)`.mapWith(
+        Number,
+      ),
     })
     .from(words)
     .where(where);

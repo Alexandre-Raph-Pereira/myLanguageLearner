@@ -580,7 +580,9 @@ export async function candidateStats(
       type: words.type,
       hasExample: sql<boolean>`${words.exampleSentence} is not null`,
       total: sql<number>`count(*)`.mapWith(Number),
-      due: sql<number>`count(*) filter (where ${words.dueAt} <= ${now})`.mapWith(Number),
+      due: sql<number>`count(*) filter (where ${words.dueAt} <= ${now.toISOString()}::timestamptz)`.mapWith(
+        Number,
+      ),
     })
     .from(words)
     .where(
