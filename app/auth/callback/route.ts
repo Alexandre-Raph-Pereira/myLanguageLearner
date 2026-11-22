@@ -7,6 +7,10 @@ export async function GET(request: NextRequest) {
   const { searchParams, origin } = request.nextUrl;
   const code = searchParams.get("code");
   const next = safeNextPath(searchParams.get("next"));
+  // Links emailed before the flag was turned off must not log anyone in either.
+  if (!env.MAGIC_LINK_LOGIN) {
+    return NextResponse.redirect(new URL("/login?error=disabled", origin));
+  }
   if (!code) return NextResponse.redirect(new URL("/login?error=callback", origin));
 
   const supabase = await createSupabaseServerClient();

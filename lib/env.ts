@@ -67,6 +67,17 @@ export const env = {
       .map((e) => e.trim().toLowerCase())
       .filter(Boolean);
   },
+  /**
+   * Login by email magic link. On by default; `0` / `false` / `off` turns it off
+   * (the login form, the send action and the /auth/callback link exchange all refuse).
+   */
+  get MAGIC_LINK_LOGIN(): boolean {
+    const v = raw("MAGIC_LINK_LOGIN")?.toLowerCase();
+    if (v === undefined) return true;
+    if (["1", "true", "on"].includes(v)) return true;
+    if (["0", "false", "off"].includes(v)) return false;
+    throw new EnvError("MAGIC_LINK_LOGIN", "is invalid (use 1/0, true/false or on/off)");
+  },
   get AI_PROVIDER(): AiProviderName {
     return parsed("AI_PROVIDER", providerSchema, "anthropic");
   },

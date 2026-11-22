@@ -15,6 +15,9 @@ export async function sendMagicLink(_prev: LoginState, formData: FormData): Prom
     email: formData.get("email"),
     next: formData.get("next") ?? undefined,
   });
+  if (!env.MAGIC_LINK_LOGIN) {
+    return { status: "error", message: "Login by email link is turned off." };
+  }
   if (!parsed.success) return { status: "error", message: "Enter a valid email address." };
   if (!isSupabaseConfigured()) {
     return { status: "error", message: "Login is not configured (Supabase env vars missing)." };

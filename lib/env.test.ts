@@ -24,6 +24,21 @@ describe("env", () => {
     expect(env.AI_MODEL_SMART).toBe("claude-sonnet-5-5");
   });
 
+  it("parses MAGIC_LINK_LOGIN (on by default)", () => {
+    vi.stubEnv("MAGIC_LINK_LOGIN", "");
+    expect(env.MAGIC_LINK_LOGIN).toBe(true);
+    for (const v of ["1", "true", "ON"]) {
+      vi.stubEnv("MAGIC_LINK_LOGIN", v);
+      expect(env.MAGIC_LINK_LOGIN).toBe(true);
+    }
+    for (const v of ["0", "false", "Off"]) {
+      vi.stubEnv("MAGIC_LINK_LOGIN", v);
+      expect(env.MAGIC_LINK_LOGIN).toBe(false);
+    }
+    vi.stubEnv("MAGIC_LINK_LOGIN", "maybe");
+    expect(() => env.MAGIC_LINK_LOGIN).toThrow(/MAGIC_LINK_LOGIN/);
+  });
+
   it("parses ALLOWED_EMAILS", () => {
     vi.stubEnv("ALLOWED_EMAILS", " A@x.com, b@y.com ,");
     expect(env.ALLOWED_EMAILS).toEqual(["a@x.com", "b@y.com"]);
