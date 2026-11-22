@@ -8,7 +8,7 @@
 
 ## Tasks
 
-### [ ] T1 — Tokens & fonts
+### [x] T1 — Tokens & fonts
 - Rewrite the colour variables in `app/globals.css` with the values of DESIGN.md §1 (`:root` light, `.dark` dark). Keep shadcn variable names (`--background`, `--card`, `--primary`, `--muted-foreground`, `--border`, `--ring`, `--destructive`, `--sidebar*`, `--chart-1..5`) and add: `--border-strong`, `--track`, `--hero`, `--on-hero`, `--hero-brass`, `--hero-teal`, `--brass`, `--brass-text`, `--good-soft`, `--wrong-soft`, `--wrong-text`, `--level-{0..3}`, `--level-{0..3}-text`, `--on-level-{0..3}`. Map them all in `@theme inline` (`--color-level-2: var(--level-2)` …). Charts: `--chart-1..4` = level-3, level-2, brass, level-0.
 - `--radius: 0.75rem` (12 px controls); cards use `rounded-2xl` (16 px).
 - Fonts via `next/font/google` in `app/layout.tsx`: Fraunces (variable, opsz), Inter, Noto Serif KR (500/700, `preload: false`). CSS vars `--font-display`, `--font-sans`, `--font-target-ko`; Tailwind utilities `font-display`, `font-target-ko`.
