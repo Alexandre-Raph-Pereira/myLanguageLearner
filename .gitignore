@@ -158,3 +158,12 @@ vite.config.ts.timestamp-*
 
 
 *:Zone.Identifier
+# Next.js / Vercel / testing
+next-env.d.ts
+.vercel
+*.pem
+/playwright-report/
+/test-results/
+/blob-report/
+/playwright/.cache/
+/.pglite*
