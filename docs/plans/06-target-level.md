@@ -42,6 +42,11 @@ Input: target level T, reference items with level ≤ T (minus ignored), active 
   - Grammar → plan 02 `grammar.structure` per item (notes = pattern + meaning + level), up to 3 calls.
 - Results inserted with `status = suggested`, `source = alignment`.
 
+## Design & progress hooks
+- Coverage bars: stacked known (level-3) / stored (level-1) / missing (`track`) with % labels; per-level totals coloured by `scaleStep`.
+- Snapshot sources for plan 00c: ledger row "TOPIK N coverage" on Home, `coverageByLevel` for the "level L fully covered" milestones.
+- Review-queue nav badge uses `brass` with the count.
+
 ## 4. Tasks
 
 ### [ ] T1 — Schema + CSV reference import

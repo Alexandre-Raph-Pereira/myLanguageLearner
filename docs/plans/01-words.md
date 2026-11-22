@@ -2,7 +2,7 @@
 
 **Goal:** a word bank with example sentences, a spaced-repetition word test (EN→KR / KR→EN / mixed), CSV/TSV import (Quizlet export, ~700 words) and notebook-photo import.
 
-**Depends on:** 00.
+**Depends on:** 00c (design system + `recordActivity`).
 
 ---
 
@@ -72,6 +72,14 @@ isKnown(w) = level >= 2
 
 ---
 
+## Design & progress hooks
+Canvas screens (DESIGN.md §5): **Words library**, **Word test — feedback**, **Session results**, Home ledger rows.
+- Level colours everywhere come from `levelStep(level)`; levels are always shown as "Lv n" next to the colour.
+- Events (`recordActivity`, inside the same server action as the review):
+  - every answer → `word_answer` (`ref_id` = word, `dedupe_key` = `word_answer:<reviewId>`, points 10 if `correct`/`alternative`, 0 if `wrong`); "I was right" → `adjustActivity` to 10.
+  - level goes from < 2 to 2 → `word_known` (+5, `dedupe_key` = `word_known:<wordId>:<reviewId>`).
+- Snapshot sources registered for plan 00c: `wordsKnown` (count level ≥ 2), ledger rows "Words known" (`known / total`) and "Due today" (`answered today / due at start of day`), test tile `lastScore.word`.
+
 ## Tasks
 
 ### [ ] T1 — Schema + queries
@@ -79,7 +87,7 @@ isKnown(w) = level >= 2
 - **Accept:** PGlite tests for CRUD, uniqueness with homonyms, filters.
 
 ### [ ] T2 — Word library UI
-- `/words`: search box, filter chips (type, level 0–3, "missing example"), list rows (term, primary meaning, type badge, level dots). Infinite scroll or pagination (50).
+- `/words` (canvas "Words library"): title + "N words · K known (P %)", `LevelBar` of the whole bank, search box, filter chips with level-colour dots and counts (all, Lv 0–3, type, "no example · N"), a `HeroPanel` card "N words due — today's goal x / y — Start test", list rows (term in the target font, primary meaning, type chip, `LevelPips` + "Lv n", "no example" flag in `level-1-text`). Infinite scroll or pagination (50).
 - `/words/new` and `/words/[id]`: form (term, meanings as tag input, type select, example + translation, notes), level shown read-only with "reset to 0" button. Delete with confirm.
 - Header actions: Add, Import (CSV), Import (photo), Start test.
 - **Accept:** create/edit/delete works on mobile width; zod validation messages.
@@ -91,13 +99,13 @@ isKnown(w) = level >= 2
 ### [ ] T4 — Word test
 - `/tests/words` params page: types (multi-select, default all), direction (`en_ko` default, `ko_en`, `mixed`), count (5–50, default 25), checkbox "include words without example". Shows "N due / M total matching".
 - Start → server action creates `test_sessions` (kind `word`, config, list of selected word ids + direction per item in `config.items`) → redirect `/tests/words/[sessionId]`.
-- Runner (one card at a time, progress bar):
+- Runner (canvas "Word test — feedback"; one card at a time): header with quit button, brass progress bar, "n/25"; sub-line with in-session streak and accuracy %.
   - Prompt: `en_ko` shows all meanings + type badge; `ko_en` shows term + type.
   - Input autofocus, `lang="ko"` for Korean answers, `autoComplete="off"`, `autoCorrect="off"`, `autoCapitalize="none"`, **Enter ignored while `isComposing`**.
   - Submit → server action `answerWord(sessionId, index, answer)`: checks, writes `word_reviews`, applies scheduler (`alternative` → no change), returns result.
-  - Feedback panel: correct/wrong/alternative, expected answer, **example sentence + translation** (always shown after answering), buttons "Next" and **"I was right"** (sets result `override`, applies onCorrect instead; for `ko_en` checkbox "add my answer as accepted meaning").
+  - Feedback panel (`FeedbackPanel`: `good-soft` / `wrong-soft`): correct/wrong/alternative, expected answer, `LevelTransition` (e.g. Lv 1 → Lv 2 · Known, or Lv 2 → Lv 0) + "next review in N days" / "back in today's review", points gained, **example sentence + translation** (always shown after answering), buttons "Next" and **"I was right"** (sets result `override`, applies onCorrect instead; for `ko_en` checkbox "add my answer as accepted meaning"). Mini daily-goal bar above the Next button.
   - Answers are persisted one by one, so leaving mid-test keeps progress; session can be resumed from Home.
-- End screen: score, list of failed words (with links), "retry failed words now" (new session with those ids).
+- End screen (canvas "Session results"): score % in Fraunces 88 px (scale colour) + "x of n correct", `session-summary` from plan 00c (goal-met banner, points breakdown, rank progress, milestone toasts), **level movement** = two `LevelBar`s (before / after) for the session's words, list of failed words (with links), "Retry the N missed words" (new session with those ids) and "Back to home".
 - **Accept:** e2e smoke on seeded data: run a 5-word test, fail one, level resets to 0, pass one, level increments, due date set.
 
 ### [ ] T5 — CSV/TSV import (`/words/import`)

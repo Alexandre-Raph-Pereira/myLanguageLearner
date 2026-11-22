@@ -14,6 +14,8 @@ Duolingo and Quizlet lack good grammar explanations, words without example sente
 | Plan | Feature |
 |---|---|
 | 00 | Foundation: scaffold, auth, DB, AI layer with budgets, settings (incl. **target TOPIK level**), app shell, PWA |
+| 00b | **Design system**: Navy & Cream light/dark themes, fonts, progress colour scale, shared progress components, restyled shell |
+| 00c | **Progress & motivation**: daily goal, streak, points, ranks, milestones; Home dashboard |
 | 01 | **Words** (EPIC 1): word bank, spaced-repetition word test, CSV/TSV import (Quizlet export), notebook-photo import |
 | 02 | **Grammar** (EPIC 2): grammar library, AI structuring from text/photo, review → save/rewrite |
 | 03 | **Grammar test** (new): AI-generated tests on chosen grammar lessons; shared test engine (question bank, retry pool, sessions) |
@@ -23,6 +25,14 @@ Duolingo and Quizlet lack good grammar explanations, words without example sente
 | later | New EPIC(s) for complex TOPIK items (graphs, posters, ads), written by the owner |
 
 The app ends with three test types: **Word test**, **Grammar test**, **TOPIK test**.
+
+## Decisions — Design & motivation
+Full spec: `docs/DESIGN.md`. Mockups: Claude Design canvas "myLanguageLearner redesign", page "Navy & Cream — chosen".
+- Visual direction **Navy & Cream** (chosen 2026-11-22 over a Korean-inspired and a graphite proposal): grown-up, editorial; works for Korean and the future languages. Light (cream) and dark (navy) themes; follows the system by default, switchable in the header and Settings.
+- Fonts: Fraunces (display/numbers), Inter (UI), a **per-language target font** (Noto Serif KR for Korean).
+- Progress is shown with **percentages and one 4-step colour scale** (rust → ochre → teal → navy) shared by word levels 0–3 and all percentages (< 40 / 40–59 / 60–79 / ≥ 80 %). Colour is never the only signal: numbers are always shown.
+- Motivation: **daily goal = 20 word answers + 1 grammar lesson** (editable), **streak** of days with the goal met (no freezes), **points** for correct work, **ranks** by cumulative points, **24 milestones**. No leaderboards, no mascots, no notifications (online PWA only).
+- Keep the existing navigation: bottom tab bar on mobile, sidebar on desktop (Home, Words, Grammar, Tests, Settings).
 
 ## Decisions — Words (EPIC 1)
 - Word = term (dictionary form), meanings[] (accepted English answers; first = primary), type, example sentence + translation, level 0–3, schedule.
