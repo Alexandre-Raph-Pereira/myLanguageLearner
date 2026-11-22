@@ -19,8 +19,9 @@ const bootstrapped = new Set<string>();
 
 /** The signed-in, allow-listed user, or null. */
 export async function getCurrentUser(): Promise<AuthUser | null> {
-  const devUserId = env.DEV_USER_ID; // always undefined in production
-  if (devUserId) return { id: devUserId, email: "dev@localhost" };
+  // DEV_USER_ID (dev only) or NO_LOGIN_USER_ID (no-login mode, any env).
+  const bypassId = env.BYPASS_USER_ID;
+  if (bypassId) return { id: bypassId, email: "dev@localhost" };
 
   const { createSupabaseServerClient, isSupabaseConfigured } =
     await import("@/lib/supabase/server");

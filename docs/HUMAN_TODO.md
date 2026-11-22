@@ -25,3 +25,19 @@ Claude Code appends here when a step needs a human (accounts, keys, files, manua
 ## All plans
 
 - [ ] Repo is public — consider making it private; never commit `.env*` (only `.env.example`).
+
+## Plan 00c — Progress & motivation
+
+- [ ] **Apply migration 0002** — with `DATABASE_URL` pointing at Supabase, run `pnpm db:migrate` (adds `activity_events`, `daily_progress`, `milestones_earned` and the goal / timezone / motivation columns).
+- [ ] **Check Home and Settings on the phone** — open the deployment once in the phone's browser so the timezone is detected (Settings → Daily goal shows it), set your daily goal, and compare Home / Settings with the canvas in light and dark mode. Locally, `pnpm db:seed` fills 30 days of sample activity for the dev user (do **not** run it against production: it would add sample points to your real account).
+- [ ] **Local e2e on WSL/Ubuntu** (optional) — Playwright's Chromium needs `libnspr4`, `libnss3` and `libasound2t64`: `sudo pnpm exec playwright install-deps chromium` (or `sudo apt install libnspr4 libnss3 libasound2t64`).
+
+## Magic-link login flag
+
+- [ ] **Turn magic-link login off (optional)** — Vercel → Project → Settings → Environment Variables: add `MAGIC_LINK_LOGIN` = `0` for Production (and Preview if wanted), then redeploy. Set it to `1` (or delete it) to turn login back on. Note: magic link is currently the **only** way to sign in — while it is off, only browsers that are already signed in can use the app; sign out and you are locked out until you set it back to `1`.
+
+## No-login mode (until all features are done)
+- [ ] Vercel → Project → Settings → Environment Variables (Production): add `NO_LOGIN_USER_ID` = `2dd3bfbe-a490-4cbc-a9c6-92eac7767842` (your own account id, so your data is kept), then redeploy. The app then opens straight on Home.
+- [ ] Locally it is already set in `.env.local`; restart `pnpm dev` to pick it up.
+- ⚠️ While it is set, **anyone who has the URL** can use the app and spend your AI key (the monthly AI budget in Settings is the only cap). Keep the URL private and keep the budget low.
+- [ ] When you want login back: delete `NO_LOGIN_USER_ID` in Vercel and `.env.local` and redeploy.

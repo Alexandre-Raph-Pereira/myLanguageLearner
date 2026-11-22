@@ -67,6 +67,17 @@ export const env = {
       .map((e) => e.trim().toLowerCase())
       .filter(Boolean);
   },
+  /**
+   * Login by email magic link. On by default; `0` / `false` / `off` turns it off
+   * (the login form, the send action and the /auth/callback link exchange all refuse).
+   */
+  get MAGIC_LINK_LOGIN(): boolean {
+    const v = raw("MAGIC_LINK_LOGIN")?.toLowerCase();
+    if (v === undefined) return true;
+    if (["1", "true", "on"].includes(v)) return true;
+    if (["0", "false", "off"].includes(v)) return false;
+    throw new EnvError("MAGIC_LINK_LOGIN", "is invalid (use 1/0, true/false or on/off)");
+  },
   get AI_PROVIDER(): AiProviderName {
     return parsed("AI_PROVIDER", providerSchema, "anthropic");
   },
@@ -94,5 +105,18 @@ export const env = {
     const v = raw("DEV_USER_ID");
     if (v === undefined) return undefined;
     return parsed("DEV_USER_ID", z.uuid());
+  },
+  /**
+   * No-login mode, production included: every visitor acts as this user id
+   * and the login page is skipped. Meant for testing before the app is done.
+   */
+  get NO_LOGIN_USER_ID(): string | undefined {
+    const v = raw("NO_LOGIN_USER_ID");
+    if (v === undefined) return undefined;
+    return parsed("NO_LOGIN_USER_ID", z.uuid());
+  },
+  /** The user id to act as without Supabase (dev bypass or no-login mode), if any. */
+  get BYPASS_USER_ID(): string | undefined {
+    return this.DEV_USER_ID ?? this.NO_LOGIN_USER_ID;
   },
 };

@@ -19,13 +19,15 @@ export default defineConfig({
   use: {
     baseURL,
     trace: "off",
+    // Matches the seeded timezone so <TimezoneSync> does not move the e2e user's days.
+    timezoneId: "UTC",
     launchOptions: process.env.PW_CHROMIUM_PATH
       ? { executablePath: process.env.PW_CHROMIUM_PATH }
       : undefined,
   },
   projects: [{ name: "mobile", use: { ...devices["Pixel 7"] } }],
   webServer: {
-    command: `pnpm exec tsx e2e/prepare-db.ts && pnpm exec next dev --port ${PORT}`,
+    command: `node --conditions=react-server --import tsx e2e/prepare-db.ts && pnpm exec next dev --port ${PORT}`,
     url: `${baseURL}/login`,
     reuseExistingServer: false,
     timeout: 180_000,

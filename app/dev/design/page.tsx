@@ -14,6 +14,7 @@ import {
   MilestoneBadge,
   MiniBars,
   PointsBreakdown,
+  SessionSummary,
   ProgressBar,
   ProgressRing,
   StatTile,
@@ -24,9 +25,33 @@ import { Wordmark } from "@/components/shell/wordmark";
 import { Button } from "@/components/ui/button";
 import { T } from "@/components/ui/target-text";
 import { BASE_TOKENS, type ThemeName } from "@/lib/design/tokens";
+import { MILESTONES_BY_ID } from "@/lib/progress/milestones";
+import { rankFor } from "@/lib/progress/ranks";
+import type { ActivityResult } from "@/lib/progress/record";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Design system · LangLearner" };
+
+const DEMO_RESULT: ActivityResult = {
+  pointsAdded: 215,
+  goal: { pct: 100, met: true, justMet: true },
+  streak: { current: 12, best: 12, todayMet: true },
+  newMilestones: [MILESTONES_BY_ID.get("words-450")!],
+  rank: rankFor(18_700),
+  pointsTotal: 18_700,
+  awarded: [
+    ...Array.from({ length: 18 }, () => ({
+      kind: "word_answer" as const,
+      points: 10,
+      refId: null,
+      meta: {},
+    })),
+    { kind: "word_known", points: 5, refId: null, meta: {} },
+    { kind: "word_known", points: 5, refId: null, meta: {} },
+    { kind: "goal_met", points: 25, refId: null, meta: {} },
+  ],
+  localDate: "2026-11-22",
+};
 
 const WEEK: WeekDay[] = [
   { label: "M", name: "Monday", status: "met" },
@@ -158,6 +183,13 @@ function Column({ theme }: { theme: ThemeName }) {
 
       <Section title="WeekStrip">
         <WeekStrip days={WEEK} />
+        <div className="bg-hero text-on-hero rounded-3xl p-4">
+          <WeekStrip days={WEEK} tone="hero" />
+        </div>
+      </Section>
+
+      <Section title="SessionSummary">
+        <SessionSummary result={DEMO_RESULT} celebrateMilestones={false} />
       </Section>
 
       <Section title="Milestones · Points">

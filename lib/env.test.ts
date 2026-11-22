@@ -24,6 +24,21 @@ describe("env", () => {
     expect(env.AI_MODEL_SMART).toBe("claude-sonnet-5-5");
   });
 
+  it("parses MAGIC_LINK_LOGIN (on by default)", () => {
+    vi.stubEnv("MAGIC_LINK_LOGIN", "");
+    expect(env.MAGIC_LINK_LOGIN).toBe(true);
+    for (const v of ["1", "true", "ON"]) {
+      vi.stubEnv("MAGIC_LINK_LOGIN", v);
+      expect(env.MAGIC_LINK_LOGIN).toBe(true);
+    }
+    for (const v of ["0", "false", "Off"]) {
+      vi.stubEnv("MAGIC_LINK_LOGIN", v);
+      expect(env.MAGIC_LINK_LOGIN).toBe(false);
+    }
+    vi.stubEnv("MAGIC_LINK_LOGIN", "maybe");
+    expect(() => env.MAGIC_LINK_LOGIN).toThrow(/MAGIC_LINK_LOGIN/);
+  });
+
   it("parses ALLOWED_EMAILS", () => {
     vi.stubEnv("ALLOWED_EMAILS", " A@x.com, b@y.com ,");
     expect(env.ALLOWED_EMAILS).toEqual(["a@x.com", "b@y.com"]);
@@ -35,5 +50,16 @@ describe("env", () => {
     expect(env.DEV_USER_ID).toBeUndefined();
     vi.stubEnv("NODE_ENV", "development");
     expect(env.DEV_USER_ID).toBe("00000000-0000-4000-8000-000000000001");
+  });
+
+  it("NO_LOGIN_USER_ID works in production and must be a uuid", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("NO_LOGIN_USER_ID", "00000000-0000-4000-8000-000000000001");
+    expect(env.NO_LOGIN_USER_ID).toBe("00000000-0000-4000-8000-000000000001");
+    expect(env.BYPASS_USER_ID).toBe("00000000-0000-4000-8000-000000000001");
+    vi.stubEnv("NO_LOGIN_USER_ID", "nope");
+    expect(() => env.NO_LOGIN_USER_ID).toThrow(/NO_LOGIN_USER_ID is invalid/);
+    vi.stubEnv("NO_LOGIN_USER_ID", "");
+    expect(env.BYPASS_USER_ID).toBeUndefined();
   });
 });

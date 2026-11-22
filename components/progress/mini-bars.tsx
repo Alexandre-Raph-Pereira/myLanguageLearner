@@ -1,5 +1,22 @@
-import { clampPct, scaleStep, stepClasses } from "@/lib/progress/scale";
+import { clampPct, scaleStep, stepClasses, type ScaleTone } from "@/lib/progress/scale";
 import { cn } from "@/lib/utils";
+
+export type MiniBar = {
+  label?: string;
+  /** Bar height, 0–100. */
+  pct: number;
+  /** Fill override (default: scale colour of `pct`); `track` for empty / neutral bars. */
+  tone?: ScaleTone | "brass" | "track";
+  /** What the bar means for screen readers and the tooltip (default `${pct}%`). */
+  text?: string;
+};
+
+const toneClass = (tone: MiniBar["tone"], v: number) =>
+  tone === "brass"
+    ? "bg-brass"
+    : tone === "track"
+      ? "bg-border-strong"
+      : stepClasses(tone ?? scaleStep(v)).fill;
 
 /** CSS bar chart (≤ 12 bars), each coloured by the scale — e.g. score history. */
 export function MiniBars({
@@ -8,13 +25,14 @@ export function MiniBars({
   height = 56,
   className,
 }: {
-  values: { label?: string; pct: number }[];
+  values: MiniBar[];
   label?: string;
   height?: number;
   className?: string;
 }) {
   const bars = values.slice(-12);
-  const summary = bars.map((b) => `${b.label ? `${b.label} ` : ""}${clampPct(b.pct)}%`).join(", ");
+  const textOf = (b: MiniBar) => b.text ?? `${clampPct(b.pct)}%`;
+  const summary = bars.map((b) => `${b.label ? `${b.label} ` : ""}${textOf(b)}`).join(", ");
   return (
     <div
       role="img"
@@ -28,8 +46,8 @@ export function MiniBars({
           <span
             key={i}
             aria-hidden
-            title={`${b.label ? `${b.label}: ` : ""}${v}%`}
-            className={cn("min-h-1 flex-1 rounded-t-sm", stepClasses(scaleStep(v)).fill)}
+            title={`${b.label ? `${b.label}: ` : ""}${textOf(b)}`}
+            className={cn("min-h-1 flex-1 rounded-t-sm", toneClass(b.tone, v))}
             style={{ height: `${Math.max(v, 4)}%` }}
           />
         );

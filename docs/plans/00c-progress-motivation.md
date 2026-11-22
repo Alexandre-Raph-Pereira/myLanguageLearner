@@ -58,21 +58,21 @@ One transaction: insert events (skip duplicates by `dedupe_key`) → upsert `dai
 
 ## Tasks
 
-### [ ] T1 — Schema + migration
+### [x] T1 — Schema + migration
 Columns and tables above; drizzle migration; PGlite test helper unchanged.
 
-### [ ] T2 — Pure logic
+### [x] T2 — Pure logic
 Files and tests listed above (≥ 95 % line coverage).
 
-### [ ] T3 — recordActivity / summary
+### [x] T3 — recordActivity / summary
 Implementation + PGlite tests: idempotency (same `dedupe_key` twice → counted once), goal met exactly once per day (+25 once), streak updates, `adjustActivity`, milestone earned once, summary for an empty user (all zeros, no crash).
 
-### [ ] T4 — Settings: goals, motivation, timezone
+### [x] T4 — Settings: goals, motivation, timezone
 - Settings → **Daily goal** (per active language): steppers "Words to review" (5–200, step 5) and "Grammar lessons" (0–5), 44 px buttons, as in the canvas.
 - Settings → **Motivation**: checkboxes "Points & rank", "Milestone celebrations".
 - Timezone: a tiny client component posts `Intl.DateTimeFormat().resolvedOptions().timeZone` once when it differs from the stored value (server action, zod-validated against `Intl.supportedValuesOf('timeZone')`); also shown read-only in Settings.
 
-### [ ] T5 — Home wired to data (canvas "Home")
+### [x] T5 — Home wired to data (canvas "Home")
 - `HeroPanel` with `GoalRing` (words outer, grammar inner, total %), counts, `WeekStrip`, streak label, CTA "Review N more words" (link to `/tests/words` once plan 01 ships; disabled before).
 - Rank card: rank name, points to next rank, week points + `MiniBars` (7 days, today in brass). Hidden when `show_points` is off.
 - **Mastery ledger**: `LedgerRow`s from registered sources — Words known (plan 01), Grammar mastered (plan 03), TOPIK N coverage (plan 06), Due today (plan 01). A source not registered yet renders nothing (no fake numbers).
@@ -80,10 +80,10 @@ Implementation + PGlite tests: idempotency (same `dedupe_key` twice → counted 
 - Desktop: same blocks in the canvas grid (hero spans 2 columns), sidebar footer shows rank + bar.
 - Empty state for a brand-new user: hero at 0 % with the goal text, everything else hidden.
 
-### [ ] T6 — Shared results blocks
+### [x] T6 — Shared results blocks
 `components/progress/session-summary.tsx`: given an `ActivityResult` (+ session-specific props) renders `GoalMetBanner` (when `justMet`), `PointsBreakdown` (grouped lines from the session's events), rank progress (today's gain in brass) and fires a sonner toast per new milestone (when `celebrate_milestones`). Used by word, grammar and TOPIK results pages.
 
-### [ ] T7 — Dev seed + e2e
+### [x] T7 — Dev seed + e2e
 - `pnpm db:seed` adds 30 days of activity for the dev user (streak 12, some missed days, points ≈ 18,700 → "Intermediate II").
 - e2e: Home shows the seeded goal %, streak and rank; change the words goal in Settings → Home % updates.
 

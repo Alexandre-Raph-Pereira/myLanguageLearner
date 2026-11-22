@@ -17,13 +17,24 @@ import { AI_PROVIDERS, resolveModelChoice } from "@/lib/ai/providers";
 import { requireUser } from "@/lib/auth";
 import { env } from "@/lib/env";
 import { ENABLED_LANGUAGES, LANGUAGE_LABELS } from "@/lib/languages";
-import { getLanguageProfile, getPricingRows, getUserSettings, recentUsage } from "@/lib/settings";
+import {
+  DAILY_GOAL_GRAMMAR,
+  DAILY_GOAL_WORDS,
+  getLanguageProfile,
+  getPricingRows,
+  getUserSettings,
+  recentUsage,
+} from "@/lib/settings";
 import {
   saveAiSettingsAction,
   saveBudgetsAction,
+  saveDailyGoalAction,
   saveLanguageProfileAction,
+  saveMotivationAction,
   savePricingAction,
 } from "./actions";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Stepper } from "./stepper";
 import { T } from "@/components/ui/target-text";
 import { AppearanceSettings } from "./appearance";
 import { SettingsForm } from "./settings-form";
@@ -68,6 +79,65 @@ export default async function SettingsPage() {
         description={<>Follows your device by default. Saved on this device only.</>}
       >
         <AppearanceSettings />
+      </SettingsSection>
+
+      <SettingsSection
+        id="daily-goal"
+        title="Daily goal"
+        description={
+          <>
+            {LANGUAGE_LABELS[language].english}: every answered word counts. A grammar lesson counts
+            when studied, saved or practised that day. Days follow your timezone:{" "}
+            <span className="text-foreground font-medium">{settings.timezone}</span>.
+          </>
+        }
+      >
+        <SettingsForm action={saveDailyGoalAction} name="Daily goal">
+          <input type="hidden" name="language" value={language} />
+          <Stepper
+            name="dailyGoalWords"
+            label="Words to review"
+            defaultValue={profile?.dailyGoalWords ?? 20}
+            {...DAILY_GOAL_WORDS}
+          />
+          <Stepper
+            name="dailyGoalGrammar"
+            label="Grammar lessons"
+            defaultValue={profile?.dailyGoalGrammar ?? 1}
+            {...DAILY_GOAL_GRAMMAR}
+          />
+        </SettingsForm>
+      </SettingsSection>
+
+      <SettingsSection
+        id="motivation"
+        title="Motivation"
+        description={<>Points keep counting when hidden.</>}
+      >
+        <SettingsForm action={saveMotivationAction} name="Motivation">
+          <label className="flex min-h-11 items-center gap-3">
+            <Checkbox name="showPoints" defaultChecked={settings.showPoints} className="size-5" />
+            <span className="flex flex-col">
+              <span className="text-[15px] font-semibold">Points &amp; rank</span>
+              <span className="text-muted-foreground text-[13px]">
+                Show points, rank and weekly points.
+              </span>
+            </span>
+          </label>
+          <label className="flex min-h-11 items-center gap-3">
+            <Checkbox
+              name="celebrateMilestones"
+              defaultChecked={settings.celebrateMilestones}
+              className="size-5"
+            />
+            <span className="flex flex-col">
+              <span className="text-[15px] font-semibold">Milestone celebrations</span>
+              <span className="text-muted-foreground text-[13px]">
+                A short notice and banner on results when you reach a milestone.
+              </span>
+            </span>
+          </label>
+        </SettingsForm>
       </SettingsSection>
 
       <SettingsSection

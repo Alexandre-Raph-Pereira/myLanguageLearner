@@ -28,6 +28,9 @@ export async function getUserSettings(db: Db, userId: string): Promise<UserSetti
     aiModelFast: null,
     budgetPerRequestUsd: DEFAULT_BUDGET_PER_REQUEST_USD,
     budgetMonthlyUsd: DEFAULT_BUDGET_MONTHLY_USD,
+    timezone: "UTC",
+    showPoints: true,
+    celebrateMilestones: true,
     createdAt: now,
     updatedAt: now,
   };
@@ -83,6 +86,34 @@ export const pricingInput = z.object({
   ),
 });
 
+export const DAILY_GOAL_WORDS = { min: 5, max: 200, step: 5 } as const;
+export const DAILY_GOAL_GRAMMAR = { min: 0, max: 5, step: 1 } as const;
+
+export const dailyGoalInput = z.object({
+  language: z.enum(SUPPORTED_LANGUAGES),
+  dailyGoalWords: z.coerce.number().int().min(DAILY_GOAL_WORDS.min).max(DAILY_GOAL_WORDS.max),
+  dailyGoalGrammar: z.coerce.number().int().min(DAILY_GOAL_GRAMMAR.min).max(DAILY_GOAL_GRAMMAR.max),
+});
+
+/** HTML checkboxes: present ("on") when checked, absent otherwise. */
+const checkbox = z.preprocess((v) => v === "on" || v === "true" || v === true, z.boolean());
+
+export const motivationInput = z.object({
+  showPoints: checkbox,
+  celebrateMilestones: checkbox,
+});
+
+let timezones: Set<string> | null = null;
+/** IANA zones known to the runtime (+ "UTC", which `supportedValuesOf` omits). */
+export function isSupportedTimezone(tz: string): boolean {
+  timezones ??= new Set([...Intl.supportedValuesOf("timeZone"), "UTC", "Etc/UTC"]);
+  return timezones.has(tz);
+}
+
+export const timezoneInput = z.object({
+  timezone: z.string().max(100).refine(isSupportedTimezone, "unknown timezone"),
+});
+
 // ---- writes (always scoped by userId, except the global pricing table) ----
 
 export async function saveLanguageProfile(
@@ -120,6 +151,43 @@ export async function saveBudgets(db: Db, userId: string, input: z.infer<typeof 
     .insert(userSettings)
     .values({ userId, ...input })
     .onConflictDoUpdate({ target: userSettings.userId, set: { ...input, updatedAt: new Date() } });
+}
+
+export async function saveDailyGoal(db: Db, userId: string, input: z.infer<typeof dailyGoalInput>) {
+  const goals = { dailyGoalWords: input.dailyGoalWords, dailyGoalGrammar: input.dailyGoalGrammar };
+  await db
+    .insert(languageProfiles)
+    .values({
+      userId,
+      language: input.language,
+      exam: LANGUAGE_EXAMS[input.language] ?? "TOPIK",
+      ...goals,
+    })
+    .onConflictDoUpdate({
+      target: [languageProfiles.userId, languageProfiles.language],
+      set: { ...goals, updatedAt: new Date() },
+    });
+}
+
+export async function saveMotivation(
+  db: Db,
+  userId: string,
+  input: z.infer<typeof motivationInput>,
+) {
+  await db
+    .insert(userSettings)
+    .values({ userId, ...input })
+    .onConflictDoUpdate({ target: userSettings.userId, set: { ...input, updatedAt: new Date() } });
+}
+
+export async function saveTimezone(db: Db, userId: string, input: z.infer<typeof timezoneInput>) {
+  await db
+    .insert(userSettings)
+    .values({ userId, timezone: input.timezone })
+    .onConflictDoUpdate({
+      target: userSettings.userId,
+      set: { timezone: input.timezone, updatedAt: new Date() },
+    });
 }
 
 /** Saving from the UI marks the prices as verified by the owner. */

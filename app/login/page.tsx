@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ThemeToggle } from "@/components/shell/theme-toggle";
+import { env } from "@/lib/env";
 import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = { title: "Log in · LangLearner" };
@@ -7,12 +8,14 @@ export const metadata: Metadata = { title: "Log in · LangLearner" };
 const ERRORS: Record<string, string> = {
   not_allowed: "This email is not allowed to use this app.",
   callback: "The login link is invalid or expired. Request a new one.",
+  disabled: "Login by email link is turned off.",
 };
 
 export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   const sp = await searchParams;
   const error = typeof sp.error === "string" ? ERRORS[sp.error] : undefined;
   const next = typeof sp.next === "string" ? sp.next : undefined;
+  const magicLink = env.MAGIC_LINK_LOGIN;
   return (
     <main className="bg-background relative flex flex-1 flex-col items-center justify-center gap-6 px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))]">
       <div className="absolute top-[max(0.5rem,env(safe-area-inset-top))] right-2">
@@ -34,15 +37,17 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
             Log in
           </h1>
           <p className="text-muted-foreground text-[13px]">
-            We&apos;ll email you a magic link — no password.
+            {magicLink
+              ? "We'll email you a magic link — no password."
+              : "Login by email link is turned off on this deployment."}
           </p>
         </div>
-        {error && (
+        {error && magicLink && (
           <p role="alert" className="bg-wrong-soft text-wrong-text rounded-xl p-3 text-sm">
             {error}
           </p>
         )}
-        <LoginForm next={next} />
+        {magicLink && <LoginForm next={next} />}
       </section>
     </main>
   );

@@ -1,6 +1,7 @@
 /* Dev-only seed: `pnpm db:seed` (uses DATABASE_URL and DEV_USER_ID). */
 import { openScriptDb } from "./script-client";
 import * as schema from "./schema";
+import { seedProgress } from "./seed-progress";
 
 async function main() {
   if (process.env.NODE_ENV === "production") throw new Error("db:seed is dev only");
@@ -22,7 +23,10 @@ async function main() {
       cacheReadPerMtok: 0.1,
     })
     .onConflictDoNothing();
-  console.log(`Seeded dev user ${userId}`);
+  const progress = await seedProgress(db, userId);
+  console.log(
+    `Seeded dev user ${userId}: ${progress.pointsTotal.toLocaleString("en-US")} pts, streak ${progress.streak}`,
+  );
   await close();
 }
 

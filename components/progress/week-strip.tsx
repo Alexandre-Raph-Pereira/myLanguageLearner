@@ -19,7 +19,17 @@ const STATUS_TEXT: Record<WeekDay["status"], string> = {
 };
 
 /** 7 segments Mon–Sun: goal met = brass, not met / future = track; today = partial. */
-export function WeekStrip({ days, className }: { days: WeekDay[]; className?: string }) {
+export function WeekStrip({
+  days,
+  tone = "card",
+  className,
+}: {
+  days: WeekDay[];
+  /** `hero` = on the inverted hero panel (hero ring colours). */
+  tone?: "card" | "hero";
+  className?: string;
+}) {
+  const onHero = tone === "hero";
   return (
     <ol aria-label="This week" className={cn("grid grid-cols-7 gap-1.5", className)}>
       {days.map((d, i) => {
@@ -33,17 +43,28 @@ export function WeekStrip({ days, className }: { days: WeekDay[]; className?: st
             <span
               aria-hidden
               className={cn(
-                "bg-track h-2 w-full overflow-hidden rounded-full",
-                d.status === "today" && "ring-brass/60 ring-1",
+                "h-2 w-full overflow-hidden rounded-full",
+                onHero ? "bg-on-hero/15" : "bg-track",
+                d.status === "today" &&
+                  (onHero ? "ring-hero-brass/70 ring-1" : "ring-brass/60 ring-1"),
               )}
             >
-              <span className="bg-brass block h-full" style={{ width: `${pct}%` }} />
+              <span
+                className={cn("block h-full", onHero ? "bg-hero-brass" : "bg-brass")}
+                style={{ width: `${pct}%` }}
+              />
             </span>
             <span
               aria-hidden
               className={cn(
                 "text-[11px]",
-                d.status === "today" ? "text-foreground font-semibold" : "text-muted-foreground",
+                d.status === "today"
+                  ? onHero
+                    ? "font-semibold"
+                    : "text-foreground font-semibold"
+                  : onHero
+                    ? "opacity-70"
+                    : "text-muted-foreground",
               )}
             >
               {d.label}

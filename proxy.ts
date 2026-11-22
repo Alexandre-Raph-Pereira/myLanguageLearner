@@ -5,6 +5,12 @@ import { updateSession } from "@/lib/supabase/proxy";
 export async function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
 
+  // No-login mode (any env): act as NO_LOGIN_USER_ID; the login page sends you to Home.
+  if (process.env.NO_LOGIN_USER_ID?.trim()) {
+    if (pathname === "/login") return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.next({ request });
+  }
+
   // Dev-only bypass (never in production): act as DEV_USER_ID without Supabase.
   if (process.env.NODE_ENV !== "production" && process.env.DEV_USER_ID) {
     return NextResponse.next({ request });
