@@ -61,7 +61,7 @@ One transaction: insert events (skip duplicates by `dedupe_key`) → upsert `dai
 ### [x] T1 — Schema + migration
 Columns and tables above; drizzle migration; PGlite test helper unchanged.
 
-### [ ] T2 — Pure logic
+### [x] T2 — Pure logic
 Files and tests listed above (≥ 95 % line coverage).
 
 ### [ ] T3 — recordActivity / summary
