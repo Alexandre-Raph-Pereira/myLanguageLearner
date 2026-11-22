@@ -28,6 +28,9 @@ export async function getUserSettings(db: Db, userId: string): Promise<UserSetti
     aiModelFast: null,
     budgetPerRequestUsd: DEFAULT_BUDGET_PER_REQUEST_USD,
     budgetMonthlyUsd: DEFAULT_BUDGET_MONTHLY_USD,
+    timezone: "UTC",
+    showPoints: true,
+    celebrateMilestones: true,
     createdAt: now,
     updatedAt: now,
   };

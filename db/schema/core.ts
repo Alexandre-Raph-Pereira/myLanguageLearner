@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import {
   boolean,
+  check,
   index,
   integer,
   numeric,
@@ -37,6 +38,10 @@ export const userSettings = pgTable("user_settings", {
   budgetMonthlyUsd: numeric("budget_monthly_usd", { precision: 10, scale: 2, mode: "number" })
     .notNull()
     .default(10),
+  /** IANA timezone used for local days (goal, streak). Auto-detected from the browser. */
+  timezone: text("timezone").notNull().default("UTC"),
+  showPoints: boolean("show_points").notNull().default(true),
+  celebrateMilestones: boolean("celebrate_milestones").notNull().default(true),
   ...timestamps,
 });
 
@@ -47,9 +52,18 @@ export const languageProfiles = pgTable(
     language: text("language").notNull(),
     exam: text("exam").notNull().default("TOPIK"),
     targetLevel: smallint("target_level"),
+    dailyGoalWords: smallint("daily_goal_words").notNull().default(20),
+    dailyGoalGrammar: smallint("daily_goal_grammar").notNull().default(1),
+    /** Cache of sum(activity_events.points) for this language. */
+    pointsTotal: integer("points_total").notNull().default(0),
+    bestStreak: integer("best_streak").notNull().default(0),
     ...timestamps,
   },
-  (t) => [primaryKey({ columns: [t.userId, t.language] })],
+  (t) => [
+    primaryKey({ columns: [t.userId, t.language] }),
+    check("daily_goal_words_range", sql`${t.dailyGoalWords} between 5 and 200`),
+    check("daily_goal_grammar_range", sql`${t.dailyGoalGrammar} between 0 and 5`),
+  ],
 );
 
 /** Global reference table (prices are not per user). */
