@@ -1,0 +1,21 @@
+{
+  "responses": [
+    {
+      "title": "-지만",
+      "pattern": "-지만",
+      "variants": ["-지만", "-았지만", "-었지만"],
+      "meaning_short": "but, although",
+      "level": 1,
+      "description_md": "Contrasts two clauses (\"A, but B\").",
+      "formation_md": "- Stem + **-지만**: 비싸다 → 비싸지만\n- Past: **-았/었지만**",
+      "examples": [
+        { "sentence": "한국어는 어렵지만 재미있어요.", "translation": "Korean is hard but fun." },
+        { "sentence": "비가 왔지만 산책했어요.", "translation": "It rained, but I went for a walk." },
+        { "sentence": "피곤하지만 공부해야 돼요.", "translation": "I'm tired, but I have to study." }
+      ],
+      "similar_md": "**그렇지만** starts a new sentence with the same meaning.",
+      "related": [{ "ref": "G1", "kind": "similar" }]
+    }
+  ],
+  "usage": { "input": 1500, "output": 600 }
+}

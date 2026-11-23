@@ -26,7 +26,11 @@ export function ProgressRing({
   return (
     <div
       role="img"
-      aria-label={`${label} ${value}%${sub ? `, ${sub}` : ""}`}
+      aria-label={
+        tone === "muted"
+          ? `${label}: not measured yet`
+          : `${label} ${value}%${sub ? `, ${sub}` : ""}`
+      }
       className={cn("relative flex shrink-0 flex-col items-center justify-center", className)}
       style={{ width: size, height: size }}
     >

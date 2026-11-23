@@ -41,6 +41,7 @@ describe("rings", () => {
     expect(screen.getByRole("img", { name: "Score 72%, 18 / 25" })).toBeInTheDocument();
     rerender(<ProgressRing pct={0} step="muted" label="Mastery" />);
     expect(screen.getByText("–")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "Mastery: not measured yet" })).toBeInTheDocument();
   });
 });
 
