@@ -62,7 +62,7 @@ Canvas screen: **Grammar lesson** (DESIGN.md §5). Patterns, variants and exampl
 - Tables + migration; `lib/grammar/queries.ts`: list (search title/pattern/meaning, level filter, status), get with links, create (computes match_keys, writes links both ways), update, delete, `compactListForPrompt(userId, language)` → `{ code, id, title, meaning_short }[]`, `libraryIndex` (id, title, pattern, variants, meaning_short, level, description_md, examples — for plan 05 cache).
 - **Accept:** PGlite tests: create with links, dedupe detection, match keys.
 
-### [ ] T2 — Library & lesson pages
+### [x] T2 — Library & lesson pages
 - `/grammar`: list cards (title in the target font, meaning_short, TOPIK level chip, mastery badge slot for plan 03 coloured by the scale, "studied today" tick), search, level filter.
 - `/grammar/[id]` (canvas "Grammar lesson"): title (target font, 34 px) + meaning (Fraunces), level chip, **mastery card** (`ProgressRing` + state + last-10 attempt strip — slot until plan 03), "Mark as studied today" / "Studied today" row (`good-soft`), Formation card (react-markdown), Examples card (KR/EN, pattern occurrence in `brass-text` bold via simple match on variants), "Similar · be careful" dashed card with related lessons as chips (links), bottom actions Edit / **Test this lesson** (enabled by plan 03) / Delete in an overflow menu.
 - `/grammar/[id]/edit`: same form as review (T4).

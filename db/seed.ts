@@ -1,6 +1,7 @@
 /* Dev-only seed: `pnpm db:seed` (uses DATABASE_URL and DEV_USER_ID). */
 import { openScriptDb } from "./script-client";
 import * as schema from "./schema";
+import { seedGrammar } from "./seed-grammar";
 import { seedProgress } from "./seed-progress";
 import { seedWords } from "./seed-words";
 
@@ -26,8 +27,9 @@ async function main() {
     .onConflictDoNothing();
   const progress = await seedProgress(db, userId);
   const added = await seedWords(db, userId);
+  const lessons = await seedGrammar(db, userId);
   console.log(
-    `Seeded dev user ${userId}: ${progress.pointsTotal.toLocaleString("en-US")} pts, streak ${progress.streak}, ${added} new words`,
+    `Seeded dev user ${userId}: ${progress.pointsTotal.toLocaleString("en-US")} pts, streak ${progress.streak}, ${added} new words, ${lessons} new grammar lessons`,
   );
   await close();
 }
