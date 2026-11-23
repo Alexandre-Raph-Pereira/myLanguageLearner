@@ -86,6 +86,11 @@ Route handlers `POST /api/grammar/structure`, `POST /api/grammar/rewrite` (`maxD
 ### [x] T5 — Fixtures
 `grammar.structure.json` (2 drafts, one with a `related` code), `grammar.rewrite.json`.
 
+### [x] T6 — Import hand-written lesson files (no AI)
+Lessons can be written by hand in `content/grammar/<lang>/*.md` (format: `content/grammar/TEMPLATE.md`, parser: `lib/grammar/lesson-file.ts`).
+- `pnpm grammar:import [--update]` (`db/import-grammar.ts` → `lib/grammar/import-files.ts`): user = `GRAMMAR_IMPORT_USER_ID` ?? `NO_LOGIN_USER_ID` ?? `DEV_USER_ID`. Matches lessons by pattern: new → created (`source = import_text`), existing → skipped (or overwritten with `--update`, links kept). `related` patterns → `grammar_links` both ways (additive); missing ones are printed and linked on a later run.
+- **Accept:** PGlite test: importing twice → one lesson each; links created; `--update` keeps links.
+
 ---
 
 ## Out of scope
