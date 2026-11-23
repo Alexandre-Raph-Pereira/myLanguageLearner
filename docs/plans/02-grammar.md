@@ -83,7 +83,7 @@ Route handlers `POST /api/grammar/structure`, `POST /api/grammar/rewrite` (`maxD
 - Component must also work inside a narrow drawer (used by plan 05) — props `compact`.
 - **Accept:** e2e with AI_MOCK: paste text → 2 drafts → rewrite one → save both → appear in library with links.
 
-### [ ] T5 — Fixtures
+### [x] T5 — Fixtures
 `grammar.structure.json` (2 drafts, one with a `related` code), `grammar.rewrite.json`.
 
 ---

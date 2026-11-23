@@ -42,6 +42,20 @@ export type RelatedLesson = {
 /** Draft as held by the review UI: AI fields with `related` resolved to existing lessons. */
 export type ReviewDraft = Omit<GrammarDraft, "related"> & { related: RelatedLesson[] };
 
+/** A review draft sent back by the client (rewrite requests). */
+export const reviewDraftSchema = grammarDraftSchema.omit({ related: true }).extend({
+  related: z
+    .array(
+      z.object({
+        id: z.uuid(),
+        title: z.string().max(200),
+        kind: z.enum(GRAMMAR_LINK_KINDS),
+        note: z.string().max(300).nullish(),
+      }),
+    )
+    .max(30),
+});
+
 export function emptyDraft(): ReviewDraft {
   return {
     title: "",

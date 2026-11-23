@@ -1,0 +1,44 @@
+{
+  "responses": [
+    {
+      "drafts": [
+        {
+          "title": "-고 싶다",
+          "pattern": "-고 싶다",
+          "variants": ["-고 싶다", "-고 싶어요", "-고 싶지 않다", "-고 싶었다"],
+          "meaning_short": "to want to (do)",
+          "level": 1,
+          "description_md": "Expresses the speaker's **wish** to do something. For a third person use **-고 싶어하다**.",
+          "formation_md": "- Attach **-고 싶다** to any verb stem: 가다 → 가고 싶다, 먹다 → 먹고 싶다\n- Past: **-고 싶었다**\n- Negative: **-고 싶지 않다**",
+          "examples": [
+            { "sentence": "한국에 가고 싶어요.", "translation": "I want to go to Korea." },
+            { "sentence": "오늘은 집에서 쉬고 싶어요.", "translation": "Today I want to rest at home." },
+            { "sentence": "어릴 때 의사가 되고 싶었어요.", "translation": "When I was young I wanted to become a doctor." }
+          ],
+          "similar_md": "With a third-person subject use **-고 싶어하다**: 동생이 자고 싶어해요.",
+          "related": [
+            { "ref": "G1", "kind": "similar", "note": "both attach to verb stems" },
+            { "ref": "G99", "kind": "contrast" }
+          ]
+        },
+        {
+          "title": "-지만",
+          "pattern": "-지만",
+          "variants": ["-지만", "-았지만", "-었지만"],
+          "meaning_short": "but, although",
+          "level": 1,
+          "description_md": "Joins two clauses that **contrast**. Formal-neutral, common in writing and speech.",
+          "formation_md": "- Attach **-지만** to the stem: 비싸다 → 비싸지만\n- Past: **-았/었지만**\n- Nouns: **이지만 / 지만**",
+          "examples": [
+            { "sentence": "한국어는 어렵지만 재미있어요.", "translation": "Korean is hard but fun." },
+            { "sentence": "비가 왔지만 산책했어요.", "translation": "It rained, but I went for a walk." },
+            { "sentence": "학생이지만 일도 해요.", "translation": "I am a student but I also work." }
+          ],
+          "similar_md": "**그렇지만** starts a new sentence with the same meaning.",
+          "related": []
+        }
+      ]
+    }
+  ],
+  "usage": { "input": 2400, "output": 1100, "cacheRead": 1800 }
+}
