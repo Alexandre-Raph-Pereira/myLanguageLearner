@@ -58,7 +58,7 @@ Canvas screen: **Grammar lesson** (DESIGN.md §5). Patterns, variants and exampl
 
 ## Tasks
 
-### [ ] T1 — Schema, normalization, queries
+### [x] T1 — Schema, normalization, queries
 - Tables + migration; `lib/grammar/queries.ts`: list (search title/pattern/meaning, level filter, status), get with links, create (computes match_keys, writes links both ways), update, delete, `compactListForPrompt(userId, language)` → `{ code, id, title, meaning_short }[]`, `libraryIndex` (id, title, pattern, variants, meaning_short, level, description_md, examples — for plan 05 cache).
 - **Accept:** PGlite tests: create with links, dedupe detection, match keys.
 
