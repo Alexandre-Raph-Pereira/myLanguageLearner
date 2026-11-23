@@ -49,3 +49,9 @@ Claude Code appends here when a step needs a human (accounts, keys, files, manua
 - [ ] **Phone check** — on the deployment, take a 25-word EN→KR test with the Korean keyboard: typing 한글 and pressing Enter/Done must commit the syllable without submitting early or twice; check the feedback panel, "I was right", and the results page in light and dark mode.
 - [ ] **Photo import check** — Words → Import photo → "Take a photo" of a notebook page; verify the preview against the page before importing (real AI call, costs a few cents per photo with Sonnet).
 - [ ] **Local e2e without sudo** (optional, alternative to installing the libs) — `apt-get download libnspr4 libnss3 libasound2t64`, extract each with `dpkg-deb -x <file>.deb ./pwlibs`, then run e2e with `LD_LIBRARY_PATH=$PWD/pwlibs/usr/lib/x86_64-linux-gnu pnpm test:e2e`.
+
+## Plan 02 — Grammar
+
+- [ ] **Apply migration 0004** — with `DATABASE_URL` pointing at Supabase, run `pnpm db:migrate` (adds `grammar_points` and `grammar_links`). Do **not** run `pnpm db:seed` against Supabase (it now also adds 3 sample grammar lessons).
+- [ ] **Notebook photo check (Definition of Done, real AI)** — on the deployed app on your phone: Grammar → Add lesson → **From photo** → "Take a photo" of a notebook grammar page → Read. Check the draft against the page, press **Rewrite** with an instruction (e.g. "shorter description"), check **Undo rewrite** works, then **Save**. The lesson must appear in Grammar and its page must be readable in light and dark mode. Each photo / rewrite costs a few cents with Sonnet (the estimate is shown next to each AI button).
+- [ ] **Korean keyboard check** — on the phone, type Korean in the variants field and press Enter: the syllable must be committed and added as one form (not cut or added twice).
