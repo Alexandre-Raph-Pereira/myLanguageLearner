@@ -86,6 +86,12 @@ Route handlers `POST /api/grammar/structure`, `POST /api/grammar/rewrite` (`maxD
 ### [x] T5 — Fixtures
 `grammar.structure.json` (2 drafts, one with a `related` code), `grammar.rewrite.json`.
 
+### [ ] T6 — Import hand-written lesson files (no AI)
+Lessons can be written by hand in `content/grammar/<lang>/*.md` (format: `content/grammar/TEMPLATE.md`, parser + zod schema: `lib/grammar/lesson-file.ts`, already done).
+- `pnpm grammar:import` (script, uses the `DEV_USER_ID` / owner id): parses every file, upserts by `match_keys` (same pattern = update, never a duplicate), `source = import_text`, then resolves `related` by pattern match → `grammar_links` (both ways); unresolved patterns are printed and retried on the next run.
+- Examples keep their optional `use` label (add `use?: string` to the `examples` jsonb items; the lesson page groups examples by it).
+- **Accept:** PGlite test: import `dorok.md` twice → one lesson; links created once the related lesson exists.
+
 ---
 
 ## Out of scope
