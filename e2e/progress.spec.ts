@@ -22,7 +22,7 @@ test("changing the words goal in Settings updates Home %", async ({ page }) => {
   await page.goto("/");
   // (14/25 + 1/1) / 2 = 78 %
   await expect(page.getByRole("img", { name: /^Daily goal 78%: 14 of 25 words/ })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Review 11 more words" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Review 11 more words" })).toBeVisible();
 });
 
 test("turning off Points & rank hides the rank card", async ({ page }) => {

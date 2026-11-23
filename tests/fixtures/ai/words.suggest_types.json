@@ -1,0 +1,19 @@
+{
+  "responses": [
+    {
+      "types": [
+        { "i": 0, "type": "noun" },
+        { "i": 1, "type": "noun" },
+        { "i": 2, "type": "verb" },
+        { "i": 3, "type": "verb" },
+        { "i": 4, "type": "noun" },
+        { "i": 5, "type": "noun" },
+        { "i": 6, "type": "adverb" },
+        { "i": 7, "type": "noun" },
+        { "i": 8, "type": "noun" },
+        { "i": 9999, "type": "verb" }
+      ]
+    }
+  ],
+  "usage": { "input": 600, "output": 180 }
+}

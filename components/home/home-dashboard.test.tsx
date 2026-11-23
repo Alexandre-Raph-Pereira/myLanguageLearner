@@ -50,7 +50,9 @@ describe("HomeDashboard", () => {
     expect(screen.getByTestId("streak").textContent).toContain("Streak 3 days");
     expect(screen.getByTestId("rank-name").textContent).toBe("Intermediate II");
     expect(screen.getByText("3,300 pts to Upper-intermediate")).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Review 6 more words" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Review 6 more words" }).getAttribute("href")).toBe(
+      "/tests/words",
+    );
     expect(screen.getByRole("img", { name: /^7-day streak: locked, 43%/ })).toBeTruthy();
     expect(screen.queryByRole("region", { name: "Mastery ledger" })).toBeNull();
   });

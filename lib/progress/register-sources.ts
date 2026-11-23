@@ -3,4 +3,4 @@
  * (`registerSnapshotSource`, `registerLedgerSource`, `registerTestScoreSource`).
  * Plans 01, 03, 05 and 06 add one import line each, e.g. `import "@/lib/words/progress-sources";`.
  */
-export {};
+import "@/lib/words/progress-sources";

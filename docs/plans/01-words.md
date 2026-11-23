@@ -82,21 +82,21 @@ Canvas screens (DESIGN.md §5): **Words library**, **Word test — feedback**, *
 
 ## Tasks
 
-### [ ] T1 — Schema + queries
+### [x] T1 — Schema + queries
 - Tables above + migration. `lib/words/queries.ts` (all scoped by userId/language): list with filters (search on term/meanings ILIKE, type[], level[], needsExample, status), get, create, update, delete, bulkInsert, findDuplicates(rows), libraryIndex (id, term, meanings, type, level — used by plan 05).
 - **Accept:** PGlite tests for CRUD, uniqueness with homonyms, filters.
 
-### [ ] T2 — Word library UI
+### [x] T2 — Word library UI
 - `/words` (canvas "Words library"): title + "N words · K known (P %)", `LevelBar` of the whole bank, search box, filter chips with level-colour dots and counts (all, Lv 0–3, type, "no example · N"), a `HeroPanel` card "N words due — today's goal x / y — Start test", list rows (term in the target font, primary meaning, type chip, `LevelPips` + "Lv n", "no example" flag in `level-1-text`). Infinite scroll or pagination (50).
 - `/words/new` and `/words/[id]`: form (term, meanings as tag input, type select, example + translation, notes), level shown read-only with "reset to 0" button. Delete with confirm.
 - Header actions: Add, Import (CSV), Import (photo), Start test.
 - **Accept:** create/edit/delete works on mobile width; zod validation messages.
 
-### [ ] T3 — Scheduler, selection, answer checking
+### [x] T3 — Scheduler, selection, answer checking
 - Implement `lib/words/scheduler.ts`, `select.ts`, `answer.ts`, `lib/text/normalize.ts` with tests above.
 - **Accept:** ≥ 95 % line coverage on these files.
 
-### [ ] T4 — Word test
+### [x] T4 — Word test
 - `/tests/words` params page: types (multi-select, default all), direction (`en_ko` default, `ko_en`, `mixed`), count (5–50, default 25), checkbox "include words without example". Shows "N due / M total matching".
 - Start → server action creates `test_sessions` (kind `word`, config, list of selected word ids + direction per item in `config.items`) → redirect `/tests/words/[sessionId]`.
 - Runner (canvas "Word test — feedback"; one card at a time): header with quit button, brass progress bar, "n/25"; sub-line with in-session streak and accuracy %.
@@ -108,7 +108,7 @@ Canvas screens (DESIGN.md §5): **Words library**, **Word test — feedback**, *
 - End screen (canvas "Session results"): score % in Fraunces 88 px (scale colour) + "x of n correct", `session-summary` from plan 00c (goal-met banner, points breakdown, rank progress, milestone toasts), **level movement** = two `LevelBar`s (before / after) for the session's words, list of failed words (with links), "Retry the N missed words" (new session with those ids) and "Back to home".
 - **Accept:** e2e smoke on seeded data: run a 5-word test, fail one, level resets to 0, pass one, level increments, due date set.
 
-### [ ] T5 — CSV/TSV import (`/words/import`)
+### [x] T5 — CSV/TSV import (`/words/import`)
 - Input: paste textarea **or** file (.csv/.tsv/.txt). Parse with papaparse.
 - Options: separator (auto-detect tab/comma/semicolon, or custom), "first row is header", meaning split on `;` (default on), `,` (default off), `/` (default off).
 - Column mapping UI: term, meaning, example_sentence, example_translation, type (each column can be ignored). Default mapping for 2 columns = term, meaning (Quizlet export); 3 columns = term, meaning, example.
@@ -118,14 +118,14 @@ Canvas screens (DESIGN.md §5): **Words library**, **Word test — feedback**, *
 - Import button → transaction, batches of 500, `source = import_csv`, level 0, due now. Result summary: inserted / updated / skipped.
 - **Accept:** unit tests for parsing (Quizlet tab export, quoted commas, Korean NFC), mapping, duplicate detection; e2e import of a 10-row fixture.
 
-### [ ] T6 — Photo import (`/words/import/photo`)
+### [x] T6 — Photo import (`/words/import/photo`)
 - Pick up to 5 images (camera allowed on mobile: `accept="image/*" capture` optional). Client-side resize with canvas to max 2000 px long side, JPEG q≈0.85 (keep each < ~1.5 MB — Vercel request body limit is 4.5 MB). Send **one image per request**, sequentially, with progress.
 - Route `POST /api/words/photo-extract` (`maxDuration` 60): `aiObject` tier smart, task `words.photo_extract`, schema `{ entries: [{ term, meanings: string[], example_sentence?, example_translation?, type?, confidence: 'high'|'low' }] }`.
 - Prompt rules: transcribe exactly what is written; Korean in NFC; do not invent words, meanings or examples that are not on the page; mark unclear handwriting `low`; skip crossed-out items; if a verb/adjective is written conjugated, keep as written and set `confidence: 'low'`.
 - Results merged into the same Import Preview (low-confidence rows highlighted). Images are **not stored**.
 - **Accept:** mock-fixture test of the route; UI flow works with AI_MOCK.
 
-### [ ] T7 — Dev seed + fixtures
+### [x] T7 — Dev seed + fixtures
 - `pnpm db:seed` adds ~40 Korean words of mixed types/levels for the dev user.
 - AI fixtures: `words.photo_extract.json`, `words.suggest_types.json`.
 

@@ -6,6 +6,8 @@ export type TestEntry = {
   description: string;
   /** Plan that ships it — the card is disabled until then. */
   plan: string;
+  /** Set once the test exists: the card links there. */
+  href?: string;
   icon: LucideIcon;
 };
 
@@ -16,6 +18,7 @@ export const TEST_ENTRIES: TestEntry[] = [
     title: "Word test",
     description: "25 due words, spaced repetition. EN→KR by default.",
     plan: "01",
+    href: "/tests/words",
     icon: Languages,
   },
   {
