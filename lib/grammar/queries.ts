@@ -286,3 +286,20 @@ export async function creditedLessonIds(db: Db, s: Scope, localDate: string): Pr
     );
   return new Set(rows.map((r) => r.refId).filter((id): id is string => id !== null));
 }
+
+/** Lessons for the related-lessons picker and client-side duplicate checks. */
+export async function lessonOptions(
+  db: Db,
+  s: Scope,
+): Promise<{ id: string; title: string; meaningShort: string; matchKeys: string[] }[]> {
+  return db
+    .select({
+      id: grammarPoints.id,
+      title: grammarPoints.title,
+      meaningShort: grammarPoints.meaningShort,
+      matchKeys: grammarPoints.matchKeys,
+    })
+    .from(grammarPoints)
+    .where(and(scoped(s), eq(grammarPoints.status, "active")))
+    .orderBy(asc(grammarPoints.title));
+}

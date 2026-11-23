@@ -1,5 +1,5 @@
 /** Pure helpers for AI drafts (client-safe). */
-import type { GrammarDraft, RelatedLesson, ReviewDraft } from "./schema";
+import type { GrammarDraft, GrammarInputRaw, RelatedLesson, ReviewDraft } from "./schema";
 
 const nfc = (s: string | null | undefined) => (s ?? "").normalize("NFC").trim();
 
@@ -56,4 +56,82 @@ export function draftForRewrite(d: ReviewDraft): string {
     ...rest,
     related: related.map((r) => ({ ref: r.title, kind: r.kind, note: r.note ?? null })),
   });
+}
+
+/** The pattern used for saving / duplicate checks: the title when the pattern is left empty. */
+export function effectivePattern(d: { title: string; pattern: string }): string {
+  return d.pattern.trim() ? d.pattern : d.title;
+}
+
+/** Review draft → raw `grammarInput` (related reduced to ids, empty pattern = title). */
+export function toGrammarInputRaw(d: ReviewDraft): GrammarInputRaw {
+  return {
+    ...d,
+    pattern: effectivePattern(d),
+    related: d.related.map((r) => ({ id: r.id, kind: r.kind, note: r.note ?? null })),
+  };
+}
+
+/** Stored lesson → review draft (edit page). */
+export function lessonToDraft(l: {
+  title: string;
+  pattern: string;
+  variants: string[];
+  meaningShort: string;
+  level: number | null;
+  descriptionMd: string;
+  formationMd: string;
+  examples: { sentence: string; translation: string }[];
+  similarMd: string;
+  links: { id: string; title: string; kind: RelatedLesson["kind"]; note: string | null }[];
+}): ReviewDraft {
+  return {
+    title: l.title,
+    pattern: l.pattern,
+    variants: l.variants,
+    meaning_short: l.meaningShort,
+    level: l.level,
+    description_md: l.descriptionMd,
+    formation_md: l.formationMd,
+    examples: l.examples,
+    similar_md: l.similarMd,
+    related: l.links.map((k) => ({ id: k.id, title: k.title, kind: k.kind, note: k.note })),
+  };
+}
+
+/** First zod issue message per top-level field. */
+export function fieldErrors(issues: readonly { path: PropertyKey[]; message: string }[]) {
+  const out: Record<string, string> = {};
+  for (const i of issues) {
+    const key = String(i.path[0] ?? "form");
+    if (!(key in out)) out[key] = i.message;
+  }
+  return out;
+}
+
+/** A partially written lesson as plain notes ("Complete with AI" sends it to `grammar.structure`). */
+export function draftToNotes(d: ReviewDraft): string {
+  const lines: string[] = [];
+  const add = (label: string, v: string) => {
+    if (v.trim()) lines.push(`${label}: ${v.trim()}`);
+  };
+  add("Title", d.title);
+  if (d.pattern.trim() && d.pattern.trim() !== d.title.trim()) add("Pattern", d.pattern);
+  add("Forms", d.variants.join(", "));
+  add("Meaning", d.meaning_short);
+  if (d.level) add("Level", String(d.level));
+  add("Explanation", d.description_md);
+  add("Formation", d.formation_md);
+  const examples = d.examples.filter((e) => e.sentence.trim());
+  if (examples.length) {
+    lines.push("Examples:");
+    for (const e of examples) {
+      lines.push(
+        `- ${e.sentence.trim()}${e.translation.trim() ? ` = ${e.translation.trim()}` : ""}`,
+      );
+    }
+  }
+  add("Similar / be careful", d.similar_md);
+  if (d.related.length) add("Related lessons", d.related.map((r) => r.title).join(", "));
+  return lines.join("\n");
 }

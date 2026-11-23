@@ -54,3 +54,22 @@ describe("drafts", () => {
     expect(json.title).toBe("-고 싶다");
   });
 });
+
+describe("draftToNotes", () => {
+  it("serializes only the filled fields", async () => {
+    const { draftToNotes } = await import("./drafts");
+    const { emptyDraft } = await import("./schema");
+    expect(draftToNotes(emptyDraft())).toBe("");
+    const notes = draftToNotes({
+      ...emptyDraft(),
+      title: "-지만",
+      pattern: "-지만",
+      meaning_short: "but",
+      examples: [
+        { sentence: "비싸지만 좋아요", translation: "" },
+        { sentence: "", translation: "" },
+      ],
+    });
+    expect(notes).toBe("Title: -지만\nMeaning: but\nExamples:\n- 비싸지만 좋아요");
+  });
+});

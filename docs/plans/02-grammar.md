@@ -68,14 +68,14 @@ Canvas screen: **Grammar lesson** (DESIGN.md §5). Patterns, variants and exampl
 - `/grammar/[id]/edit`: same form as review (T4).
 - **Accept:** mobile layout readable; markdown renders.
 
-### [ ] T3 — Import entry (`/grammar/new`)
+### [x] T3 — Import entry (`/grammar/new`)
 Tabs:
 1. **Write** — empty form (manual, no AI) with an optional "Complete with AI" button (sends the partial form as notes to `grammar.structure`).
 2. **From text** — textarea for notes → "Structure with AI".
 3. **From photo** — up to 5 images, client resize as in plan 01, one request per image → drafts appended.
 Route handlers `POST /api/grammar/structure`, `POST /api/grammar/rewrite` (`maxDuration` 60), each one AI operation, cost estimate shown before the call (tooltip/inline "≈ $0.0x").
 
-### [ ] T4 — Review screen (shared component `GrammarDraftReview`)
+### [x] T4 — Review screen (shared component `GrammarDraftReview`)
 - One editable card per draft: all fields (variants as tag input, examples as editable rows, markdown fields with preview toggle), related lessons picker (search existing).
 - Duplicate warning banner if `findPossibleDuplicates` hits, with link to the existing lesson and choice "save anyway" / "discard".
 - Actions: **Save** (stores, `source` from origin), **Rewrite** (opens instruction textarea, calls `grammar.rewrite`, replaces the draft; keep the previous version for one-step **Undo**), **Discard**.
