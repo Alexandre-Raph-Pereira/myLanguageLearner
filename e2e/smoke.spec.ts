@@ -40,14 +40,14 @@ test("dev design page renders every primitive in both themes", async ({ page }) 
 
 test("settings: Claude Code provider shows its status and the daily call cap", async ({ page }) => {
   await page.goto("/settings");
-  const form = page.getByRole("form", { name: "AI" });
+  const form = page.getByRole("form", { name: "AI", exact: true });
   await form.getByLabel("Provider").selectOption("claude-code");
   await form.getByLabel("Daily AI calls (Claude Code)").fill("40");
   await form.getByRole("button", { name: "Save" }).click();
   await expect(form.getByText("Saved")).toBeVisible();
 
   await page.reload();
-  const ai = page.getByRole("form", { name: "AI" });
+  const ai = page.getByRole("form", { name: "AI", exact: true });
   await expect(ai.getByLabel("Daily AI calls (Claude Code)")).toHaveValue("40");
   // "Claude Code found (…)" where the CLI is installed, "not installed" elsewhere.
   await expect(page.getByTestId("claude-code-status")).toHaveText(/Claude Code/);
