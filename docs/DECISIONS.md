@@ -103,3 +103,6 @@ Format: `YYYY-MM-DD — plan NN — decision — reason`
 ## Word test: "I don't know" button
 - A ghost "I don't know" button under "Check" submits an empty answer, graded `wrong` like any miss (schedule reset, back in today's review, listed in missed words, counts in the score). No new review result type.
 - The feedback for an empty answer reads "Here's the answer", and hides "You wrote …" and "I was right" (there is nothing to accept). `overrideAnswer` is also a no-op for an empty answer on the server.
+
+## Planned: local AI + home hosting (plans 07 and 08)
+- 2026-11-24 — planning — Owner's choice: **no paid AI API and no Vercel**. Plan 07 adds a `claude-code` AI provider that calls the owner's logged-in Claude Code CLI on their computer (WSL2), hosts the app there (`next start` on 127.0.0.1 behind **Tailscale Serve**, no router port forwarding), keeps Supabase as the database, replaces dollar budgets with a daily call cap for that provider, and retires Vercel once the home server is verified. API providers stay as a fallback. Plan 08 adds `langlearner-agents/` (runtime `CLAUDE.md`, learner profile, one skill per AI task, personas, evals) used as the CLI's working directory; skills/personas are inlined into the system prompt and the runtime model has no tools. The fixed stack in `CLAUDE.md` is updated when plan 07 T9 is done.
