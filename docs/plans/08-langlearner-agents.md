@@ -65,8 +65,8 @@ langlearner-agents/
 
 ### Appended system prompt built by the adapter (inline mode)
 ```
-<CLAUDE.md is loaded by Claude Code itself from the cwd>
---append-system-prompt =
+--system-prompt-file =            (plan 07 replaces Claude Code's default prompt; see DECISIONS)
+  [CLAUDE.md of the folder — read by the app, Claude Code's auto-discovery is not relied on]
   [persona body from .claude/agents/<agent>.md]
   [learner profile: learner/profile.local.md, or profile.example.md if missing]
   [shared skill bodies]
@@ -95,7 +95,7 @@ Frontmatter is stripped; bodies are joined with `---` separators. Total appended
 - **Accept:** unit tests on a temp folder: full task, task missing from manifest, missing profile.local → example used, oversize → error.
 
 ### [ ] T4 — Wire into the adapter (only if plan 07 is done; otherwise add to HUMAN_TODO / plan 07 notes)
-- `createClaudeCodeModel(modelId, task, language)` calls `loadAgentsContext` and puts the result before the task system prompt in `--append-system-prompt`.
+- `loadAgentsInstructions(dir, task)` in `lib/ai/claude-code/agents.ts` (plan 07, today returns `CLAUDE.md` only) becomes `loadAgentsContext`; its result goes before the task system prompt in the `--system-prompt-file` (pass the call's language through `createClaudeCodeModel` if a language-specific shared skill is needed).
 - `CLAUDE_AGENTS_SKILL_MODE` env: `inline` (default) | `tool` (allow only `Skill`, don't inline the task skill; inline persona + profile still).
 - **Accept:** fake-CLI test asserts the appended prompt contains persona, profile, shared skill, task skill and the task prompt last.
 

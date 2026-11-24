@@ -94,7 +94,7 @@ All bash, idempotent, commented, run inside WSL as the owner (no root except whe
 - `package.json`: `"home:deploy": "bash scripts/home/deploy.sh"`.
 - **Accept:** `bash -n` on every script; `shellcheck` if available; the unit files reference no absolute path other than through a `%h`/placeholder replaced by `install.sh`.
 
-### [ ] T7 — Runbook `docs/HOME_HOSTING.md`
+### [x] T7 — Runbook `docs/HOME_HOSTING.md`
 Step-by-step for the owner, mobile-friendly Markdown, every command copy-pastable:
 1. **WSL:** enable systemd (`/etc/wsl.conf` → `[boot] systemd=true`, then `wsl --shutdown` from PowerShell); keep WSL running (`%UserProfile%\.wslconfig` → `[wsl2] vmIdleTimeout=-1`); start it at Windows logon with a Task Scheduler task running `wsl.exe -d Ubuntu --exec /bin/true`.
 2. **Windows power:** never sleep on AC power (Settings → System → Power); optional: auto-login after reboot or accept that a reboot needs a login.
@@ -107,7 +107,7 @@ Step-by-step for the owner, mobile-friendly Markdown, every command copy-pastabl
 9. **Troubleshooting:** `journalctl --user -u mylanguagelearner -f`, `curl localhost:3000/api/health`, `tailscale status`, Claude Code logged out, Windows rebooted, plan usage limit reached.
 10. **Fallback:** switch Settings → AI provider to `anthropic` and set `ANTHROPIC_API_KEY` in `.env.production.local` if Claude Code is unavailable.
 
-### [ ] T8 — HUMAN_TODO
+### [x] T8 — HUMAN_TODO
 Add a **Plan 07** section to `docs/HUMAN_TODO.md`: do the runbook (T7), record real CLI outputs for `tests/fixtures/claude-code/` (`claude -p --output-format json …` with and without `--json-schema`, an error case) if T2 used doc-based samples, first real checks (grammar from text, words photo import) with `AI_PROVIDER=claude-code`, and the Vercel retirement steps (T9).
 
 ### [ ] T9 — Retire Vercel (after the owner confirms the home server works)

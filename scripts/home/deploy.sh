@@ -21,6 +21,7 @@ for arg in "$@"; do
   case "$arg" in
     --if-changed) IF_CHANGED=1 ;;
     --no-pull) PULL=0 ;;
+    --) ;; # pnpm may forward a literal "--"
     -h | --help)
       sed -n '2,9p' "$0"
       exit 0

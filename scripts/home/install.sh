@@ -16,6 +16,7 @@ AUTO_UPDATE=0
 for arg in "$@"; do
   case "$arg" in
     --auto-update) AUTO_UPDATE=1 ;;
+    --) ;; # pnpm may forward a literal "--"
     *)
       echo "Unknown option: $arg" >&2
       exit 2
