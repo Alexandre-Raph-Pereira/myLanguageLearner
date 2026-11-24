@@ -226,6 +226,20 @@ describe("overrideAnswer", () => {
   });
 });
 
+describe("I don't know (empty answer)", () => {
+  it("counts as wrong, resets the schedule and cannot be overridden", async () => {
+    const w = await addWord("책", ["book"]);
+    await db.update(words).set({ level: 2, intervalDays: 3 }).where(eq(words.id, w.id));
+    const s = await startWordTest(db, me, config(), { now: NOW });
+    const out = await answerWord(db, me, { sessionId: s.id, index: 0, answer: "", now: NOW });
+    expect(out).toMatchObject({ result: "wrong", answer: "", expected: "책", levelTo: 0 });
+
+    const again = await overrideAnswer(db, me, { sessionId: s.id, index: 0, now: NOW });
+    expect(again).toMatchObject({ result: "wrong", points: 0 });
+    expect((await getWord(db, me, w.id))?.level).toBe(0);
+  });
+});
+
 describe("results + retry", () => {
   it("summarizes the session and retries the missed words", async () => {
     const a = await addWord("하나", ["one"]);

@@ -35,7 +35,18 @@ test("5-word EN→KR test: fail one, pass the others, levels and due dates updat
     await expect(input).toHaveAttribute("lang", "ko");
 
     const failed = i === 1;
-    await input.fill(failed ? "틀린답" : word!.term);
+    if (failed) {
+      // "I don't know" grades the word as missed without typing anything.
+      await page.getByRole("button", { name: "I don't know" }).click();
+      const shown = page.getByRole("status").filter({ hasText: "Here's the answer" });
+      await expect(shown).toContainText(word!.term);
+      await expect(shown).toContainText("Back in today's review");
+      await expect(page.getByRole("button", { name: "I was right" })).toHaveCount(0);
+      answered.push({ term: word!.term, meaning: word!.meanings[0], level: word!.level, failed });
+      await page.getByRole("button", { name: "Next", exact: true }).click();
+      continue;
+    }
+    await input.fill(word!.term);
     if (i === 0) {
       // Enter while the IME is composing must not submit.
       await input.evaluate((el) =>
@@ -48,9 +59,7 @@ test("5-word EN→KR test: fail one, pass the others, levels and due dates updat
       );
     }
     await input.press("Enter");
-    const feedback = page.getByRole("status").filter({ hasText: failed ? "Not quite" : "Correct" });
-    await expect(feedback).toBeVisible();
-    if (failed) await expect(feedback).toContainText("Back in today's review");
+    await expect(page.getByRole("status").filter({ hasText: "Correct" })).toBeVisible();
     answered.push({ term: word!.term, meaning: word!.meanings[0], level: word!.level, failed });
     await page.getByRole("button", { name: i === 4 ? "See results" : "Next", exact: true }).click();
   }

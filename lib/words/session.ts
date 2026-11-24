@@ -418,7 +418,8 @@ export async function overrideAnswer(
   const [word] = await getWordsByIds(db, s, [item.wordId]);
   if (!word) throw new SessionError("This word was deleted.");
   const done = state.nextIndex >= state.items.length;
-  if (review.result !== "wrong") {
+  // Nothing to accept for "I don't know" (empty answer).
+  if (review.result !== "wrong" || !review.answer) {
     return outcomeFrom(review, word, input.index, 0, await todayGoal(db, s, now), done);
   }
 

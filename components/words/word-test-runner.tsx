@@ -37,7 +37,7 @@ function verdictOf(o: AnswerOutcome): string {
     case "override":
       return "Counted as correct";
     default:
-      return "Not quite";
+      return o.answer ? "Not quite" : "Here's the answer";
   }
 }
 
@@ -106,6 +106,13 @@ export function WordTestRunner({
     const value = answer.trim();
     if (!value) return;
     start(async () => apply(await answerWordAction(sessionId, index, value), false));
+  }
+
+  /** "I don't know": an empty answer, graded as wrong (no typing needed). */
+  function skip() {
+    if (pending || outcome || !item) return;
+    setAnswer("");
+    start(async () => apply(await answerWordAction(sessionId, index, ""), false));
   }
 
   function onKeyDown(e: KeyboardEvent<HTMLInputElement>) {
@@ -206,9 +213,14 @@ export function WordTestRunner({
               )}
             />
             {!outcome && (
-              <Button type="submit" size="lg" disabled={pending || !answer.trim()}>
-                {pending ? "Checking…" : "Check"}
-              </Button>
+              <>
+                <Button type="submit" size="lg" disabled={pending || !answer.trim()}>
+                  {pending ? "Checking…" : "Check"}
+                </Button>
+                <Button type="button" variant="ghost" size="lg" onClick={skip} disabled={pending}>
+                  I don&apos;t know
+                </Button>
+              </>
             )}
           </form>
         </section>
@@ -243,7 +255,7 @@ export function WordTestRunner({
                 +{outcome.points} pts
               </span>
             )}
-            {outcome.result === "wrong" && (
+            {outcome.result === "wrong" && outcome.answer && (
               <span className="text-muted-foreground">
                 You wrote{" "}
                 {outcome.direction === "en_ko" ? (
@@ -259,7 +271,7 @@ export function WordTestRunner({
           {!outcome.example && (
             <p className="text-muted-foreground text-[13px]">No example sentence yet.</p>
           )}
-          {outcome.result === "wrong" && (
+          {outcome.result === "wrong" && outcome.answer && (
             <div className="flex flex-col gap-2">
               {outcome.direction === "ko_en" && (
                 <label className="flex min-h-11 items-center gap-2 text-[13px]">
