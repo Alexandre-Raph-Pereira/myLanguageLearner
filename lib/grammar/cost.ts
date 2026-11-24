@@ -7,6 +7,8 @@ import { estimateCost, estimateInputTokens } from "@/lib/ai/estimate";
  */
 export type GrammarCostInfo = {
   model: string;
+  /** Plan provider (Claude Code): calls are included in the Claude plan, no price needed. */
+  included: boolean;
   rates: { inputPerMtok: number; outputPerMtok: number } | null;
   structureBaseTokens: number;
   rewriteBaseTokens: number;
@@ -38,8 +40,14 @@ export function rewriteEstimate(
   return estimateCost(tokens, info.rewriteMaxOutput, { ...info.rates, cacheReadPerMtok: null });
 }
 
-/** "≈ $0.03" (at least $0.01 shown as "< $0.01"); a hint when the model has no price. */
-export function formatEstimate(usd: number | null): string {
+export const INCLUDED_LABEL = "included in your Claude plan";
+
+/**
+ * "≈ $0.03" (at least $0.01 shown as "< $0.01"); a hint when the model has no price;
+ * "included in your Claude plan" with a plan provider (Claude Code).
+ */
+export function formatEstimate(usd: number | null, included = false): string {
+  if (included) return INCLUDED_LABEL;
   if (usd === null) return "no price set for the model";
   if (usd < 0.01) return "≈ < $0.01";
   return `≈ $${usd.toFixed(2)}`;

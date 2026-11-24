@@ -404,7 +404,7 @@ function DraftCard({
               className="text-muted-foreground text-[13px] tabular-nums"
               data-testid="rewrite-cost"
             >
-              {formatEstimate(estimate)}
+              {formatEstimate(estimate, cost.included)}
             </span>
           </div>
         </div>
@@ -431,12 +431,12 @@ function DraftCard({
             variant="outline"
             disabled={busy || !notes || cost.rates === null}
             onClick={completeWithAi}
-            title={formatEstimate(completeCost)}
+            title={formatEstimate(completeCost, cost.included)}
           >
             <Sparkles aria-hidden /> {rewriting ? "Completing…" : "Complete with AI"}
             {notes && (
               <span className="text-muted-foreground text-xs font-normal tabular-nums">
-                {formatEstimate(completeCost)}
+                {formatEstimate(completeCost, cost.included)}
               </span>
             )}
           </Button>

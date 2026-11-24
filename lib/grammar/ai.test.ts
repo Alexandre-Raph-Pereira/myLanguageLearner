@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { aiUsage, modelPricing, userSettings } from "@/db/schema";
 import type { Db } from "@/db/types";
 import { getMockCalls, resetMockFixtures } from "@/lib/ai/mock";
@@ -93,5 +93,14 @@ describe("grammarCostInfo", () => {
     expect(structureEstimate(info, { notes: "abc" })).toBeGreaterThan(0);
     await db.delete(modelPricing);
     expect((await grammarCostInfo(db, me)).rates).toBeNull();
+  });
+
+  it("is included in the plan with Claude Code, without any price row", async () => {
+    vi.stubEnv("AI_PROVIDER", "claude-code");
+    await db.delete(modelPricing);
+    const info = await grammarCostInfo(db, me);
+    expect(info.included).toBe(true);
+    expect(info.rates).toEqual({ inputPerMtok: 0, outputPerMtok: 0 });
+    vi.unstubAllEnvs();
   });
 });
