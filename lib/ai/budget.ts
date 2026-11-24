@@ -1,6 +1,7 @@
-import { and, eq, gte, sum } from "drizzle-orm";
+import { and, eq, gte, inArray, sum } from "drizzle-orm";
 import { aiUsage } from "@/db/schema";
 import type { Db } from "@/db/types";
+import { localDate } from "@/lib/progress/days";
 import { BudgetError } from "./errors";
 
 /** One user action (may contain several AI calls) sharing the per-request cap. */
@@ -54,6 +55,60 @@ export async function assertBudget(
   if (month + estimate > caps.budgetMonthlyUsd) {
     throw new BudgetError(
       `Monthly AI budget reached: ${usd(month)} spent of ${usd(caps.budgetMonthlyUsd)} (this call could cost up to ${usd(estimate)}). Raise it in Settings to continue.`,
+    );
+  }
+}
+
+// ---- plan providers (claude-code): a daily call cap instead of dollar budgets ----
+
+export type CallCap = { aiCallsDailyCap: number; timezone: string };
+
+/** How many of `dates` fall on the same local day as `now` in `timeZone`. */
+export function countOnLocalDay(dates: Date[], now: Date, timeZone: string): number {
+  const today = localDate(now, timeZone);
+  return dates.filter((d) => localDate(d, timeZone) === today).length;
+}
+
+/** Calls made today (user's local day) with `provider`; blocked calls do not count. */
+export async function callsToday(
+  db: Db,
+  userId: string,
+  provider: string,
+  timeZone: string,
+  now = new Date(),
+): Promise<number> {
+  // A local day is at most 26 h long; 48 h back covers every timezone.
+  const since = new Date(now.getTime() - 48 * 3_600_000);
+  const rows = await db
+    .select({ createdAt: aiUsage.createdAt })
+    .from(aiUsage)
+    .where(
+      and(
+        eq(aiUsage.userId, userId),
+        eq(aiUsage.provider, provider),
+        inArray(aiUsage.status, ["ok", "error"]),
+        gte(aiUsage.createdAt, since),
+      ),
+    );
+  return countOnLocalDay(
+    rows.map((r) => r.createdAt),
+    now,
+    timeZone,
+  );
+}
+
+/** Throws BudgetError when the daily call cap of a plan provider is reached. */
+export async function assertCallCap(
+  db: Db,
+  userId: string,
+  provider: string,
+  cap: CallCap,
+  now = new Date(),
+): Promise<void> {
+  const used = await callsToday(db, userId, provider, cap.timezone, now);
+  if (used >= cap.aiCallsDailyCap) {
+    throw new BudgetError(
+      `Daily AI call limit reached (${used} of ${cap.aiCallsDailyCap} today). Raise it in Settings → AI, or try again tomorrow.`,
     );
   }
 }

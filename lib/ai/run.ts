@@ -12,11 +12,11 @@ import { getDb } from "@/db";
 import { aiUsage } from "@/db/schema";
 import type { Db } from "@/db/types";
 import { getUserSettings } from "@/lib/settings";
-import { assertBudget, type Operation } from "./budget";
+import { assertBudget, assertCallCap, type Operation } from "./budget";
 import { AiError, BudgetError } from "./errors";
 import { estimateCost, estimateInputTokens } from "./estimate";
 import { costOf, getPricing, type PricingRates, type TokenUsage } from "./pricing";
-import { getModel, type ModelChoice, type Tier } from "./providers";
+import { getModel, isPlanProvider, type ModelChoice, type Tier } from "./providers";
 
 export type AiImage = { data: Uint8Array | string; mediaType: string };
 
@@ -47,8 +47,17 @@ type Ctx = {
   model: ReturnType<typeof getModel>["model"];
   providerLabel: string;
   pricing: PricingRates;
-  caps: { budgetPerRequestUsd: number; budgetMonthlyUsd: number };
+  /** Plan provider (claude-code): no prices, a daily call cap instead of dollar budgets. */
+  plan: boolean;
+  caps: {
+    budgetPerRequestUsd: number;
+    budgetMonthlyUsd: number;
+    aiCallsDailyCap: number;
+    timezone: string;
+  };
 };
+
+const FREE: PricingRates = { inputPerMtok: 0, outputPerMtok: 0, cacheReadPerMtok: 0 };
 
 const ZERO_USAGE: TokenUsage = { inputTokens: 0, outputTokens: 0, cachedInputTokens: 0 };
 
@@ -147,7 +156,8 @@ async function prepare(opts: AiCallOptions): Promise<Ctx> {
   const settings = await getUserSettings(db, opts.userId);
   const { model, choice, mock } = getModel(opts.tier, settings, opts.task);
   const providerLabel = mock ? `mock:${choice.provider}` : choice.provider;
-  const pricing = await getPricing(db, choice.modelId);
+  const plan = isPlanProvider(choice.provider);
+  const pricing = plan ? FREE : await getPricing(db, choice.modelId);
   if (!pricing) {
     const message = `No pricing for model ${choice.modelId}. Add its prices in Settings.`;
     await logUsage(
@@ -163,15 +173,29 @@ async function prepare(opts: AiCallOptions): Promise<Ctx> {
     model,
     providerLabel,
     pricing,
+    plan,
     caps: {
       budgetPerRequestUsd: settings.budgetPerRequestUsd,
       budgetMonthlyUsd: settings.budgetMonthlyUsd,
+      aiCallsDailyCap: settings.aiCallsDailyCap,
+      timezone: settings.timezone,
     },
   };
 }
 
 /** Budget check for one model call; logs a `blocked` row when refused. */
 async function guard(ctx: Ctx, messages: ModelMessage[]): Promise<number> {
+  if (ctx.plan) {
+    try {
+      await assertCallCap(ctx.db, ctx.opts.userId, ctx.providerLabel, ctx.caps);
+    } catch (e) {
+      if (e instanceof BudgetError) {
+        await logUsage(ctx, { status: "blocked", estimated: 0, cost: 0, error: e.message });
+      }
+      throw e;
+    }
+    return 0;
+  }
   const inputTokens = estimateInputTokens({
     text: `${ctx.opts.system}\n${messagesText(messages)}`,
     images: ctx.opts.images?.length ?? 0,
@@ -196,6 +220,8 @@ function record(ctx: Ctx, estimated: number, usage: TokenUsage): number {
 }
 
 function providerFailure(e: unknown): AiError {
+  // Errors raised by our own adapters (claude-code) already carry a user-facing message.
+  if (e instanceof AiError) return e;
   return new AiError("The AI provider request failed. Please try again.", { cause: e });
 }
 

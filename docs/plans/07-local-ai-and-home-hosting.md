@@ -54,13 +54,13 @@ No other table changes. `ai_usage.provider = 'claude-code'`, `cost_usd = 0`, `es
 
 ## Tasks
 
-### [ ] T1 — Decisions & env
+### [x] T1 — Decisions & env
 - Append the decisions above to `docs/DECISIONS.md`.
 - `lib/env.ts`: `AI_PROVIDER` accepts `claude-code`; new optional `CLAUDE_CODE_BIN` (default `claude`), `CLAUDE_AGENTS_DIR` (default `path.join(process.cwd(), "langlearner-agents")`), `CLAUDE_CODE_TIMEOUT_MS` (default `180000`), `CLAUDE_CODE_MAX_CONCURRENT` (default `2`).
 - `.env.example`: document them, with a note that `ANTHROPIC_API_KEY` must stay empty for `claude-code`.
 - **Accept:** env tests cover the new values and defaults.
 
-### [ ] T2 — Claude Code model adapter (`lib/ai/claude-code/`)
+### [x] T2 — Claude Code model adapter (`lib/ai/claude-code/`)
 - `args.ts` (pure): builds the CLI argument list and the stream-json input from the AI SDK call options (system, messages, text + image parts, responseFormat, model id). Unit-tested.
 - `parse.ts` (pure): parses the CLI JSON result → `{ text, usage, isError, error }`. Unit-tested with recorded samples in `tests/fixtures/claude-code/*.json` (record real outputs once on the owner's machine; until then, write them from the CLI docs and note it in HUMAN_TODO).
 - `model.ts` (`server-only`): `createClaudeCodeModel(modelId, task, language)` (`getModel` already receives `task`; pass the call's language too, default `ko`, so plan 08 can pick the task's skill and persona from `langlearner-agents/manifest.json`) returning a `LanguageModel` whose `doGenerate` spawns the CLI (`child_process.spawn`, no shell), writes the input on stdin, enforces the timeout (kill the process), honours `abortSignal`, and a module-level semaphore (`CLAUDE_CODE_MAX_CONCURRENT`). `doStream` throws "not supported" (no streaming used today).
@@ -68,7 +68,7 @@ No other table changes. `ai_usage.provider = 'claude-code'`, `cost_usd = 0`, `es
 - Create `langlearner-agents/` with a **minimal stub** only if plan 08 has not been done yet: `CLAUDE.md` ("You answer requests from the myLanguageLearner app. Follow the system instructions and answer only in the requested format.") and `.claude/settings.json` denying all tools. Plan 08 replaces it.
 - **Tests:** a fake CLI `tests/fixtures/claude-code/fake-claude.mjs` (prints a canned result, can simulate error / timeout / bad JSON) used through `CLAUDE_CODE_BIN`. Test: structured call returns the object; invalid JSON goes through run.ts's retry; timeout kills the process; `ANTHROPIC_API_KEY` is not in the child env; cwd is the agents dir.
 
-### [ ] T3 — Wire the provider into `lib/ai`
+### [x] T3 — Wire the provider into `lib/ai`
 - `providers.ts`: `AI_PROVIDERS` gains `"claude-code"`; `providerModel` returns `createClaudeCodeModel(modelId)`. Mock mode unchanged (`AI_MOCK=1` wins over every provider).
 - `run.ts` `prepare()`: for `claude-code`, skip `getPricing` (use zero rates) and replace the dollar `guard` with `assertCallCap(db, userId, settings)` (count of today's `ai_usage` rows with provider `claude-code` and status `ok`/`error`, user timezone) → `BudgetError("Daily AI call limit reached (150). Raise it in Settings.")`. Logging unchanged (cost 0). `cacheSystem` is ignored (Claude Code caches on its own).
 - `lib/ai/budget.ts`: add the pure day-window helper + `assertCallCap`; unit tests on PGlite.

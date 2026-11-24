@@ -38,6 +38,8 @@ export const userSettings = pgTable("user_settings", {
   budgetMonthlyUsd: numeric("budget_monthly_usd", { precision: 10, scale: 2, mode: "number" })
     .notNull()
     .default(10),
+  /** Max AI calls per local day with a plan provider (claude-code), which has no prices. */
+  aiCallsDailyCap: integer("ai_calls_daily_cap").notNull().default(150),
   /** IANA timezone used for local days (goal, streak). Auto-detected from the browser. */
   timezone: text("timezone").notNull().default("UTC"),
   showPoints: boolean("show_points").notNull().default(true),

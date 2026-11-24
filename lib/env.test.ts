@@ -24,6 +24,27 @@ describe("env", () => {
     expect(env.AI_MODEL_SMART).toBe("claude-sonnet-5-5");
   });
 
+  it("accepts the claude-code provider and its options", () => {
+    vi.stubEnv("AI_PROVIDER", "claude-code");
+    expect(env.AI_PROVIDER).toBe("claude-code");
+    for (const name of [
+      "CLAUDE_CODE_BIN",
+      "CLAUDE_AGENTS_DIR",
+      "CLAUDE_CODE_TIMEOUT_MS",
+      "CLAUDE_CODE_MAX_CONCURRENT",
+    ]) {
+      vi.stubEnv(name, "");
+    }
+    expect(env.CLAUDE_CODE_BIN).toBe("claude");
+    expect(env.CLAUDE_AGENTS_DIR).toMatch(/langlearner-agents$/);
+    expect(env.CLAUDE_CODE_TIMEOUT_MS).toBe(180_000);
+    expect(env.CLAUDE_CODE_MAX_CONCURRENT).toBe(2);
+    vi.stubEnv("CLAUDE_CODE_TIMEOUT_MS", "100");
+    expect(() => env.CLAUDE_CODE_TIMEOUT_MS).toThrow(/CLAUDE_CODE_TIMEOUT_MS is invalid/);
+    vi.stubEnv("CLAUDE_CODE_MAX_CONCURRENT", "3");
+    expect(env.CLAUDE_CODE_MAX_CONCURRENT).toBe(3);
+  });
+
   it("parses MAGIC_LINK_LOGIN (on by default)", () => {
     vi.stubEnv("MAGIC_LINK_LOGIN", "");
     expect(env.MAGIC_LINK_LOGIN).toBe(true);
