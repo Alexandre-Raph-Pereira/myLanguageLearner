@@ -84,7 +84,7 @@ No other table changes. `ai_usage.provider = 'claude-code'`, `cost_usd = 0`, `es
 - `GET /api/health` (public path in `lib/auth-rules.ts`): `{ ok, version: <git sha from env or package.json>, db: "ok" | "error", ai: { provider, ready } }`. No secrets, no user data. Used by the deploy script and to check the server from the phone.
 - **Accept:** route test with PGlite + fake CLI.
 
-### [ ] T6 — Home server scripts (`scripts/home/`)
+### [x] T6 — Home server scripts (`scripts/home/`)
 All bash, idempotent, commented, run inside WSL as the owner (no root except where stated).
 - `deploy.sh`: `git fetch` + `git checkout main` + `git pull --ff-only` → `pnpm install --frozen-lockfile` → `pnpm db:migrate` → `pnpm build` → `systemctl --user restart mylanguagelearner` → poll `http://127.0.0.1:3000/api/health` for 60 s, exit non-zero (and print the last 50 log lines) if it never gets `ok`. Default: build in place (a few seconds of downtime during restart is acceptable).
 - `mylanguagelearner.service` (systemd **user** unit): `WorkingDirectory=<repo>`, `EnvironmentFile=<repo>/.env.production.local`, `ExecStart=pnpm start -H 127.0.0.1 -p 3000`, `Restart=always`. Binding to `127.0.0.1` means only Tailscale Serve reaches it.

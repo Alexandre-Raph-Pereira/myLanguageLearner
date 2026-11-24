@@ -1,0 +1,10 @@
+# Rendered by scripts/home/install.sh. Started by mylanguagelearner-update.timer.
+[Unit]
+Description=myLanguageLearner auto-update (deploy origin/main if it moved)
+
+[Service]
+Type=oneshot
+WorkingDirectory=@REPO@
+Environment=PATH=@PATH@
+Environment=PORT=@PORT@
+ExecStart=/usr/bin/env bash @REPO@/scripts/home/deploy.sh --if-changed

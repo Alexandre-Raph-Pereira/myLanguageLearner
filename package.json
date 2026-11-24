@@ -14,9 +14,12 @@
     "format": "prettier --write .",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "node --env-file-if-exists=.env.local --import tsx db/migrate.ts",
+    "db:migrate:prod": "node --env-file=.env.production.local --import tsx db/migrate.ts",
     "db:seed": "node --env-file-if-exists=.env.local --conditions=react-server --import tsx db/seed.ts",
     "grammar:import": "node --env-file-if-exists=.env.local --conditions=react-server --import tsx db/import-grammar.ts",
     "icons": "node scripts/generate-icons.mjs",
+    "home:deploy": "bash scripts/home/deploy.sh",
+    "home:install": "bash scripts/home/install.sh",
     "test:coverage": "vitest run --coverage --coverage.include=\"lib/progress/*.ts\" --coverage.include=\"lib/words/{scheduler,select,answer}.ts\" --coverage.include=\"lib/text/*.ts\""
   },
   "dependencies": {
