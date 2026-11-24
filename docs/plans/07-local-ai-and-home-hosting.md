@@ -74,13 +74,13 @@ No other table changes. `ai_usage.provider = 'claude-code'`, `cost_usd = 0`, `es
 - `lib/ai/budget.ts`: add the pure day-window helper + `assertCallCap`; unit tests on PGlite.
 - **Accept:** existing `lib/ai/ai.test.ts` passes untouched; new tests for the cap and for "no pricing row needed".
 
-### [ ] T4 — Settings & cost UI
+### [x] T4 — Settings & cost UI
 - Settings → AI: provider select gains **"Claude Code (this computer)"**; when selected, show the daily call cap input (instead of the dollar budgets, which stay for API providers), and a status line from a server check (`claude --version` run once, cached 60 s): "Claude Code found (v…)" or the error message from T2. Never show env values.
 - Cost estimates (`lib/grammar/cost.ts`, `lib/words/suggest-types.ts`, the AI buttons): with `claude-code`, show "Included in your Claude plan · N calls" instead of "≈ $…", and never disable AI buttons for a missing price. Keep the "verify prices" banner only for API providers.
 - Follow `docs/DESIGN.md` (tokens, light + dark, 375 px).
 - **Accept:** component/unit tests for both provider modes; e2e still passes with `AI_MOCK=1`.
 
-### [ ] T5 — Health endpoint
+### [x] T5 — Health endpoint
 - `GET /api/health` (public path in `lib/auth-rules.ts`): `{ ok, version: <git sha from env or package.json>, db: "ok" | "error", ai: { provider, ready } }`. No secrets, no user data. Used by the deploy script and to check the server from the phone.
 - **Accept:** route test with PGlite + fake CLI.
 
