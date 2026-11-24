@@ -43,7 +43,9 @@ lib/words|grammar|tests|exams|align|progress/   domain logic (pure functions whe
 lib/text/               Korean/text normalization helpers
 tests/                  vitest helpers, fixtures (tests/fixtures/ai/*.json)
 e2e/                    playwright specs
-docs/                   vision, plans, decisions
+docs/                   vision, plans, decisions (home server runbook: docs/HOME_HOSTING.md)
+langlearner-agents/     working dir + instructions of the local Claude Code AI provider (plan 07/08)
+scripts/home/           home server deploy/install scripts (WSL + systemd)
 ```
 
 ## Rules
@@ -58,6 +60,9 @@ docs/                   vision, plans, decisions
 - **Progress:** award points / goal progress only through `recordActivity()` (`lib/progress/record.ts`).
 - **Secrets:** the repo is PUBLIC. Never commit `.env*` (only `.env.example`). Never log API keys.
 - Use the AI SDK API of the **installed version** (check `node_modules/ai` docs/types; e.g. `generateObject` vs `generateText({ output })` differ between majors).
+
+## AI providers
+`AI_PROVIDER=claude-code` (home server, plan 07) runs the owner's logged-in `claude` CLI from `langlearner-agents/` with no tools: no prices, a daily call cap instead of dollar budgets. The API providers (`anthropic | openai | google`) remain as a fallback. The adapter lives in `lib/ai/claude-code/` (still behind `lib/ai/run.ts`).
 
 ## AI mock mode
 `AI_MOCK=1` makes `lib/ai/providers.ts` return mock models (from `ai/test`) that answer from fixtures in `tests/fixtures/ai/<task>.json`. Unit tests, e2e tests and cloud sessions without an API key must work in this mode. When you add a new AI task, add a fixture for it.

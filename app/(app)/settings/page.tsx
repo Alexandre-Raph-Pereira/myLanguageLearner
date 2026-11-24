@@ -12,12 +12,19 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getDb } from "@/db";
-import { monthSpent } from "@/lib/ai/budget";
-import { AI_PROVIDERS, resolveModelChoice } from "@/lib/ai/providers";
+import { callsToday, monthSpent } from "@/lib/ai/budget";
+import { claudeCodeStatus } from "@/lib/ai/claude-code/status";
+import {
+  AI_PROVIDER_LABELS,
+  AI_PROVIDERS,
+  isPlanProvider,
+  resolveModelChoice,
+} from "@/lib/ai/providers";
 import { requireUser } from "@/lib/auth";
 import { env } from "@/lib/env";
 import { ENABLED_LANGUAGES, LANGUAGE_LABELS } from "@/lib/languages";
 import {
+  AI_CALLS_DAILY_CAP,
   DAILY_GOAL_GRAMMAR,
   DAILY_GOAL_WORDS,
   getLanguageProfile,
@@ -58,7 +65,11 @@ export default async function SettingsPage() {
   const modelIds = [...new Set([smart.modelId, fast.modelId])];
   const pricingRows = await getPricingRows(db, modelIds);
   const pricing = modelIds.map((id) => ({ id, row: pricingRows.find((r) => r.modelId === id) }));
-  const needsVerification = pricing.some((p) => !p.row?.verified);
+  // Claude Code (plan provider): no prices; a daily call cap instead of dollar budgets.
+  const plan = isPlanProvider(smart.provider);
+  const ccStatus = plan ? await claudeCodeStatus() : null;
+  const ccCalls = plan ? await callsToday(db, user.id, smart.provider, settings.timezone) : 0;
+  const needsVerification = !plan && pricing.some((p) => !p.row?.verified);
   const spent = await monthSpent(db, user.id);
   const usage = await recentUsage(db, user.id, 20);
 
@@ -184,13 +195,22 @@ export default async function SettingsPage() {
             defaultValue={settings.aiProvider ?? ""}
             className={selectClass}
           >
-            <option value="">Default ({env.AI_PROVIDER})</option>
+            <option value="">Default ({AI_PROVIDER_LABELS[env.AI_PROVIDER]})</option>
             {AI_PROVIDERS.map((p) => (
               <option key={p} value={p}>
-                {p}
+                {AI_PROVIDER_LABELS[p]}
               </option>
             ))}
           </select>
+          {ccStatus && (
+            <p
+              role="status"
+              data-testid="claude-code-status"
+              className={`rounded-xl px-3 py-2 text-[13px] ${ccStatus.ready ? "bg-good-soft text-foreground" : "bg-wrong-soft text-wrong-text"}`}
+            >
+              {ccStatus.message}
+            </p>
+          )}
           <Label htmlFor="aiModelSmart">Smart model (generation)</Label>
           <Input
             id="aiModelSmart"
@@ -205,12 +225,41 @@ export default async function SettingsPage() {
             defaultValue={settings.aiModelFast ?? ""}
             placeholder={env.AI_MODEL_FAST}
           />
+          <Label htmlFor="aiCallsDailyCap">Daily AI calls (Claude Code)</Label>
+          <Input
+            id="aiCallsDailyCap"
+            name="aiCallsDailyCap"
+            inputMode="numeric"
+            required
+            min={AI_CALLS_DAILY_CAP.min}
+            max={AI_CALLS_DAILY_CAP.max}
+            defaultValue={settings.aiCallsDailyCap}
+          />
+          <p className="text-muted-foreground text-xs">
+            Claude Code uses your Claude plan instead of prices: this caps the calls per day.
+            {plan && (
+              <>
+                {" "}
+                Today:{" "}
+                <span className="text-foreground font-medium tabular-nums">
+                  {ccCalls} of {settings.aiCallsDailyCap}
+                </span>
+                .
+              </>
+            )}
+          </p>
         </SettingsForm>
       </SettingsSection>
 
       <SettingsSection
         title="Pricing"
-        description={<>USD per million tokens for the configured models.</>}
+        description={
+          plan ? (
+            <>Not used with Claude Code (calls are included in your Claude plan).</>
+          ) : (
+            <>USD per million tokens for the configured models.</>
+          )
+        }
         className="gap-6"
       >
         {pricing.map(({ id, row }) => (
@@ -325,7 +374,9 @@ export default async function SettingsPage() {
                       <TableCell className="text-right">
                         {u.inputTokens}/{u.outputTokens}
                       </TableCell>
-                      <TableCell className="text-right">{usd(u.costUsd)}</TableCell>
+                      <TableCell className="text-right">
+                        {u.provider.endsWith("claude-code") ? "plan" : usd(u.costUsd)}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

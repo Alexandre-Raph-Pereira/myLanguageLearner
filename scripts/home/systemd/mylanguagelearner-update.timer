@@ -1,0 +1,11 @@
+# Rendered by scripts/home/install.sh (enabled with --auto-update).
+[Unit]
+Description=Check for a new myLanguageLearner version every 10 minutes
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=10min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

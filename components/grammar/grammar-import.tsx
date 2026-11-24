@@ -215,7 +215,7 @@ function TextPanel({
           className="text-muted-foreground text-[13px] tabular-nums"
           data-testid="structure-cost"
         >
-          {formatEstimate(estimate)}
+          {formatEstimate(estimate, cost.included)}
         </span>
       </div>
       {info && (
@@ -380,7 +380,7 @@ function PhotoPanel({
             : `Read ${files.length || ""} ${files.length === 1 ? "photo" : "photos"}`}
         </Button>
         <span className="text-muted-foreground text-[13px] tabular-nums">
-          {formatEstimate(estimate)}
+          {formatEstimate(estimate, cost.included)}
           {files.length > 1 && one !== null ? ` (${files.length} calls)` : ""}
         </span>
       </div>

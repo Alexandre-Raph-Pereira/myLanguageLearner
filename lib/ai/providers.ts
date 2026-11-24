@@ -4,10 +4,28 @@ import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenAI } from "@ai-sdk/openai";
 import type { LanguageModel } from "ai";
 import { env, type AiProviderName } from "@/lib/env";
+import { createClaudeCodeModel } from "./claude-code/model";
 import { createMockModel } from "./mock";
 
 export type Tier = "smart" | "fast";
-export const AI_PROVIDERS = ["anthropic", "openai", "google"] as const satisfies AiProviderName[];
+export const AI_PROVIDERS = [
+  "claude-code",
+  "anthropic",
+  "openai",
+  "google",
+] as const satisfies AiProviderName[];
+
+export const AI_PROVIDER_LABELS: Record<AiProviderName, string> = {
+  "claude-code": "Claude Code (this computer, your Claude plan)",
+  anthropic: "Anthropic API",
+  openai: "OpenAI API",
+  google: "Google API",
+};
+
+/** Providers billed by a subscription instead of per token: no prices, a daily call cap. */
+export function isPlanProvider(provider: AiProviderName): boolean {
+  return provider === "claude-code";
+}
 
 /** Per-user overrides from user_settings (null → env defaults). */
 export type ModelSettings = {
@@ -31,8 +49,10 @@ export function resolveModelChoice(tier: Tier, settings?: ModelSettings | null):
   return { provider, modelId };
 }
 
-function providerModel({ provider, modelId }: ModelChoice): LanguageModel {
+function providerModel({ provider, modelId }: ModelChoice, task: string): LanguageModel {
   switch (provider) {
+    case "claude-code":
+      return createClaudeCodeModel(modelId, task);
     case "anthropic":
       return createAnthropic({ apiKey: env.ANTHROPIC_API_KEY })(modelId);
     case "openai":
@@ -53,5 +73,5 @@ export function getModel(
 ): { model: LanguageModel; choice: ModelChoice; mock: boolean } {
   const choice = resolveModelChoice(tier, settings);
   if (env.AI_MOCK) return { model: createMockModel(task, choice.modelId), choice, mock: true };
-  return { model: providerModel(choice), choice, mock: false };
+  return { model: providerModel(choice, task), choice, mock: false };
 }

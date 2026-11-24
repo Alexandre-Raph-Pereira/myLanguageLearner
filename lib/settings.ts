@@ -13,6 +13,8 @@ import { LANGUAGE_EXAMS, SUPPORTED_LANGUAGES, type Language } from "@/lib/langua
 
 export const DEFAULT_BUDGET_PER_REQUEST_USD = 0.5;
 export const DEFAULT_BUDGET_MONTHLY_USD = 10;
+export const DEFAULT_AI_CALLS_DAILY_CAP = 150;
+export const AI_CALLS_DAILY_CAP = { min: 1, max: 2000 } as const;
 
 /** The user's settings row, or defaults when it does not exist yet. */
 export async function getUserSettings(db: Db, userId: string): Promise<UserSettings> {
@@ -28,6 +30,7 @@ export async function getUserSettings(db: Db, userId: string): Promise<UserSetti
     aiModelFast: null,
     budgetPerRequestUsd: DEFAULT_BUDGET_PER_REQUEST_USD,
     budgetMonthlyUsd: DEFAULT_BUDGET_MONTHLY_USD,
+    aiCallsDailyCap: DEFAULT_AI_CALLS_DAILY_CAP,
     timezone: "UTC",
     showPoints: true,
     celebrateMilestones: true,
@@ -66,9 +69,17 @@ export const languageProfileInput = z.object({
 });
 
 export const aiSettingsInput = z.object({
-  aiProvider: z.enum(["", "anthropic", "openai", "google"]).transform((v) => (v === "" ? null : v)),
+  aiProvider: z
+    .enum(["", "claude-code", "anthropic", "openai", "google"])
+    .transform((v) => (v === "" ? null : v)),
   aiModelSmart: optionalText,
   aiModelFast: optionalText,
+  aiCallsDailyCap: z.coerce
+    .number()
+    .int()
+    .min(AI_CALLS_DAILY_CAP.min)
+    .max(AI_CALLS_DAILY_CAP.max)
+    .default(DEFAULT_AI_CALLS_DAILY_CAP),
 });
 
 export const budgetsInput = z.object({

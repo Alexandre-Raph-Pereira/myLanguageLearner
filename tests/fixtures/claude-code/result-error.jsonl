@@ -1,0 +1,2 @@
+{"type":"system","subtype":"init","model":"not-a-model"}
+{"type":"result","subtype":"success","is_error":true,"api_error_status":404,"api_error_type":"not_found_error","result":"There's an issue with the selected model (not-a-model). It may not exist or you may not have access to it.","stop_reason":"stop_sequence","num_turns":1,"terminal_reason":"api_error","usage":{"input_tokens":0,"cache_creation_input_tokens":0,"cache_read_input_tokens":0,"output_tokens":0},"modelUsage":{}}

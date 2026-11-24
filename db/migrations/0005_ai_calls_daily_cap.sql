@@ -1,0 +1,1 @@
+ALTER TABLE "user_settings" ADD COLUMN "ai_calls_daily_cap" integer DEFAULT 150 NOT NULL;

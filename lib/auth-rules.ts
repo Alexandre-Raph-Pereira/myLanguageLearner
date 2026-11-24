@@ -1,6 +1,6 @@
 /** Pure auth rules shared by proxy.ts, the login action and the callback. */
 
-const PUBLIC_PREFIXES = ["/login", "/auth", "/_next", "/icons"];
+const PUBLIC_PREFIXES = ["/login", "/auth", "/_next", "/icons", "/api/health"];
 const PUBLIC_FILES = new Set([
   "/manifest.webmanifest",
   "/favicon.ico",

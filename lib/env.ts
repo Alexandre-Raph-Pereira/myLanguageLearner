@@ -1,3 +1,4 @@
+import path from "node:path";
 import { z } from "zod";
 
 /**
@@ -6,7 +7,7 @@ import { z } from "zod";
  * only when its getter is used.
  */
 
-const providerSchema = z.enum(["anthropic", "openai", "google"]);
+const providerSchema = z.enum(["anthropic", "openai", "google", "claude-code"]);
 export type AiProviderName = z.infer<typeof providerSchema>;
 
 export const DEFAULT_MODEL = "claude-sonnet-5-5";
@@ -95,6 +96,22 @@ export const env = {
   },
   get GOOGLE_GENERATIVE_AI_API_KEY() {
     return required("GOOGLE_GENERATIVE_AI_API_KEY");
+  },
+  /** `claude` binary used by the `claude-code` provider (name on PATH or absolute path). */
+  get CLAUDE_CODE_BIN(): string {
+    return raw("CLAUDE_CODE_BIN") ?? "claude";
+  },
+  /** Working directory of the Claude Code process: the tutor's instructions (plan 08). */
+  get CLAUDE_AGENTS_DIR(): string {
+    return raw("CLAUDE_AGENTS_DIR") ?? path.join(process.cwd(), "langlearner-agents");
+  },
+  /** Kill a Claude Code call after this many milliseconds. */
+  get CLAUDE_CODE_TIMEOUT_MS(): number {
+    return parsed("CLAUDE_CODE_TIMEOUT_MS", z.coerce.number().int().min(5_000), 180_000);
+  },
+  /** Claude Code processes allowed at the same time (more calls wait their turn). */
+  get CLAUDE_CODE_MAX_CONCURRENT(): number {
+    return parsed("CLAUDE_CODE_MAX_CONCURRENT", z.coerce.number().int().min(1).max(8), 2);
   },
   get AI_MOCK(): boolean {
     return raw("AI_MOCK") === "1";

@@ -16,7 +16,13 @@ import { classifyRows, countByStatus, rowsToImport, type ImportRow } from "@/lib
 import type { BulkResult } from "@/lib/words/queries";
 import { ImportPreview } from "./import-preview";
 
-type Estimate = { usd: number | null; calls: number; model: string; count: number };
+type Estimate = {
+  usd: number | null;
+  calls: number;
+  model: string;
+  included: boolean;
+  count: number;
+};
 
 /** Preview + duplicate check + optional AI types + import, shared by CSV and photo import. */
 export function ImportReview({
@@ -162,7 +168,7 @@ export function ImportReview({
               <span className="text-[13px]" data-testid="ai-estimate">
                 {estimate.usd === null
                   ? `No price set for ${estimate.model} — add it in Settings first.`
-                  : `${estimate.count} words · ${estimate.calls} ${estimate.calls === 1 ? "call" : "calls"} · up to $${estimate.usd.toFixed(4)}`}
+                  : `${estimate.count} words · ${estimate.calls} ${estimate.calls === 1 ? "call" : "calls"} · ${estimate.included ? "included in your Claude plan" : `up to $${estimate.usd.toFixed(4)}`}`}
               </span>
               {estimate.usd !== null && (
                 <Button type="button" onClick={runSuggest} disabled={pending}>

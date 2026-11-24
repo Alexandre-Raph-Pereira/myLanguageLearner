@@ -8,7 +8,7 @@ import {
   grammarStructurePrompt,
   type GrammarPromptCtx,
 } from "@/lib/ai/prompts/grammar";
-import { resolveModelChoice } from "@/lib/ai/providers";
+import { isPlanProvider, resolveModelChoice } from "@/lib/ai/providers";
 import { aiObject, type AiImage } from "@/lib/ai/run";
 import { isLanguage, LANGUAGE_LABELS } from "@/lib/languages";
 import { getLanguageProfile, getUserSettings } from "@/lib/settings";
@@ -39,17 +39,21 @@ async function promptCtx(db: Db, s: Scope): Promise<GrammarPromptCtx> {
 
 export async function grammarCostInfo(db: Db, s: Scope): Promise<GrammarCostInfo> {
   const settings = await getUserSettings(db, s.userId);
-  const { modelId } = resolveModelChoice("smart", settings);
-  const pricing = await getPricing(db, modelId);
+  const { modelId, provider } = resolveModelChoice("smart", settings);
+  const included = isPlanProvider(provider);
+  const pricing = included ? null : await getPricing(db, modelId);
   const ctx = await promptCtx(db, s);
   const lessons = await compactListForPrompt(db, s);
   const sp = grammarStructurePrompt(ctx, lessons, { notes: "" });
   const rp = grammarRewritePrompt(ctx, "", null);
   return {
     model: modelId,
-    rates: pricing
-      ? { inputPerMtok: pricing.inputPerMtok, outputPerMtok: pricing.outputPerMtok }
-      : null,
+    included,
+    rates: included
+      ? { inputPerMtok: 0, outputPerMtok: 0 }
+      : pricing
+        ? { inputPerMtok: pricing.inputPerMtok, outputPerMtok: pricing.outputPerMtok }
+        : null,
     structureBaseTokens: estimateInputTokens({ text: `${sp.system}\n${sp.prompt}` }),
     rewriteBaseTokens: estimateInputTokens({ text: `${rp.system}\n${rp.prompt}` }),
     structureMaxOutput: STRUCTURE_MAX_OUTPUT,

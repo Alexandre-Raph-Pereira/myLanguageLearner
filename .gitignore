@@ -167,3 +167,6 @@ next-env.d.ts
 /blob-report/
 /playwright/.cache/
 /.pglite*
+
+# home server deploy lock
+.deploy.lock

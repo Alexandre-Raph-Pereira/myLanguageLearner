@@ -3,6 +3,7 @@ import { formatEstimate, rewriteEstimate, structureEstimate, type GrammarCostInf
 
 const info: GrammarCostInfo = {
   model: "m",
+  included: false,
   rates: { inputPerMtok: 2, outputPerMtok: 10 },
   structureBaseTokens: 1000,
   rewriteBaseTokens: 500,
@@ -23,5 +24,10 @@ describe("grammar cost estimates", () => {
     expect(formatEstimate(null)).toBe("no price set for the model");
     expect(formatEstimate(0.004)).toBe("≈ < $0.01");
     expect(formatEstimate(0.0823)).toBe("≈ $0.08");
+  });
+
+  it("says included in the Claude plan for Claude Code", () => {
+    expect(formatEstimate(0, true)).toBe("included in your Claude plan");
+    expect(formatEstimate(null, true)).toBe("included in your Claude plan");
   });
 });

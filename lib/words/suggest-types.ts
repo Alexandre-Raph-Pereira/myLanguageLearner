@@ -6,7 +6,7 @@ import { createOperation } from "@/lib/ai/budget";
 import { estimateCost, estimateInputTokens } from "@/lib/ai/estimate";
 import { getPricing } from "@/lib/ai/pricing";
 import { suggestTypesPrompt } from "@/lib/ai/prompts/words-suggest-types";
-import { resolveModelChoice } from "@/lib/ai/providers";
+import { isPlanProvider, resolveModelChoice } from "@/lib/ai/providers";
 import { aiObject } from "@/lib/ai/run";
 import { getUserSettings } from "@/lib/settings";
 import type { Scope } from "./queries";
@@ -34,12 +34,16 @@ export async function estimateSuggestTypes(
   db: Db,
   s: Scope,
   rows: SuggestRow[],
-): Promise<{ usd: number | null; calls: number; model: string }> {
+): Promise<{ usd: number | null; calls: number; model: string; included: boolean }> {
   const settings = await getUserSettings(db, s.userId);
-  const { modelId } = resolveModelChoice("fast", settings);
-  const pricing = await getPricing(db, modelId);
+  const { modelId, provider } = resolveModelChoice("fast", settings);
   const parts = chunks(rows, SUGGEST_CHUNK);
-  if (!pricing) return { usd: null, calls: parts.length, model: modelId };
+  // Claude Code: included in the Claude plan, nothing to price.
+  if (isPlanProvider(provider)) {
+    return { usd: 0, calls: parts.length, model: modelId, included: true };
+  }
+  const pricing = await getPricing(db, modelId);
+  if (!pricing) return { usd: null, calls: parts.length, model: modelId, included: false };
   let usd = 0;
   for (const part of parts) {
     const p = suggestTypesPrompt(s.language, part);
@@ -49,7 +53,7 @@ export async function estimateSuggestTypes(
       pricing,
     );
   }
-  return { usd, calls: parts.length, model: modelId };
+  return { usd, calls: parts.length, model: modelId, included: false };
 }
 
 /** One operation, chunks of 200 rows (fast tier). Unknown ids in the answer are ignored. */

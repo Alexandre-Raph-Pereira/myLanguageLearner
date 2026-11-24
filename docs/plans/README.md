@@ -14,6 +14,11 @@ Execute in order. Each plan is self-contained and lists its dependencies, data m
 | 05 | [TOPIK test modes, lookups, stats](05-topik-test-modes.md) | 04 | L |
 | 06 | [Target level alignment](06-target-level.md) | 05 | M |
 
+| 07 | [Local Claude Code AI + home hosting (WSL + Tailscale)](07-local-ai-and-home-hosting.md) | 02 | L |
+| 08 | [`langlearner-agents/` folder (tutor skills, personas, evals)](08-langlearner-agents.md) | 02 (pairs with 07) | M |
+
+07 and 08 are infrastructure: they only need 02 and can be done before 03–06. They are separate tasks (own branch each) and can be done in either order; 08 T4 wires into 07's adapter when 07 exists.
+
 01 and 02 are independent of each other (both only need 00c) and can be built in parallel branches.
 
 **Design:** every UI task follows `docs/DESIGN.md` (Navy & Cream). Build screens from `components/progress/*` and the tokens; never hardcode colours. Each feature plan has a **Design & progress hooks** section listing the canvas screen it implements and the `recordActivity` events it must emit.
