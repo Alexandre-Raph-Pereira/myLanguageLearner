@@ -62,12 +62,12 @@ Claude Code appends here when a step needs a human (accounts, keys, files, manua
 
 Full step-by-step guide with every command: **`docs/HOME_HOSTING.md`**.
 
-- [ ] **Windows prep** (runbook Part A): systemd on in WSL (`/etc/wsl.conf`), PC never sleeps when plugged in.
-- [ ] **Tools in WSL** (Part B): git, Node 22 (nvm), `corepack enable`, Claude Code installed **and logged in** (`claude -p "hi"` answers, no `ANTHROPIC_API_KEY` in your shell).
-- [ ] **Local dev** (Part C, optional now): clone to `~/dev/myLanguageLearner`, `.env.local` with `DATABASE_URL=pglite://./.pglite`, `AI_PROVIDER=claude-code`, `pnpm dev -p 3001`.
-- [ ] **Always-on app** (Part D): clone to `~/apps/myLanguageLearner`, create `.env.production.local` (values from Vercel, `AI_PROVIDER=claude-code`, **no** API key), `pnpm home:install --auto-update`, `pnpm home:deploy` → "Healthy".
-- [ ] **Keep WSL running** (Part D5): run `scripts/home/windows/keep-wsl-running.ps1` once in PowerShell, `wsl --shutdown`, log off/on, check `/api/health`.
-- [ ] **Tailscale** (Part E): account, `sudo tailscale up --hostname=langlearner` in WSL, enable MagicDNS + HTTPS certificates, disable key expiry for the machine, `sudo tailscale serve --bg 3000`, Tailscale app on the phone (always-on).
-- [ ] **Phone check** (Definition of Done): Wi-Fi off, open `https://langlearner.<tailnet>.ts.net`, install the PWA, remove the old Vercel one.
-- [ ] **Real AI checks** (Part F): Settings → AI shows "Claude Code found"; provider is Default/Claude Code (not "Anthropic API" saved from before); a grammar import from text returns a draft; one words photo import; Settings → Last AI calls shows cost "plan".
+- [x] **Windows prep** (runbook Part A): systemd on in WSL (`/etc/wsl.conf`), PC never sleeps when plugged in.
+- [x] **Tools in WSL** (Part B): git, Node 22 (nvm), `corepack enable`, Claude Code installed **and logged in** (`claude -p "hi"` answers, no `ANTHROPIC_API_KEY` in your shell).
+- [x] **Local dev** (Part C, optional now): clone to `~/dev/myLanguageLearner`, `.env.local` with `DATABASE_URL=pglite://./.pglite`, `AI_PROVIDER=claude-code`, `pnpm dev -p 3001`.
+- [x] **Always-on app** (Part D): clone to `~/apps/myLanguageLearner`, create `.env.production.local` (values from Vercel, `AI_PROVIDER=claude-code`, **no** API key), `pnpm home:install --auto-update`, `pnpm home:deploy` → "Healthy".
+- [x] **Keep WSL running** (Part D5): run `scripts/home/windows/keep-wsl-running.ps1` once in PowerShell, `wsl --shutdown`, log off/on, check `/api/health`.
+- [x] **Tailscale** (Part E): account, `sudo tailscale up --hostname=langlearner` in WSL, enable MagicDNS + HTTPS certificates, disable key expiry for the machine, `sudo tailscale serve --bg 3000`, Tailscale app on the phone (always-on).
+- [x] **Phone check** (Definition of Done): Wi-Fi off, open `https://langlearner.<tailnet>.ts.net`, install the PWA, remove the old Vercel one.
+- [x] **Real AI checks** (Part F): Settings → AI shows "Claude Code found"; provider is Default/Claude Code (not "Anthropic API" saved from before); a grammar import from text returns a draft; one words photo import; Settings → Last AI calls shows cost "plan".
 - [ ] **Retire Vercel** (plan 07 T9) once you are happy with the home server for a few days: Vercel → Project → Settings → Git → Disconnect (or delete the project). Then ask Claude to finish plan 07 T9 (removes `vercel.json`, updates CLAUDE.md / VISION.md / README). Until then both run against the same Supabase database, which is fine.

@@ -11,7 +11,10 @@ param([string]$Distro = "Ubuntu")
 $ErrorActionPreference = "Stop"
 $taskName = "myLanguageLearner - keep WSL running"
 
-$action = New-ScheduledTaskAction -Execute "wsl.exe" -Argument "-d $Distro --exec /bin/sh -c `"exec sleep infinity`""
+# conhost --headless runs wsl.exe with no console window (closing a visible window would
+# end the keep-alive). Re-running this script updates an existing task in place.
+$action = New-ScheduledTaskAction -Execute "conhost.exe" `
+  -Argument "--headless wsl.exe -d $Distro --exec /bin/sh -c `"exec sleep infinity`""
 $trigger = New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME
 $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries `
   -ExecutionTimeLimit ([TimeSpan]::Zero) -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)

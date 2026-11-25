@@ -200,8 +200,64 @@ Don't run both on the same PC.
   otherwise in `~/apps/myLanguageLearner` run `pnpm home:deploy`.
 - **Logs:** `journalctl --user -u mylanguagelearner -f` (app),
   `journalctl --user -u mylanguagelearner-update -n 50` (auto-update).
-- **Restart:** `systemctl --user restart mylanguagelearner`.
 - **Health:** `curl -s localhost:3000/api/health` (or the tailnet URL + `/api/health` on the phone).
+
+## Command cheat sheet
+
+All in the **Ubuntu (WSL)** terminal unless marked PowerShell.
+
+**The app** (systemd user service `mylanguagelearner`)
+
+| What | Command |
+|---|---|
+| Is it running? | `systemctl --user status mylanguagelearner` |
+| Stop now (comes back at next WSL start or deploy) | `systemctl --user stop mylanguagelearner` |
+| Start | `systemctl --user start mylanguagelearner` |
+| Restart (e.g. after editing `.env.production.local`) | `systemctl --user restart mylanguagelearner` |
+| Live logs | `journalctl --user -u mylanguagelearner -f` |
+| Last 50 log lines | `journalctl --user -u mylanguagelearner -n 50 --no-pager` |
+| Health | `curl -s localhost:3000/api/health` |
+
+**Keep it off, even after a reboot** (stop the auto-update too, or a push to `main` restarts it):
+```bash
+systemctl --user disable --now mylanguagelearner
+systemctl --user disable --now mylanguagelearner-update.timer
+```
+Turn both back on:
+```bash
+systemctl --user enable --now mylanguagelearner
+systemctl --user enable --now mylanguagelearner-update.timer
+```
+
+**Auto-update** (timer `mylanguagelearner-update`)
+
+| What | Command |
+|---|---|
+| Is the timer on, next run | `systemctl --user list-timers mylanguagelearner-update.timer` |
+| Last runs | `journalctl --user -u mylanguagelearner-update -n 50 --no-pager` |
+| Deploy now by hand | `cd ~/apps/myLanguageLearner && pnpm home:deploy` |
+
+**Tailscale**
+
+| What | Command |
+|---|---|
+| Devices and connection | `tailscale status` |
+| What is published | `tailscale serve status` |
+| Close access from the phone (app keeps running on the PC) | `sudo tailscale serve --https=443 off` |
+| Open it again | `sudo tailscale serve --bg 3000` |
+| Disconnect the PC from the tailnet / reconnect | `sudo tailscale down` / `sudo tailscale up` |
+
+**WSL** (PowerShell)
+
+| What | Command |
+|---|---|
+| Stop everything in WSL (app, Tailscale…) | `wsl --shutdown` |
+| Start WSL again without logging off (the app starts with it) | `wsl -d Ubuntu --exec true` |
+| Health check from Windows | `wsl -d Ubuntu --exec curl -s localhost:3000/api/health` |
+| Remove the keep-alive task | `Unregister-ScheduledTask -TaskName "myLanguageLearner - keep WSL running" -Confirm:$false` |
+
+After `wsl --shutdown` or a Windows restart, the app comes back on its own once you log in
+to Windows (keep-alive task, no window).
 
 ## Troubleshooting
 
