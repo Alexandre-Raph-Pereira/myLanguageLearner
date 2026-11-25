@@ -333,6 +333,43 @@ describe("claude-code provider (fake CLI)", () => {
     ).resolves.toBeUndefined();
   });
 
+  it("puts persona, profile, shared skill, task skill, then the task prompt last", async () => {
+    const write = (rel: string, text: string) => {
+      const file = path.join(agentsDir, rel);
+      fs.mkdirSync(path.dirname(file), { recursive: true });
+      fs.writeFileSync(file, text);
+    };
+    write(
+      "manifest.json",
+      JSON.stringify({
+        version: 1,
+        shared: { ko: ["korean-teaching"] },
+        tasks: { "test.echo": { skill: "echo-skill", agent: "tutor" } },
+      }),
+    );
+    write(".claude/agents/tutor.md", "---\nname: tutor\ntools: []\n---\nPERSONA");
+    write("learner/profile.example.md", "PROFILE");
+    write(".claude/skills/korean-teaching/SKILL.md", "---\nname: korean-teaching\n---\nKOREAN");
+    write(".claude/skills/echo-skill/SKILL.md", "---\nname: echo-skill\n---\nTASK SKILL");
+    respond([{ structured: { word: "물", meaning: "water" } }]);
+    await ask();
+    const [call] = calls();
+    expect(call.system).toBe(
+      ["TUTOR RULES", "PERSONA", "PROFILE", "KOREAN", "TASK SKILL", "TASK RULES"].join(
+        "\n\n---\n\n",
+      ),
+    );
+    expect(call.args[call.args.indexOf("--tools") + 1]).toBe("");
+
+    vi.stubEnv("CLAUDE_AGENTS_SKILL_MODE", "tool");
+    await ask();
+    const second = calls()[1];
+    expect(second.system).not.toContain("TASK SKILL");
+    expect(second.system).toContain("load the skill `echo-skill` with the Skill tool");
+    expect(second.system.endsWith("TASK RULES")).toBe(true);
+    expect(second.args[second.args.indexOf("--tools") + 1]).toBe("Skill");
+  });
+
   it("mock mode still wins over claude-code", async () => {
     vi.stubEnv("AI_MOCK", "1");
     await expect(ask()).resolves.toBeTruthy();

@@ -11,6 +11,7 @@ import type { z } from "zod";
 import { getDb } from "@/db";
 import { aiUsage } from "@/db/schema";
 import type { Db } from "@/db/types";
+import type { Language } from "@/lib/languages";
 import { getUserSettings } from "@/lib/settings";
 import { assertBudget, assertCallCap, type Operation } from "./budget";
 import { AiError, BudgetError } from "./errors";
@@ -28,6 +29,8 @@ export type AiCallOptions = PromptInput & {
   operation: Operation;
   /** Task name, e.g. `words.photo_extract` (also the mock fixture name). */
   task: string;
+  /** Target language of the call (picks language-specific agents skills); default `ko`. */
+  language?: Language;
   tier: Tier;
   system: string;
   images?: AiImage[];
@@ -154,7 +157,7 @@ async function prepare(opts: AiCallOptions): Promise<Ctx> {
   }
   const db = opts.db ?? (await getDb());
   const settings = await getUserSettings(db, opts.userId);
-  const { model, choice, mock } = getModel(opts.tier, settings, opts.task);
+  const { model, choice, mock } = getModel(opts.tier, settings, opts.task, opts.language);
   const providerLabel = mock ? `mock:${choice.provider}` : choice.provider;
   const plan = isPlanProvider(choice.provider);
   const pricing = plan ? FREE : await getPricing(db, choice.modelId);

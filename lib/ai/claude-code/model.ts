@@ -6,7 +6,7 @@ import path from "node:path";
 import type { LanguageModel } from "ai";
 import { env } from "@/lib/env";
 import { AiError } from "../errors";
-import { agentsDirExists, loadAgentsContext } from "./agents";
+import { agentsDirExists, loadAgentsContext, type AgentsContext } from "./agents";
 import {
   buildCliArgs,
   buildSystemPrompt,
@@ -84,6 +84,7 @@ function runCli(opts: {
 async function generate(
   modelId: string,
   task: string,
+  language: string,
   options: CallOptions,
 ): Promise<GenerateResult> {
   const cwd = env.CLAUDE_AGENTS_DIR;
@@ -93,7 +94,13 @@ async function generate(
     );
   }
   const input = promptToCliInput(options.prompt);
-  const system = buildSystemPrompt(loadAgentsContext(cwd, task, "ko").appendedPrompt, input.system);
+  let agents: AgentsContext;
+  try {
+    agents = loadAgentsContext(cwd, task, language, { mode: env.CLAUDE_AGENTS_SKILL_MODE });
+  } catch (e) {
+    throw new AiError(e instanceof Error ? e.message : String(e), { cause: e });
+  }
+  const system = buildSystemPrompt(agents.appendedPrompt, input.system);
   const jsonSchema =
     options.responseFormat?.type === "json" ? (options.responseFormat.schema ?? {}) : undefined;
 
@@ -106,7 +113,12 @@ async function generate(
   try {
     out = await runCli({
       bin: env.CLAUDE_CODE_BIN,
-      args: buildCliArgs({ modelId, systemPromptFile, jsonSchema }),
+      args: buildCliArgs({
+        modelId,
+        systemPromptFile,
+        jsonSchema,
+        tools: agents.toolSkills.length > 0 ? ["Skill"] : [],
+      }),
       stdin: stdinLine(input.content),
       cwd,
       timeoutMs: env.CLAUDE_CODE_TIMEOUT_MS,
@@ -155,13 +167,13 @@ async function generate(
  * AI SDK model backed by the local Claude Code CLI (`AI_PROVIDER=claude-code`).
  * Every call spawns `claude -p` in the agents folder with no tools; see DECISIONS (plan 07).
  */
-export function createClaudeCodeModel(modelId: string, task: string): ModelV4 {
+export function createClaudeCodeModel(modelId: string, task: string, language = "ko"): ModelV4 {
   return {
     specificationVersion: "v4",
     provider: "claude-code",
     modelId,
     supportedUrls: {},
-    doGenerate: (options) => generate(modelId, task, options),
+    doGenerate: (options) => generate(modelId, task, language, options),
     doStream: () => {
       throw new AiError("Streaming is not supported by the Claude Code provider.");
     },

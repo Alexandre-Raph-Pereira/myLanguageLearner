@@ -72,6 +72,7 @@ export async function suggestTypes(
       userId: s.userId,
       operation,
       task: SUGGEST_TASK,
+      language: s.language,
       tier: "fast",
       schema: suggestTypesSchema,
       system: p.system,

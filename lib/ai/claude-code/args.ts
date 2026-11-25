@@ -97,6 +97,8 @@ export function buildCliArgs(opts: {
   modelId: string;
   systemPromptFile: string;
   jsonSchema?: unknown;
+  /** Built-in tools to allow; default none. `["Skill"]` in CLAUDE_AGENTS_SKILL_MODE=tool. */
+  tools?: string[];
 }): string[] {
   const args = [
     "-p",
@@ -107,7 +109,7 @@ export function buildCliArgs(opts: {
     "--verbose",
     // No tools at all: one question, one answer.
     "--tools",
-    "",
+    (opts.tools ?? []).join(","),
     "--no-session-persistence",
     "--strict-mcp-config",
     // Only the agents folder's .claude/settings.json (not the owner's user settings).

@@ -39,6 +39,7 @@ export async function extractFromPhoto(
     userId: s.userId,
     operation: createOperation(s.userId, "words.photo_extract"),
     task: PHOTO_TASK,
+    language: s.language,
     tier: "smart",
     schema: photoExtractSchema,
     system: p.system,

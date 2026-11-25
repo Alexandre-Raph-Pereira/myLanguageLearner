@@ -94,7 +94,7 @@ Frontmatter is stripped; bodies are joined with `---` separators. Total appended
 - Pure part (`buildAppendedPrompt(parts)`, frontmatter stripping, size cap) separated and unit-tested.
 - **Accept:** unit tests on a temp folder: full task, task missing from manifest, missing profile.local → example used, oversize → error.
 
-### [ ] T4 — Wire into the adapter (only if plan 07 is done; otherwise add to HUMAN_TODO / plan 07 notes)
+### [x] T4 — Wire into the adapter (only if plan 07 is done; otherwise add to HUMAN_TODO / plan 07 notes)
 - `loadAgentsInstructions(dir, task)` in `lib/ai/claude-code/agents.ts` (plan 07, today returns `CLAUDE.md` only) becomes `loadAgentsContext`; its result goes before the task system prompt in the `--system-prompt-file` (pass the call's language through `createClaudeCodeModel` if a language-specific shared skill is needed).
 - `CLAUDE_AGENTS_SKILL_MODE` env: `inline` (default) | `tool` (allow only `Skill`, don't inline the task skill; inline persona + profile still).
 - **Accept:** fake-CLI test asserts the appended prompt contains persona, profile, shared skill, task skill and the task prompt last.

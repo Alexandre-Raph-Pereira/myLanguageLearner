@@ -113,6 +113,10 @@ export const env = {
   get CLAUDE_CODE_MAX_CONCURRENT(): number {
     return parsed("CLAUDE_CODE_MAX_CONCURRENT", z.coerce.number().int().min(1).max(8), 2);
   },
+  /** `inline` (default): task skill inlined in the system prompt; `tool`: only the Skill tool allowed (plan 08). */
+  get CLAUDE_AGENTS_SKILL_MODE(): "inline" | "tool" {
+    return parsed("CLAUDE_AGENTS_SKILL_MODE", z.enum(["inline", "tool"]), "inline");
+  },
   get AI_MOCK(): boolean {
     return raw("AI_MOCK") === "1";
   },

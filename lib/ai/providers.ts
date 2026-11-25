@@ -4,6 +4,7 @@ import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenAI } from "@ai-sdk/openai";
 import type { LanguageModel } from "ai";
 import { env, type AiProviderName } from "@/lib/env";
+import type { Language } from "@/lib/languages";
 import { createClaudeCodeModel } from "./claude-code/model";
 import { createMockModel } from "./mock";
 
@@ -49,10 +50,14 @@ export function resolveModelChoice(tier: Tier, settings?: ModelSettings | null):
   return { provider, modelId };
 }
 
-function providerModel({ provider, modelId }: ModelChoice, task: string): LanguageModel {
+function providerModel(
+  { provider, modelId }: ModelChoice,
+  task: string,
+  language: Language,
+): LanguageModel {
   switch (provider) {
     case "claude-code":
-      return createClaudeCodeModel(modelId, task);
+      return createClaudeCodeModel(modelId, task, language);
     case "anthropic":
       return createAnthropic({ apiKey: env.ANTHROPIC_API_KEY })(modelId);
     case "openai":
@@ -70,8 +75,9 @@ export function getModel(
   tier: Tier,
   settings?: ModelSettings | null,
   task = "default",
+  language: Language = "ko",
 ): { model: LanguageModel; choice: ModelChoice; mock: boolean } {
   const choice = resolveModelChoice(tier, settings);
   if (env.AI_MOCK) return { model: createMockModel(task, choice.modelId), choice, mock: true };
-  return { model: providerModel(choice, task), choice, mock: false };
+  return { model: providerModel(choice, task, language), choice, mock: false };
 }
