@@ -44,7 +44,8 @@ lib/text/               Korean/text normalization helpers
 tests/                  vitest helpers, fixtures (tests/fixtures/ai/*.json)
 e2e/                    playwright specs
 docs/                   vision, plans, decisions (home server runbook: docs/HOME_HOSTING.md)
-langlearner-agents/     working dir + instructions of the local Claude Code AI provider (plan 07/08)
+langlearner-agents/     the tutor's brain for the claude-code provider: runtime CLAUDE.md, manifest.json,
+                        learner profile, .claude/skills (one per AI task), .claude/agents (personas), evals
 scripts/home/           home server deploy/install scripts (WSL + systemd)
 ```
 
@@ -67,8 +68,10 @@ scripts/home/           home server deploy/install scripts (WSL + systemd)
 ## AI mock mode
 `AI_MOCK=1` makes `lib/ai/providers.ts` return mock models (from `ai/test`) that answer from fixtures in `tests/fixtures/ai/<task>.json`. Unit tests, e2e tests and cloud sessions without an API key must work in this mode. When you add a new AI task, add a fixture for it.
 
+**New AI task checklist:** prompt in `lib/ai/prompts/` + name in `lib/ai/tasks.ts` (`AI_TASKS`), fixture in `tests/fixtures/ai/<task>.json`, **and** a manifest entry + skill (+ ≥ 2 eval cases) in `langlearner-agents/` (see `langlearner-agents/README.md`). `tests/agents-folder.test.ts` fails otherwise. `pnpm agents:eval [task]` runs the evals against the real Claude Code (owner's machine only).
+
 ## Working autonomously on a plan
-- Work task by task, in plan order. After each task: `pnpm lint && pnpm typecheck && pnpm test`, then commit (`feat(words): ...`, `fix: ...`, conventional commits) and tick the task's checkbox in the plan file.
+- Work task by task, in plan order. After each task: `pnpm lint && pnpm typecheck` and **only the test files related to the change** (`pnpm exec vitest run <files> --maxWorkers=1`) — running the whole suite or e2e at once crashes the owner's WSL; then commit (`feat(words): ...`, `fix: ...`, conventional commits) and tick the task's checkbox in the plan file.
 - **Do not stop to ask questions.** If something is ambiguous, pick the default stated in the plan (or the simplest option consistent with VISION.md), append an entry to `docs/DECISIONS.md`, and continue.
 - If a step needs a human (create Supabase project, set Vercel env, paste a key, provide a file), add it to `docs/HUMAN_TODO.md` with exact instructions, stub/mock around it, and continue.
 - Do not start the next plan unless asked.

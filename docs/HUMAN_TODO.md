@@ -71,3 +71,9 @@ Full step-by-step guide with every command: **`docs/HOME_HOSTING.md`**.
 - [ ] **Phone check** (Definition of Done): Wi-Fi off, open `https://langlearner.<tailnet>.ts.net`, install the PWA, remove the old Vercel one.
 - [ ] **Real AI checks** (Part F): Settings → AI shows "Claude Code found"; provider is Default/Claude Code (not "Anthropic API" saved from before); a grammar import from text returns a draft; one words photo import; Settings → Last AI calls shows cost "plan".
 - [ ] **Retire Vercel** (plan 07 T9) once you are happy with the home server for a few days: Vercel → Project → Settings → Git → Disconnect (or delete the project). Then ask Claude to finish plan 07 T9 (removes `vercel.json`, updates CLAUDE.md / VISION.md / README). Until then both run against the same Supabase database, which is fine.
+
+## Plan 08 — `langlearner-agents/` (tutor skills, personas, evals)
+
+- [ ] **Your learner profile** — on the home server (and in your dev clone if you use `claude-code` there): `cp langlearner-agents/learner/profile.example.md langlearner-agents/learner/profile.local.md` and fill every section. It is gitignored (the repo is public); until it exists the example placeholders are sent. Copy it again if you re-clone.
+- [ ] **Run the evals once** on the home server: `pnpm agents:eval` (10 cases, ~10 Claude Code calls incl. 3 images, counts against your plan's usage, no app call cap). Read the table and `langlearner-agents/evals/last-run.local.json`. Already verified during implementation: `words.suggest_types` 2/2.
+- [ ] **Tweak skills to taste** — edit `langlearner-agents/.claude/skills/*/SKILL.md` / personas, re-run `pnpm agents:eval <task>`; no restart needed (files are re-read on change). Deploy with `pnpm home:deploy` after committing.

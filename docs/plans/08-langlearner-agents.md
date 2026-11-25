@@ -122,7 +122,7 @@ Each `SKILL.md` has Claude Code frontmatter (`name`, `description` saying which 
 - `scripts/agents-eval.ts` + `pnpm agents:eval [task]`: builds the real prompts with `lib/ai/prompts/*`, calls the `claude-code` model directly (no DB, no budget), validates with the task's zod schema, checks `expect`, prints a table (task, case, ok, seconds, tokens) and writes `langlearner-agents/evals/last-run.local.json` (gitignored). Refuses to run with `AI_MOCK=1`.
 - Not part of `pnpm test` (needs the owner's login).
 
-### [ ] T9 — Docs
+### [x] T9 — Docs
 - `langlearner-agents/README.md`: what each file does, how to edit the profile, how to tune a skill and re-run `pnpm agents:eval <task>`, how to add a task.
 - `docs/plans/README.md` conventions: "A new AI task adds a prompt in `lib/ai/prompts/`, a fixture in `tests/fixtures/ai/`, **and** a manifest entry + skill in `langlearner-agents/`".
 - `CLAUDE.md` (repo): add `langlearner-agents/` to Layout and the rule above to "AI mock mode / new AI task".

@@ -34,3 +34,4 @@ Recommended: one branch + PR per plan (`plan/01-words`).
 - "Default:" marks the choice to take when something is unclear.
 - Schemas are given as field lists; exact Drizzle syntax is up to the implementer.
 - AI prompts are described by intent + rules; write them in `lib/ai/prompts/<task>.ts` as exported functions so they can be tuned in one place.
+- A new AI task adds a prompt in `lib/ai/prompts/` (and its name in `lib/ai/tasks.ts`), a fixture in `tests/fixtures/ai/`, **and** a manifest entry + skill (+ eval cases) in `langlearner-agents/` (see its README). `tests/agents-folder.test.ts` enforces it.
