@@ -85,7 +85,7 @@ Frontmatter is stripped; bodies are joined with `---` separators. Total appended
 - If plan 07's T2 stub exists, replace it.
 - Append the principles above to `docs/DECISIONS.md`.
 
-### [ ] T2 — `CLAUDE.md` and learner profile
+### [x] T2 — `CLAUDE.md` and learner profile
 - `CLAUDE.md` (≤ 80 lines): role (tutor engine called by an app, not a chat), always answer in the requested format only, no greetings/meta, target language in Unicode NFC, explanations in the learner's native language (given in each request), prefer natural everyday examples, be concise, never invent learner data not given in the request, keep exam level in mind.
 - `profile.example.md` sections: native language, other languages known, current level (TOPIK estimate), target level + date, how I learn best, known weak points, topics I like (for examples), things to avoid. Keep placeholders, no real data.
 
