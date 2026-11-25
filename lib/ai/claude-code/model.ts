@@ -6,7 +6,7 @@ import path from "node:path";
 import type { LanguageModel } from "ai";
 import { env } from "@/lib/env";
 import { AiError } from "../errors";
-import { agentsDirExists, loadAgentsInstructions } from "./agents";
+import { agentsDirExists, loadAgentsContext } from "./agents";
 import {
   buildCliArgs,
   buildSystemPrompt,
@@ -93,7 +93,7 @@ async function generate(
     );
   }
   const input = promptToCliInput(options.prompt);
-  const system = buildSystemPrompt(loadAgentsInstructions(cwd, task), input.system);
+  const system = buildSystemPrompt(loadAgentsContext(cwd, task, "ko").appendedPrompt, input.system);
   const jsonSchema =
     options.responseFormat?.type === "json" ? (options.responseFormat.schema ?? {}) : undefined;
 

@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "shared": {
+    "ko": ["korean-teaching"]
+  },
+  "tasks": {
+    "words.suggest_types": { "skill": "words-suggest-types", "agent": "extractor" },
+    "words.photo_extract": { "skill": "words-photo-extract", "agent": "extractor" },
+    "grammar.structure": { "skill": "grammar-structure", "agent": "tutor" },
+    "grammar.rewrite": { "skill": "grammar-rewrite", "agent": "tutor" }
+  }
+}

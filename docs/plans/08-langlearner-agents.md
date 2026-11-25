@@ -89,7 +89,7 @@ Frontmatter is stripped; bodies are joined with `---` separators. Total appended
 - `CLAUDE.md` (≤ 80 lines): role (tutor engine called by an app, not a chat), always answer in the requested format only, no greetings/meta, target language in Unicode NFC, explanations in the learner's native language (given in each request), prefer natural everyday examples, be concise, never invent learner data not given in the request, keep exam level in mind.
 - `profile.example.md` sections: native language, other languages known, current level (TOPIK estimate), target level + date, how I learn best, known weak points, topics I like (for examples), things to avoid. Keep placeholders, no real data.
 
-### [ ] T3 — Manifest + loader (`lib/ai/claude-code/agents.ts`, `server-only`)
+### [x] T3 — Manifest + loader (`lib/ai/claude-code/agents.ts`, `server-only`)
 - zod schema for `manifest.json`; `loadAgentsContext(task, language)` → `{ appendedPrompt: string, warnings: string[] }` built as described above; reads files once and caches them by mtime (edits apply without restarting the server).
 - Pure part (`buildAppendedPrompt(parts)`, frontmatter stripping, size cap) separated and unit-tested.
 - **Accept:** unit tests on a temp folder: full task, task missing from manifest, missing profile.local → example used, oversize → error.
