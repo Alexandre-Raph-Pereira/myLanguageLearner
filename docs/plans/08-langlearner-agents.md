@@ -108,7 +108,7 @@ Each `SKILL.md` has Claude Code frontmatter (`name`, `description` saying which 
 - `grammar-rewrite`: follow the learner's instruction literally, change only what was asked, keep examples that are correct.
 - Fixtures/mocks are unchanged (mock mode never reads this folder).
 
-### [ ] T6 — Personas (`.claude/agents/*.md`)
+### [x] T6 — Personas (`.claude/agents/*.md`)
 - `tutor`, `examiner`, `extractor` with Claude Code subagent frontmatter (`name`, `description`, `tools: []` or the equivalent "no tools") and a short body (tone, strictness, what to optimise for).
 
 ### [ ] T7 — Consistency test (runs in `pnpm test`, no Claude needed)
