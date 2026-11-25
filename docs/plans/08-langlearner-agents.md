@@ -79,7 +79,7 @@ Frontmatter is stripped; bodies are joined with `---` separators. Total appended
 
 ## Tasks
 
-### [ ] T1 — Skeleton & decisions
+### [x] T1 — Skeleton & decisions
 - Create the folder, `README.md`, `.claude/settings.json` (deny all tools; verify the settings keys against the installed Claude Code docs), `learner/profile.example.md`.
 - `.gitignore`: `langlearner-agents/learner/*.local.md`.
 - If plan 07's T2 stub exists, replace it.

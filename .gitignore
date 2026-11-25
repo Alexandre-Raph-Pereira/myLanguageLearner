@@ -170,3 +170,7 @@ next-env.d.ts
 
 # home server deploy lock
 .deploy.lock
+
+# langlearner-agents: owner's learner profile and eval results (personal, never committed)
+langlearner-agents/learner/*.local.md
+langlearner-agents/evals/*.local.json
