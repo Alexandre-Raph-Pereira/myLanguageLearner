@@ -111,7 +111,7 @@ Each `SKILL.md` has Claude Code frontmatter (`name`, `description` saying which 
 ### [x] T6 — Personas (`.claude/agents/*.md`)
 - `tutor`, `examiner`, `extractor` with Claude Code subagent frontmatter (`name`, `description`, `tools: []` or the equivalent "no tools") and a short body (tone, strictness, what to optimise for).
 
-### [ ] T7 — Consistency test (runs in `pnpm test`, no Claude needed)
+### [x] T7 — Consistency test (runs in `pnpm test`, no Claude needed)
 `tests/agents-folder.test.ts`:
 - manifest validates; every task referenced exists as a skill and persona file with valid frontmatter;
 - **every AI task used in code** (collect `task: "…"` from `lib/**` calls, or a central `AI_TASKS` list if one exists — create it if not) has a manifest entry → adding a task in plans 03–06 without a skill fails the test;

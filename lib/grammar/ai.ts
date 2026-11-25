@@ -1,4 +1,5 @@
 import "server-only";
+import type { AiTask } from "@/lib/ai/tasks";
 import type { Db } from "@/db/types";
 import { createOperation, type Operation } from "@/lib/ai/budget";
 import { estimateInputTokens } from "@/lib/ai/estimate";
@@ -17,8 +18,8 @@ import { draftForRewrite, normalizeDraft, toReviewDraft } from "./drafts";
 import { compactListForPrompt, type Scope } from "./queries";
 import { grammarDraftSchema, structureOutputSchema, type ReviewDraft } from "./schema";
 
-export const STRUCTURE_TASK = "grammar.structure";
-export const REWRITE_TASK = "grammar.rewrite";
+export const STRUCTURE_TASK = "grammar.structure" satisfies AiTask;
+export const REWRITE_TASK = "grammar.rewrite" satisfies AiTask;
 export const STRUCTURE_MAX_OUTPUT = 8000;
 export const REWRITE_MAX_OUTPUT = 4000;
 export const MAX_NOTES_CHARS = 20_000;

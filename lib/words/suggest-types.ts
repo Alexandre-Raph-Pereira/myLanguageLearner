@@ -1,4 +1,5 @@
 import "server-only";
+import type { AiTask } from "@/lib/ai/tasks";
 import { z } from "zod";
 import { WORD_TYPES, type WordType } from "@/db/schema/words";
 import type { Db } from "@/db/types";
@@ -11,7 +12,7 @@ import { aiObject } from "@/lib/ai/run";
 import { getUserSettings } from "@/lib/settings";
 import type { Scope } from "./queries";
 
-export const SUGGEST_TASK = "words.suggest_types";
+export const SUGGEST_TASK = "words.suggest_types" satisfies AiTask;
 export const SUGGEST_CHUNK = 200;
 const OUTPUT_TOKENS_PER_ROW = 16;
 

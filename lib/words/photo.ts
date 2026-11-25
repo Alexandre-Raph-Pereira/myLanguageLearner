@@ -1,4 +1,5 @@
 import "server-only";
+import type { AiTask } from "@/lib/ai/tasks";
 import { z } from "zod";
 import { WORD_TYPES } from "@/db/schema/words";
 import type { Db } from "@/db/types";
@@ -7,7 +8,7 @@ import { photoExtractPrompt } from "@/lib/ai/prompts/words-photo-extract";
 import { aiObject } from "@/lib/ai/run";
 import type { Scope } from "./queries";
 
-export const PHOTO_TASK = "words.photo_extract";
+export const PHOTO_TASK = "words.photo_extract" satisfies AiTask;
 export const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
 export const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/heic", "image/gif"];
 
