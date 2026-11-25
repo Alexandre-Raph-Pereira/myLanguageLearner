@@ -3,6 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { agentsPaths, manifestSchema, parseFrontmatter } from "@/lib/ai/claude-code/agents-prompt";
+import { checkExpect, countItems, parseEvalCase } from "@/lib/ai/claude-code/evals";
 import { AI_TASKS } from "@/lib/ai/tasks";
 
 const ROOT = path.resolve(__dirname, "..");
@@ -105,5 +106,44 @@ describe("langlearner-agents folder", () => {
       { cwd: ROOT, encoding: "utf8" },
     );
     expect(ignored.trim().split("\n")).toHaveLength(2);
+  });
+
+  it("every AI task has at least 2 valid eval cases (images exist)", () => {
+    for (const task of AI_TASKS) {
+      const dir = path.join(AGENTS, "evals/cases", task);
+      const files = fs.existsSync(dir)
+        ? fs.readdirSync(dir).filter((f) => f.endsWith(".json"))
+        : [];
+      expect(files.length, `eval cases for ${task}`).toBeGreaterThanOrEqual(2);
+      for (const f of files) {
+        const c = parseEvalCase(task, JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")));
+        if (c.image)
+          expect(fs.existsSync(path.join(AGENTS, "evals", c.image)), `${f} image`).toBe(true);
+      }
+    }
+  });
+});
+
+describe("eval expectations", () => {
+  it("counts items per task and checks min / max / contains (NFC)", () => {
+    const out = { drafts: [{ title: "-아서" }, { title: "-지만" }] };
+    expect(countItems("grammar.structure", out)).toBe(2);
+    expect(countItems("grammar.rewrite", { title: "x" })).toBe(1);
+    expect(checkExpect(out, 2, { minDrafts: 1, maxDrafts: 2, mustContain: ["-지만"] })).toEqual([]);
+    expect(
+      checkExpect(out, 2, {
+        minDrafts: 3,
+        maxDrafts: 1,
+        mustContain: ["-니까"],
+        mustNotContain: ["-아서"],
+      }),
+    ).toEqual([
+      "expected at least 3 items, got 2",
+      "expected at most 1 items, got 2",
+      'missing "-니까"',
+      'must not contain "-아서"',
+    ]);
+    // decomposed jamo in the expectation still matches composed text
+    expect(checkExpect({ t: "한" }, 1, { mustContain: ["\u1112\u1161\u11ab"] })).toEqual([]);
   });
 });

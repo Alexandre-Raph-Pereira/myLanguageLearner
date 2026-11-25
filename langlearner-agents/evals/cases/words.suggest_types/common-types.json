@@ -1,0 +1,26 @@
+{
+  "description": "One clear item per main type.",
+  "input": {
+    "language": "ko",
+    "rows": [
+      { "i": 1, "term": "사과", "meaning": "apple" },
+      { "i": 2, "term": "예쁘다", "meaning": "pretty" },
+      { "i": 3, "term": "천천히", "meaning": "slowly" },
+      { "i": 4, "term": "공부하다", "meaning": "to study" },
+      { "i": 5, "term": "마리", "meaning": "counter for animals" },
+      { "i": 6, "term": "잘 먹겠습니다", "meaning": "thank you for the meal (before eating)" }
+    ]
+  },
+  "expect": {
+    "minDrafts": 6,
+    "maxDrafts": 6,
+    "mustContain": [
+      "\"i\":1,\"type\":\"noun\"",
+      "\"i\":2,\"type\":\"adjective\"",
+      "\"i\":3,\"type\":\"adverb\"",
+      "\"i\":4,\"type\":\"verb\"",
+      "\"i\":5,\"type\":\"counter\"",
+      "\"i\":6,\"type\":\"expression\""
+    ]
+  }
+}

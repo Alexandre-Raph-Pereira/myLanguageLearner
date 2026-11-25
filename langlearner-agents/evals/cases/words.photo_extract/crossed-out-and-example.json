@@ -1,0 +1,11 @@
+{
+  "description": "A crossed-out word must be ignored; the example sentence stays with its word.",
+  "input": { "language": "ko" },
+  "image": "images/vocab-page-crossed.jpg",
+  "expect": {
+    "minDrafts": 4,
+    "maxDrafts": 4,
+    "mustContain": ["날씨", "덥다", "오늘 날씨가 더워요.", "우산", "눈이 오다"],
+    "mustNotContain": ["바람", "Vocabulary 7"]
+  }
+}

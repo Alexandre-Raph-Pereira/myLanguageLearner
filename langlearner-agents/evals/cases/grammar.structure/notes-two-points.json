@@ -1,0 +1,14 @@
+{
+  "description": "Typed notes with two grammar points and a vocabulary line to ignore; one existing lesson to link.",
+  "input": {
+    "ctx": { "language": "ko", "nativeLanguage": "English", "targetLevel": 3 },
+    "lessons": [{ "code": "G1", "title": "-아/어서", "meaningShort": "because, so (reason)" }],
+    "notes": "-(으)니까 = because (reason, speaker's judgement)\n가니까 / 먹으니까\ncan be used with commands: 비가 오니까 우산을 가져가세요.\n\n-지만 = but\n비싸지만 맛있어요.\n\nvocab: 우산 umbrella, 비 rain"
+  },
+  "expect": {
+    "minDrafts": 2,
+    "maxDrafts": 2,
+    "mustContain": ["-(으)니까", "-지만", "비가 오니까 우산을 가져가세요", "비싸지만 맛있어요"],
+    "mustNotContain": ["\"ref\":\"G2\"", "\"ref\":\"G3\""]
+  }
+}

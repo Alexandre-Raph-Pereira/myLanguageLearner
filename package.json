@@ -16,6 +16,7 @@
     "db:migrate": "node --env-file-if-exists=.env.local --import tsx db/migrate.ts",
     "db:migrate:prod": "node --env-file=.env.production.local --import tsx db/migrate.ts",
     "db:seed": "node --env-file-if-exists=.env.local --conditions=react-server --import tsx db/seed.ts",
+    "agents:eval": "node --env-file-if-exists=.env.local --conditions=react-server --import tsx scripts/agents-eval.ts",
     "grammar:import": "node --env-file-if-exists=.env.local --conditions=react-server --import tsx db/import-grammar.ts",
     "icons": "node scripts/generate-icons.mjs",
     "home:deploy": "bash scripts/home/deploy.sh",

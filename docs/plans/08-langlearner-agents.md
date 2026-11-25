@@ -117,7 +117,7 @@ Each `SKILL.md` has Claude Code frontmatter (`name`, `description` saying which 
 - **every AI task used in code** (collect `task: "…"` from `lib/**` calls, or a central `AI_TASKS` list if one exists — create it if not) has a manifest entry → adding a task in plans 03–06 without a skill fails the test;
 - no file in the folder contains a `.local.md` profile or anything matching key patterns (`sk-ant-`, `ANTHROPIC_API_KEY=`).
 
-### [ ] T8 — Evals (manual, real Claude Code, owner's machine)
+### [x] T8 — Evals (manual, real Claude Code, owner's machine)
 - `evals/cases/<task>/*.json`: `{ "input": <args for the task's prompt builder>, "image"?: "<path to a sample image under evals/images>", "expect": { "minDrafts"?: n, "mustContain"?: ["…"], "mustNotContain"?: ["…"] } }`. Start with 2–3 cases per existing task (sample notebook photos: synthetic/printed, nothing personal).
 - `scripts/agents-eval.ts` + `pnpm agents:eval [task]`: builds the real prompts with `lib/ai/prompts/*`, calls the `claude-code` model directly (no DB, no budget), validates with the task's zod schema, checks `expect`, prints a table (task, case, ok, seconds, tokens) and writes `langlearner-agents/evals/last-run.local.json` (gitignored). Refuses to run with `AI_MOCK=1`.
 - Not part of `pnpm test` (needs the owner's login).

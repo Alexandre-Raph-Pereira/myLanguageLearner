@@ -1,0 +1,9 @@
+{
+  "description": "Notes with vocabulary only: no lesson must be invented.",
+  "input": {
+    "ctx": { "language": "ko", "nativeLanguage": "English", "targetLevel": 2 },
+    "lessons": [],
+    "notes": "사과 apple\n바나나 banana\n포도 grapes\n수박 watermelon"
+  },
+  "expect": { "minDrafts": 0, "maxDrafts": 0 }
+}

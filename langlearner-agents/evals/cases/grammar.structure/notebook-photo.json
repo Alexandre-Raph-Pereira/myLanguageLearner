@@ -1,0 +1,13 @@
+{
+  "description": "Printed notebook page for -아/어서 with the learner's two examples and warnings.",
+  "input": {
+    "ctx": { "language": "ko", "nativeLanguage": "English", "targetLevel": 3 },
+    "lessons": []
+  },
+  "image": "images/grammar-page-aseo.jpg",
+  "expect": {
+    "minDrafts": 1,
+    "maxDrafts": 1,
+    "mustContain": ["아/어서", "배가 고파서 밥을 먹었어요.", "비가 와서 집에 있었어요."]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "description": "Descriptive verbs, bare Sino-Korean nouns, pronouns, numerals, interjections.",
+  "input": {
+    "language": "ko",
+    "rows": [
+      { "i": 10, "term": "맛있다", "meaning": "delicious" },
+      { "i": 11, "term": "공부", "meaning": "study, studying" },
+      { "i": 12, "term": "저", "meaning": "I (humble)" },
+      { "i": 13, "term": "하나", "meaning": "one" },
+      { "i": 14, "term": "아이고", "meaning": "oh my! (sigh)" },
+      { "i": 15, "term": "조용하다", "meaning": "quiet" }
+    ]
+  },
+  "expect": {
+    "minDrafts": 6,
+    "maxDrafts": 6,
+    "mustContain": [
+      "\"i\":10,\"type\":\"adjective\"",
+      "\"i\":11,\"type\":\"noun\"",
+      "\"i\":12,\"type\":\"pronoun\"",
+      "\"i\":13,\"type\":\"numeral\"",
+      "\"i\":14,\"type\":\"interjection\"",
+      "\"i\":15,\"type\":\"adjective\""
+    ]
+  }
+}

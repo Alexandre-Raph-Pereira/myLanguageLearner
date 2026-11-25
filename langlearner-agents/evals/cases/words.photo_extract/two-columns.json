@@ -1,0 +1,11 @@
+{
+  "description": "Printed two-column page with six words and a dated title (title must be skipped).",
+  "input": { "language": "ko" },
+  "image": "images/vocab-page-1.jpg",
+  "expect": {
+    "minDrafts": 6,
+    "maxDrafts": 6,
+    "mustContain": ["사과", "학교", "예쁘다", "천천히", "공부하다", "마리", "slowly"],
+    "mustNotContain": ["11월 3일"]
+  }
+}

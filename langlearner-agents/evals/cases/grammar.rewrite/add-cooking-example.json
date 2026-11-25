@@ -1,0 +1,26 @@
+{
+  "description": "Add one example on a given topic; everything else unchanged.",
+  "input": {
+    "ctx": { "language": "ko", "nativeLanguage": "English", "targetLevel": 2 },
+    "draft": {
+      "title": "-고 싶다",
+      "pattern": "-고 싶다",
+      "variants": ["-고 싶어요", "-고 싶었어요", "-고 싶어 하다"],
+      "meaning_short": "want to (do)",
+      "level": 1,
+      "description_md": "Used to say what you want to do. With a first-person subject (or a question to you) use -고 싶다; for someone else use -고 싶어 하다. It attaches to action verbs and it is very common in daily conversation, in questions about plans, and in the TOPIK I listening section.",
+      "formation_md": "- verb stem + 고 싶다: 가다 → 가고 싶다, 먹다 → 먹고 싶다\n- third person: 가고 싶어 하다",
+      "examples": [
+        { "sentence": "한국에 가고 싶어요.", "translation": "I want to go to Korea." },
+        { "sentence": "뭐 먹고 싶어요?", "translation": "What do you want to eat?" }
+      ],
+      "similar_md": "",
+      "related": []
+    },
+    "instruction": "Add one example about cooking."
+  },
+  "expect": {
+    "minDrafts": 1,
+    "mustContain": ["한국에 가고 싶어요.", "뭐 먹고 싶어요?", "want to (do)"]
+  }
+}
