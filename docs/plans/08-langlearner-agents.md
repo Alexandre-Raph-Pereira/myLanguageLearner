@@ -99,7 +99,7 @@ Frontmatter is stripped; bodies are joined with `---` separators. Total appended
 - `CLAUDE_AGENTS_SKILL_MODE` env: `inline` (default) | `tool` (allow only `Skill`, don't inline the task skill; inline persona + profile still).
 - **Accept:** fake-CLI test asserts the appended prompt contains persona, profile, shared skill, task skill and the task prompt last.
 
-### [ ] T5 — Skills for the existing tasks
+### [x] T5 — Skills for the existing tasks
 Each `SKILL.md` has Claude Code frontmatter (`name`, `description` saying which app task it serves) and a body of **guidance only** (no output format; refer to "the fields requested by the app"):
 - `korean-teaching`: speech levels (해요체 default for examples, when to show 합쇼체/반말), particle explanations, irregular conjugations (ㅂ, ㄷ, ㅅ, 르, ㅎ, ㄹ), spacing (띄어쓰기) rules to respect in examples, no romanization unless asked, typical mistakes of English/French speakers, NFC.
 - `words-suggest-types`: how to decide noun / verb / adjective / adverb / expression…; 하다 verbs vs nouns; when to say `other`.
